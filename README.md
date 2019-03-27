@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/phgraph/graph.svg?branch=master)](https://travis-ci.org/phgraph/graph)
 [![Coverage Status](https://coveralls.io/repos/github/phgraph/graph/badge.svg?branch=master)](https://coveralls.io/github/phgraph/graph?branch=master)
+[![StyleCI](https://github.styleci.io/repos/176066306/shield?branch=master)](https://github.styleci.io/repos/176066306)
 
 # phgraph/graph
 PHGraph is a modern mathematical graph/network library written in PHP.
@@ -70,7 +71,8 @@ $graphviz = new GraphViz($graph);
 $graphviz->display();
 ```
 
-to display
+output:
+
 ![display output](/example/simple.png?raw=true)
 
 ### Algorithms

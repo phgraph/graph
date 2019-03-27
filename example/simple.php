@@ -1,4 +1,5 @@
 <?php
+
 $cwd = dirname(__FILE__);
 
 require_once $cwd . '/../vendor/autoload.php';

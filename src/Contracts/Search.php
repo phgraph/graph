@@ -4,7 +4,8 @@ namespace PHGraph\Contracts;
 
 use PHGraph\Support\VertexCollection;
 
-interface Search {
+interface Search
+{
     /**
      * @return \PHGraph\Support\VertexCollection
      */

@@ -15,7 +15,7 @@ class DepthFirst implements Search
     protected $vertex;
 
     /**
-     * instantiate new algorithm
+     * instantiate new algorithm.
      *
      * @param Vertex $vertex Vertex to operate on
      *

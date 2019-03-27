@@ -2,7 +2,6 @@
 
 namespace Tests\Traits;
 
-use PHGraph\Edge;
 use PHGraph\Graph;
 use PHGraph\Support\VertexCollection;
 use PHGraph\Traits\Degreed;
@@ -45,7 +44,6 @@ class DegreedTest extends TestCase
     public function testGetDegreeIrregular(): void
     {
         $this->expectException(UnexpectedValueException::class);
-
 
         $graph = new Graph;
         $v1 = new Vertex($graph);

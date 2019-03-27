@@ -15,7 +15,7 @@ class BreadthFirst implements Search
     protected $vertex;
 
     /**
-     * instantiate new algorithm
+     * instantiate new algorithm.
      *
      * @param \PHGraph\Vertex $vertex Vertex to operate on
      *

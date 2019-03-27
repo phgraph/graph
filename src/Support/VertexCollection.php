@@ -12,7 +12,7 @@ use PHGraph\Vertex;
 class VertexCollection extends Collection
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function contains($value): bool
     {
@@ -36,7 +36,7 @@ class VertexCollection extends Collection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function remove($value): void
     {
@@ -44,7 +44,7 @@ class VertexCollection extends Collection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @throws \InvalidArgumentException when non-vertex supplied
      */

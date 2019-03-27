@@ -2,16 +2,13 @@
 
 namespace PHGraph\ShortestPath;
 
-use InvalidArgumentException;
 use OutOfBoundsException;
 use PHGraph\Contracts\ShortestPath;
 use PHGraph\Exception\NegativeCycleException;
 use PHGraph\Graph;
 use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
-use SplPriorityQueue;
 use UnderflowException;
 
 /**
@@ -155,6 +152,7 @@ class MooreBellmanFord implements ShortestPath
                 // ignore vertices that can not be reached
             }
         }
+
         return $ret;
     }
 
@@ -175,7 +173,7 @@ class MooreBellmanFord implements ShortestPath
             $this->vertex->getId() => INF,
         ];
 
-        $lowest_cost_vertex_to  = [
+        $lowest_cost_vertex_to = [
             $this->vertex->getId() => $this->vertex,
         ];
 
@@ -206,7 +204,6 @@ class MooreBellmanFord implements ShortestPath
                 }
             }
         }
-
 
         if ($cost_to[$this->vertex->getId()] === INF) {
             unset($lowest_cost_vertex_to[$this->vertex->getId()]);

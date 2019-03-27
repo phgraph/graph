@@ -11,7 +11,7 @@ use PHGraph\Edge;
 class EdgeCollection extends Collection
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function contains($value): bool
     {
@@ -51,7 +51,7 @@ class EdgeCollection extends Collection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function remove($value): void
     {
@@ -79,7 +79,7 @@ class EdgeCollection extends Collection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @throws \InvalidArgumentException when non-edge supplied
      */

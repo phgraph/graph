@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Graph;
 use PHGraph\Vertex;
 use PHGraph\Walk;

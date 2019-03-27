@@ -3,8 +3,8 @@
 namespace Tests\Support;
 
 use InvalidArgumentException;
-use PHGraph\Graph;
 use PHGraph\Edge;
+use PHGraph\Graph;
 use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
@@ -198,7 +198,6 @@ class EdgeCollectionTest extends TestCase
         $graph = new Graph;
         $edge_a = new Edge(new Vertex($graph), new Vertex($graph));
         $edge_b = new Edge(new Vertex($graph), new Vertex($graph));
-
 
         $c = new EdgeCollection([$edge_a]);
         $c->offsetSet(1, $edge_b);

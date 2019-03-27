@@ -2,8 +2,8 @@
 
 namespace PHGraph\Support;
 
-use ArrayIterator;
 use ArrayAccess;
+use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use Traversable;
@@ -23,7 +23,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function __construct(iterable $items = [])
     {
-        foreach($items as $key => $item) {
+        foreach ($items as $key => $item) {
             $this[$key] = $item;
         }
     }

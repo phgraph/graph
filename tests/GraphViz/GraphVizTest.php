@@ -6,7 +6,6 @@ use Mockery;
 use PHGraph\Graph;
 use PHGraph\GraphViz\GraphViz;
 use PHGraph\Vertex;
-use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -158,7 +157,7 @@ class GraphVizTest extends TestCase
 
         $graphviz = new GraphViz(new Graph);
 
-        $this->assertEquals("test", $graphviz->createImageData());
+        $this->assertEquals('test', $graphviz->createImageData());
     }
 
     /**
@@ -248,7 +247,6 @@ class GraphVizTest extends TestCase
 
         $this->assertEquals("graph {\n  \"a\"\n  \"b\"\n}\n", $graphviz->createScript());
     }
-
 
     /**
      * @covers PHGraph\GraphViz\GraphViz::createScript

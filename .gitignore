@@ -1,0 +1,4 @@
+/vendor/
+/report/
+.vscode/
+.phpunit.result.cache

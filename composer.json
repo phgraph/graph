@@ -1,0 +1,52 @@
+{
+    "name": "phgraph/graph",
+    "description": "Mathematical Graphing Library",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "graph",
+        "network",
+        "mathematical",
+        "vertex",
+        "edge"
+    ],
+    "homepage": "https://github.com/phgraph/graph",
+    "authors": [
+        {
+            "name": "sporchia",
+            "email": "print@blindchaos.net"
+        }
+    ],
+    "require": {
+        "php": "^7.2.15",
+        "symfony/process": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHGraph\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.11.4",
+        "phpunit/phpunit": "^8.0",
+        "php-coveralls/php-coveralls": "^2.1",
+        "mockery/mockery": "^1.2",
+        "phpstan/phpstan-mockery": "^0.11.0"
+    },
+    "scripts": {
+        "analyse": [
+            "./vendor/bin/phpstan analyse --ansi"
+        ],
+        "coverage": [
+            "./vendor/bin/phpunit --colors=always --coverage-clover=./report/coverage.clover --coverage-html=./report"
+        ],
+        "test": [
+            "./vendor/bin/phpunit --colors=always"
+        ]
+    }
+}

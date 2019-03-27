@@ -2,11 +2,10 @@
 
 namespace Tests;
 
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Graph;
-use PHGraph\Vertex;
-use PHGraph\Edge;
+use PHGraph\Support\EdgeCollection;
 use PHGraph\Support\VertexCollection;
+use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
 
 class GraphTest extends TestCase

@@ -15,7 +15,7 @@ class BreadthFirst implements ShortestPath
     protected $vertex;
 
     /**
-     * instantiate new algorithm
+     * instantiate new algorithm.
      *
      * @param Vertex $vertex Vertex to operate on
      *
@@ -27,7 +27,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * get walk (path) from start vertex to given end vertex
+     * get walk (path) from start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -41,7 +41,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * checks whether there's a path from this start vertex to given end vertex
+     * checks whether there's a path from this start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -59,7 +59,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * create new resulting graph with only edges on shortest path
+     * create new resulting graph with only edges on shortest path.
      *
      * @return \PHGraph\Graph
      */
@@ -69,7 +69,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * get distance between start vertex and given end vertex
+     * get distance between start vertex and given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -83,7 +83,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * get array of edges on the walk for each vertex (vertex ID => array of walk edges)
+     * get array of edges on the walk for each vertex (vertex ID => array of walk edges).
      *
      * @return array
      */
@@ -107,7 +107,6 @@ class BreadthFirst implements ShortestPath
             }
 
             $vertex_current = array_shift($vertex_queue);
-
         } while ($vertex_current);
 
         return $edges;
@@ -138,7 +137,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * get map of vertex IDs to distance
+     * get map of vertex IDs to distance.
      *
      * @return array
      */

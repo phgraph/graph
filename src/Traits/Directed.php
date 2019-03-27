@@ -43,6 +43,6 @@ trait Directed
      */
     public function isMixed(): bool
     {
-        return ($this->hasDirected() && $this->hasUndirected());
+        return $this->hasDirected() && $this->hasUndirected();
     }
 }

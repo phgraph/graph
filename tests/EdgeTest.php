@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use PHGraph\Graph;
 use PHGraph\Edge;
+use PHGraph\Graph;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
 

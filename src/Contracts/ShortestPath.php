@@ -7,9 +7,10 @@ use PHGraph\Graph;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 
-interface ShortestPath {
+interface ShortestPath
+{
     /**
-     * get walk (path) from start vertex to given end vertex
+     * get walk (path) from start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -20,7 +21,7 @@ interface ShortestPath {
     public function getWalkTo(Vertex $vertex): Walk;
 
     /**
-     * checks whether there's a path from this start vertex to given end vertex
+     * checks whether there's a path from this start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -29,7 +30,7 @@ interface ShortestPath {
     public function hasVertex(Vertex $vertex): bool;
 
     /**
-     * create new resulting graph with only edges on shortest path
+     * create new resulting graph with only edges on shortest path.
      *
      * @return \PHGraph\Graph
      */

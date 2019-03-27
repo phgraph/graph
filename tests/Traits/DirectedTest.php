@@ -2,7 +2,6 @@
 
 namespace Tests\Traits;
 
-use PHGraph\Edge;
 use PHGraph\Graph;
 use PHGraph\Support\EdgeCollection;
 use PHGraph\Traits\Directed;

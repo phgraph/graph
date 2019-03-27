@@ -5,7 +5,7 @@ namespace PHGraph\Contracts;
 interface Attributable
 {
     /**
-     * get a single attribute with the given $name (or return $default if attribute was not found)
+     * get a single attribute with the given $name (or return $default if attribute was not found).
      *
      * @param string $name
      * @param mixed  $default to return if attribute was not found
@@ -15,7 +15,7 @@ interface Attributable
     public function getAttribute(string $name, $default = null);
 
     /**
-     * set a single attribute with the given $name to given $value
+     * set a single attribute with the given $name to given $value.
      *
      * @param string $name
      * @param mixed  $value
@@ -25,7 +25,7 @@ interface Attributable
     public function setAttribute(string $name, $value): void;
 
     /**
-     * Removes a single attribute with the given $name
+     * Removes a single attribute with the given $name.
      *
      * @param string $name
      *

@@ -2,7 +2,6 @@
 
 namespace PHGraph\ShortestPath;
 
-use InvalidArgumentException;
 use OutOfBoundsException;
 use PHGraph\Contracts\ShortestPath;
 use PHGraph\Graph;
@@ -96,7 +95,7 @@ class Dijkstra implements ShortestPath
     }
 
     /**
-     * get a map of all vertices to
+     * get a map of all vertices to.
      *
      * @param \PHGraph\Vertex $vertex vertex we are walking to
      *
@@ -160,6 +159,7 @@ class Dijkstra implements ShortestPath
                 // ignore vertices that can not be reached
             }
         }
+
         return $ret;
     }
 
@@ -181,7 +181,7 @@ class Dijkstra implements ShortestPath
         $vertex_queue = new SplPriorityQueue;
         $vertex_queue->insert($this->vertex, 1);
 
-        $lowest_cost_vertex_to  = [
+        $lowest_cost_vertex_to = [
             $this->vertex->getId() => $this->vertex,
         ];
 

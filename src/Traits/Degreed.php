@@ -13,7 +13,7 @@ use UnexpectedValueException;
 trait Degreed
 {
     /**
-     * get degree for k-regular-graph (only if each vertex has the same degree)
+     * get degree for k-regular-graph (only if each vertex has the same degree).
      *
      * @throws UnderflowException       if graph is empty
      * @throws UnexpectedValueException if graph is not regular (i.e. vertex degrees are not equal)
@@ -36,7 +36,7 @@ trait Degreed
     }
 
     /**
-     * get minimum degree of vertices
+     * get minimum degree of vertices.
      *
      * @return int
      */
@@ -48,7 +48,7 @@ trait Degreed
     }
 
     /**
-     * get maximum degree of vertices
+     * get maximum degree of vertices.
      *
      * @return int
      */
@@ -60,7 +60,7 @@ trait Degreed
     }
 
     /**
-     * checks whether this graph is regular, i.e. each vertex has the same indegree/outdegree
+     * checks whether this graph is regular, i.e. each vertex has the same indegree/outdegree.
      *
      * @return bool
      */
@@ -82,7 +82,7 @@ trait Degreed
     }
 
     /**
-     * checks whether the indegree of every vertex equals its outdegree
+     * checks whether the indegree of every vertex equals its outdegree.
      *
      * @return bool
      */
@@ -98,7 +98,7 @@ trait Degreed
     }
 
     /**
-     * checks whether this vertex is a source, i.e. its indegree is zero
+     * checks whether this vertex is a source, i.e. its indegree is zero.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -110,7 +110,7 @@ trait Degreed
     }
 
     /**
-     * checks whether this vertex is a sink, i.e. its outdegree is zero
+     * checks whether this vertex is a sink, i.e. its outdegree is zero.
      *
      * @param \PHGraph\Vertex $vertex
      *

@@ -2,13 +2,11 @@
 
 namespace Tests\Traits;
 
-use PHGraph\Edge;
 use PHGraph\Graph;
 use PHGraph\Support\VertexCollection;
 use PHGraph\Traits\Grouped;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
-use UnexpectedValueException;
 
 class GroupedTest extends TestCase
 {

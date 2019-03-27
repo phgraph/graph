@@ -8,7 +8,7 @@ trait Attributes
     protected $attributes = [];
 
     /**
-     * get a single attribute with the given $name (or return $default if attribute was not found)
+     * get a single attribute with the given $name (or return $default if attribute was not found).
      *
      * @param string $name
      * @param mixed  $default to return if attribute was not found

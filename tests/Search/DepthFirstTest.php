@@ -2,9 +2,9 @@
 
 namespace Tests\Search;
 
-use PHGraph\Vertex;
 use PHGraph\Graph;
 use PHGraph\Search\DepthFirst;
+use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
 
 class DepthFirstTest extends TestCase

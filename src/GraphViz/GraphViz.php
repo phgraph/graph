@@ -77,7 +77,7 @@ class GraphViz
     }
 
     /**
-     * create image file for this graph
+     * create image file for this graph.
      *
      * @throws UnexpectedValueException
      *
@@ -156,7 +156,7 @@ class GraphViz
             foreach ($this->graph->getGroups() as $group) {
                 $script .= sprintf('  subgraph cluster_%s {%s', $gid++, PHP_EOL);
                 $script .= sprintf('    label = %s%s', $this->escape($group), PHP_EOL);
-                foreach($this->graph->getVerticesGroup($group) as $vid => $vertex) {
+                foreach ($this->graph->getVerticesGroup($group) as $vid => $vertex) {
                     $layout = $this->getLayoutVertex($vertex);
 
                     $script .= sprintf('    %s', $this->escape($vertex->getAttribute('name', $vid)));
@@ -191,7 +191,7 @@ class GraphViz
             $currentTargetVertex = $currentEdge->getTo();
 
             $label_from = $currentStartVertex->getAttribute('name', $currentStartVertex->getId());
-            $label_to = $currentTargetVertex->getAttribute('name',$currentTargetVertex->getId());
+            $label_to = $currentTargetVertex->getAttribute('name', $currentTargetVertex->getId());
 
             $script .= sprintf('  %s %s %s', $this->escape($label_from), $directed ? '->' : '--', $this->escape($label_to));
 
@@ -205,7 +205,7 @@ class GraphViz
             if ($flow !== null) {
                 // null capacity = infinite capacity
                 $label = $flow . '/' . ($capacity === null ? '∞' : $capacity);
-                // capacity set, but not flow (assume zero flow)
+            // capacity set, but not flow (assume zero flow)
             } elseif ($capacity !== null) {
                 $label = '0/' . $capacity;
             }
@@ -257,11 +257,11 @@ class GraphViz
             return $id;
         }
 
-        return '"' . str_replace(array('&', '<', '>', '"', "'", '\\', "\n"), array('&amp;', '&lt;', '&gt;', '&quot;', '&apos;', '\\\\', '\\l'), $id) . '"';
+        return '"' . str_replace(['&', '<', '>', '"', "'", '\\', "\n"], ['&amp;', '&lt;', '&gt;', '&quot;', '&apos;', '\\\\', '\\l'], $id) . '"';
     }
 
     /**
-     * get escaped attribute string for given array of (unescaped) attributes
+     * get escaped attribute string for given array of (unescaped) attributes.
      *
      * @param array $attrs
      *

@@ -563,7 +563,6 @@ class VertexTest extends TestCase
         $this->assertEquals(3, $v1->degreeOut());
     }
 
-
     /**
      * @covers PHGraph\Vertex::isIsolated
      *

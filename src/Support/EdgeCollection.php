@@ -116,7 +116,7 @@ class EdgeCollection extends Collection
     {
         parent::offsetUnset($offset);
 
-        $this->edge_order = array_filter($this->edge_order, function($edge_id) use ($offset) {
+        $this->edge_order = array_filter($this->edge_order, function ($edge_id) use ($offset) {
             return $edge_id !== $offset;
         });
     }

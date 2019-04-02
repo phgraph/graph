@@ -175,7 +175,7 @@ class GraphViz
 
                 $layout = $this->getLayoutVertex($vertex);
 
-                if ($layout || $this->graph->isVertexIsolated($vertex)) {
+                if ($layout || $vertex->isIsolated()) {
                     $script .= sprintf('  %s', $this->escape($layout['name'] ?? $vertex->getAttribute('name', $vid)));
                     unset($layout['name']);
                     if (count($layout)) {
@@ -227,7 +227,7 @@ class GraphViz
                 }
             }
 
-            if ($directed && !$currentEdge->directed()) {
+            if ($directed && !$currentEdge->isDirected()) {
                 $layout['dir'] = 'none';
             }
 

@@ -223,7 +223,31 @@ class EdgeTest extends TestCase
     }
 
     /**
-     * @covers PHGraph\Edge::directed
+     * @covers PHGraph\Edge::replaceVerticesFromMap
+     *
+     * @return void
+     */
+    public function testReplaceVerticesFromMapDoesNotLeaveOldVertexEdgeCorrilation(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+
+        $vertex_c = new Vertex($this->graph);
+        $vertex_d = new Vertex($this->graph);
+
+        $replacement_map = [
+            $vertex_a->getId() => $vertex_c,
+            $vertex_b->getId() => $vertex_d,
+        ];
+
+        $edge->replaceVerticesFromMap($replacement_map);
+
+        $this->assertNotEquals([$edge], $vertex_a->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\Edge::isDirected
      *
      * @return void
      */
@@ -233,11 +257,11 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::DIRECTED);
 
-        $this->assertTrue($edge->directed());
+        $this->assertTrue($edge->isDirected());
     }
 
     /**
-     * @covers PHGraph\Edge::directed
+     * @covers PHGraph\Edge::isDirected
      *
      * @return void
      */
@@ -247,11 +271,11 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
 
-        $this->assertFalse($edge->directed());
+        $this->assertFalse($edge->isDirected());
     }
 
     /**
-     * @covers PHGraph\Edge::loop
+     * @covers PHGraph\Edge::isLoop
      *
      * @return void
      */
@@ -260,11 +284,11 @@ class EdgeTest extends TestCase
         $vertex = new Vertex($this->graph);
         $edge = new Edge($vertex, $vertex);
 
-        $this->assertTrue($edge->loop());
+        $this->assertTrue($edge->isLoop());
     }
 
     /**
-     * @covers PHGraph\Edge::loop
+     * @covers PHGraph\Edge::isLoop
      *
      * @return void
      */
@@ -274,6 +298,6 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b);
 
-        $this->assertFalse($edge->loop());
+        $this->assertFalse($edge->isLoop());
     }
 }

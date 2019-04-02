@@ -126,6 +126,26 @@ class EdgeCollectionTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Support\EdgeCollection::ordered
+     *
+     * @return void
+     */
+    public function testOrdered()
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+        $edge_a = new Edge($vertex_a, $vertex_b);
+        $edge_b = new Edge($vertex_c, $vertex_d);
+
+        $c = new EdgeCollection([$edge_a, $edge_b, $edge_b, $edge_a]);
+
+        $this->assertEquals([$edge_a, $edge_b, $edge_b, $edge_a], $c->ordered()->all());
+    }
+
+    /**
      * @covers PHGraph\Support\EdgeCollection::remove
      *
      * @return void
@@ -215,5 +235,22 @@ class EdgeCollectionTest extends TestCase
 
         $c = new EdgeCollection;
         $c->offsetSet(1, 'foo');
+    }
+
+    /**
+     * @covers PHGraph\Support\EdgeCollection::offsetUnset
+     *
+     * @return void
+     */
+    public function testArrayAccessOffsetUnset(): void
+    {
+        $graph = new Graph;
+        $edge_a = new Edge(new Vertex($graph), new Vertex($graph));
+        $edge_b = new Edge(new Vertex($graph), new Vertex($graph));
+
+        $c = new EdgeCollection([$edge_a, $edge_b]);
+        $c->offsetUnset($edge_a->getId());
+
+        $this->assertFalse(isset($c[$edge_a->getId()]));
     }
 }

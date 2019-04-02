@@ -270,7 +270,7 @@ class VertexTest extends TestCase
 
         $edge = $vertex_a->createEdge($vertex_b);
 
-        $this->assertFalse($edge->directed());
+        $this->assertFalse($edge->isDirected());
     }
 
     /**
@@ -286,7 +286,7 @@ class VertexTest extends TestCase
 
         $edge = $vertex_a->createEdgeTo($vertex_b);
 
-        $this->assertTrue($edge->directed());
+        $this->assertTrue($edge->isDirected());
     }
 
     /**
@@ -294,7 +294,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeInDirected(): void
+    public function testAddEdgeInDirected(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -312,7 +312,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeInUndirected(): void
+    public function testAddEdgeInUndirected(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -330,7 +330,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeInNotValid(): void
+    public function testAddEdgeInNotValid(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -348,7 +348,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeInNotValidUnrelated(): void
+    public function testAddEdgeInNotValidUnrelated(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -368,7 +368,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeOutDirected(): void
+    public function testAddEdgeOutDirected(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -386,7 +386,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeOutUndirected(): void
+    public function testAddEdgeOutUndirected(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -404,7 +404,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeOutNotValid(): void
+    public function testAddEdgeOutNotValid(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -422,7 +422,7 @@ class VertexTest extends TestCase
      *
      * @return void
      */
-    public function testaddEdgeOutNotValidUnrelated(): void
+    public function testAddEdgeOutNotValidUnrelated(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -435,6 +435,221 @@ class VertexTest extends TestCase
         $vertex_b->addEdgeOut($edge_b);
 
         $this->assertEquals([$edge_a], $vertex_b->getEdgesOut()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::removeEdge
+     *
+     * @return void
+     */
+    public function testRemoveEdge(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+
+        $edge_a = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
+        $edge_b = new Edge($vertex_a, $vertex_c, Edge::UNDIRECTED);
+
+        $vertex_b->removeEdge($edge_b);
+
+        $this->assertEquals([$edge_a], $vertex_b->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degree
+     *
+     * @return void
+     */
+    public function testDegreeEmpty(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+
+        $this->assertEquals(0, $v1->degree());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degree
+     *
+     * @return void
+     */
+    public function testDegree(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdge($v2);
+
+        $this->assertEquals(1, $v1->degree());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degree
+     *
+     * @return void
+     */
+    public function testDegreeLoop(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdge($v2);
+        $v1->createEdge($v1);
+
+        $this->assertEquals(3, $v1->degree());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degreeIn
+     *
+     * @return void
+     */
+    public function testDegreeIn(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdge($v2);
+
+        $this->assertEquals(1, $v1->degreeIn());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degreeIn
+     *
+     * @return void
+     */
+    public function testDegreeInWithLoop(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdge($v2);
+        $v1->createEdge($v1);
+
+        $this->assertEquals(3, $v1->degreeIn());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degreeOut
+     *
+     * @return void
+     */
+    public function testDegreeOut(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdge($v2);
+
+        $this->assertEquals(1, $v1->degreeOut());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::degreeOut
+     *
+     * @return void
+     */
+    public function testDegreeOutWithLoop(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdge($v2);
+        $v1->createEdge($v1);
+
+        $this->assertEquals(3, $v1->degreeOut());
+    }
+
+
+    /**
+     * @covers PHGraph\Vertex::isIsolated
+     *
+     * @return void
+     */
+    public function testIsolatedTrue(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+
+        $this->assertTrue($v1->isIsolated());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::isIsolated
+     *
+     * @return void
+     */
+    public function testIsolatedFalse(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdgeTo($v2);
+
+        $this->assertFalse($v1->isIsolated());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::isSink
+     *
+     * @return void
+     */
+    public function testSinkTrue(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdgeTo($v2);
+
+        $this->assertTrue($v2->isSink());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::isSink
+     *
+     * @return void
+     */
+    public function testSinkFalse(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdgeTo($v2);
+
+        $this->assertFalse($v1->isSink());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::isSource
+     *
+     * @return void
+     */
+    public function testSourceTrue(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdgeTo($v2);
+
+        $this->assertTrue($v1->isSource());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::isSource
+     *
+     * @return void
+     */
+    public function testSourceFalse(): void
+    {
+        $graph = new Graph;
+        $v1 = new Vertex($graph);
+        $v2 = new Vertex($graph);
+        $v1->createEdgeTo($v2);
+
+        $this->assertFalse($v2->isSource());
     }
 
     /**

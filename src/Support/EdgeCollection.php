@@ -10,6 +10,9 @@ use PHGraph\Edge;
  */
 class EdgeCollection extends Collection
 {
+    /** @var array */
+    protected $edge_order = [];
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +51,18 @@ class EdgeCollection extends Collection
         }
 
         return $vertices;
+    }
+
+    /**
+     * get an ordered collection of edges.
+     *
+     * @return \PHGraph\Support\Collection
+     */
+    public function ordered(): Collection
+    {
+        return new Collection(array_map(function ($edge_id) {
+            return $this->items[$edge_id];
+        }, $this->edge_order));
     }
 
     /**
@@ -90,5 +105,19 @@ class EdgeCollection extends Collection
         }
 
         $this->items[$value->getId()] = $value;
+
+        $this->edge_order[] = $value->getId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetUnset($offset): void
+    {
+        parent::offsetUnset($offset);
+
+        $this->edge_order = array_filter($this->edge_order, function($edge_id) use ($offset) {
+            return $edge_id !== $offset;
+        });
     }
 }

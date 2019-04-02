@@ -312,6 +312,28 @@ class DijkstraTest extends TestCase
      *
      * @return void
      */
+    public function testGetEdgesCached(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_a->createEdgeTo($vertex_b);
+
+        $bf = new Dijkstra($vertex_a);
+
+        $edges = $bf->getEdges()->all();
+
+        $vertex_c = new Vertex($graph);
+        $vertex_a->createEdgeTo($vertex_c);
+
+        $this->assertEquals($edges, $bf->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\ShortestPath\Dijkstra::getEdges
+     *
+     * @return void
+     */
     public function testGetEdgesPicksSmallerWeight(): void
     {
         $graph = new Graph;

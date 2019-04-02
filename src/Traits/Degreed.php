@@ -22,10 +22,10 @@ trait Degreed
      */
     public function getDegree(): int
     {
-        $degree = $this->getDegreeVertex($this->vertices->first());
+        $degree = $this->vertices->first()->degree();
 
         foreach ($this->vertices as $vertex) {
-            $i = $this->getDegreeVertex($vertex);
+            $i = $vertex->degree();
 
             if ($i !== $degree) {
                 throw new UnexpectedValueException('Graph is not k-regular (vertex degrees differ)');
@@ -42,9 +42,9 @@ trait Degreed
      */
     public function getDegreeMin(): int
     {
-        return $this->getDegreeVertex($this->vertices->sortBy(function ($vertex) {
-            return $this->getDegreeVertex($vertex);
-        })->first());
+        return $this->vertices->sortBy(function ($vertex) {
+            return $vertex->degree();
+        })->first()->degree();
     }
 
     /**
@@ -54,9 +54,9 @@ trait Degreed
      */
     public function getDegreeMax(): int
     {
-        return $this->getDegreeVertex($this->vertices->sortByDesc(function ($vertex) {
-            return $this->getDegreeVertex($vertex);
-        })->first());
+        return $this->vertices->sortByDesc(function ($vertex) {
+            return $vertex->degree();
+        })->first()->degree();
     }
 
     /**
@@ -89,95 +89,11 @@ trait Degreed
     public function isBalanced(): bool
     {
         foreach ($this->vertices as $vertex) {
-            if ($this->getDegreeInVertex($vertex) !== $this->getDegreeOutVertex($vertex)) {
+            if ($vertex->degreeIn() !== $vertex->degreeOut()) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    /**
-     * checks whether this vertex is a source, i.e. its indegree is zero.
-     *
-     * @param \PHGraph\Vertex $vertex
-     *
-     * @return bool
-     */
-    public function isVertexSource(Vertex $vertex): bool
-    {
-        return count($vertex->getEdgesIn()) === 0;
-    }
-
-    /**
-     * checks whether this vertex is a sink, i.e. its outdegree is zero.
-     *
-     * @param \PHGraph\Vertex $vertex
-     *
-     * @return bool
-     */
-    public function isVertexSink(Vertex $vertex): bool
-    {
-        return count($vertex->getEdgesOut()) === 0;
-    }
-
-    /**
-     * get degree of this vertex (total number of edges).
-     *
-     * vertex degree counts the total number of edges attached to this vertex
-     * regardless of whether they're directed or not. loop edges are counted
-     * twice as both start and end form a 'line' to the same vertex.
-     *
-     * @todo does this feel more like a native of Vertex?
-     *
-     * @param \PHGraph\Vertex $vertex
-     *
-     * @return int
-     */
-    public function getDegreeVertex(Vertex $vertex): int
-    {
-        $edges = $vertex->getEdges();
-
-        return count($edges) + count($edges->filter(function ($edge) {
-            return $edge->loop();
-        }));
-    }
-
-    /**
-     * check whether this vertex is isolated.
-     *
-     * @param \PHGraph\Vertex $vertex
-     *
-     * @return bool
-     */
-    public function isVertexIsolated(Vertex $vertex): bool
-    {
-        return count($vertex->getEdges()) === 0;
-    }
-
-    /**
-     * get indegree of this vertex.
-     *
-     * @param \PHGraph\Vertex $vertex
-     *
-     * @return int
-     */
-    public function getDegreeInVertex(Vertex $vertex): int
-    {
-        return count($vertex->getEdgesIn());
-    }
-
-    /**
-     * get outdegree of this vertex.
-     *
-     * @todo verify if loops count?
-     *
-     * @param \PHGraph\Vertex $vertex
-     *
-     * @return int
-     */
-    public function getDegreeOutVertex(Vertex $vertex): int
-    {
-        return count($vertex->getEdgesOut());
     }
 }

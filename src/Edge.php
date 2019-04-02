@@ -48,7 +48,7 @@ class Edge implements Attributable
         $this->to->addEdgeIn($this);
         $this->from->addEdgeOut($this);
 
-        if (!$this->directed()) {
+        if (!$this->isDirected()) {
             $this->to->addEdgeOut($this);
             $this->from->addEdgeIn($this);
         }
@@ -103,7 +103,7 @@ class Edge implements Attributable
      */
     public function getTargets(): VertexCollection
     {
-        return new VertexCollection($this->directed() ? [$this->to] : [$this->to, $this->from]);
+        return new VertexCollection($this->isDirected() ? [$this->to] : [$this->to, $this->from]);
     }
 
     /**
@@ -127,8 +127,11 @@ class Edge implements Attributable
      */
     public function replaceVerticesFromMap(array $vertex_map): void
     {
-        $this->to = $vertex_map[$this->to->getId()];
-        $this->from = $vertex_map[$this->from->getId()];
+        $this->to->removeEdge($this);
+        $this->from->removeEdge($this);
+
+        $this->to = $vertex_map[$this->to->getId()] ?? $this->to;
+        $this->from = $vertex_map[$this->from->getId()] ?? $this->from;
 
         $this->to->addEdgeOut($this);
         $this->from->addEdgeIn($this);
@@ -139,7 +142,7 @@ class Edge implements Attributable
      *
      * @return bool
      */
-    public function directed(): bool
+    public function isDirected(): bool
     {
         return $this->direction === self::DIRECTED;
     }
@@ -149,7 +152,7 @@ class Edge implements Attributable
      *
      * @return bool
      */
-    public function loop(): bool
+    public function isLoop(): bool
     {
         return $this->from === $this->to;
     }

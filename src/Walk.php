@@ -18,23 +18,89 @@ class Walk
     protected $vertices;
     /** @var \PHGraph\Support\EdgeCollection */
     protected $edges;
+    /** @var \PHGraph\Graph */
+    protected $graph;
+    /** @var array */
+    protected $alternating_sequence = [];
 
     /**
-     * @todo should edges be optional for the walk?
-     *
      * @param \PHGraph\Vertex                 $start_vertex vertex that the walk starts from
-     * @param \PHGraph\Support\EdgeCollection $edges        optional collection of edges for the walk
+     * @param \PHGraph\Support\EdgeCollection $edges        collection of edges for the walk
      *
      * @return void
      */
-    public function __construct(Vertex $start_vertex, EdgeCollection $edges = null)
+    public function __construct(Vertex $start_vertex, EdgeCollection $edges)
     {
         $this->start_vertex = $start_vertex;
-        $this->edges = $edges ?? new EdgeCollection;
+        $this->edges = $edges;
         $this->vertices = new VertexCollection([$this->start_vertex]);
 
-        if ($edges === null) {
-            $this->edges = new EdgeCollection;
+        // walk the edges for the alternating sequence
+        $current_vertex = $start_vertex;
+        $this->alternating_sequence[] = $current_vertex;
+        foreach ($this->edges->ordered() as $edge) {
+            $current_vertex = $edge->getAdjacentVertex($current_vertex);
+
+            $this->vertices[] = $current_vertex;
+
+            $this->alternating_sequence[] = $edge;
+            $this->alternating_sequence[] = $current_vertex;
         }
+    }
+
+    /**
+     * Get the original underlying graph.
+     *
+     * @return \PHGraph\Graph
+     */
+    public function getGraph(): Graph
+    {
+        return $this->start_vertex->getGraph();
+    }
+
+    /**
+     * Create a new deep cloned graph from this walk.
+     *
+     * @return \PHGraph\Graph
+     */
+    public function createGraph(): Graph
+    {
+        if ($this->graph !== null) {
+            return $this->graph;
+        }
+
+        $this->graph = $this->getGraph()->newFromEdges($this->edges);
+
+        return $this->graph;
+    }
+
+    /**
+     * return all edges of walk.
+     *
+     * @return \PHGraph\Support\EdgeCollection
+     */
+    public function getEdges(): EdgeCollection
+    {
+        return $this->edges;
+    }
+
+    /**
+     * return all vertices of walk.
+     *
+     * @return \PHGraph\Support\VertexCollection
+     */
+    public function getVertices(): VertexCollection
+    {
+        return $this->vertices;
+    }
+
+    /**
+     * get alternating sequence: V1, E1, V2, ... Vx.
+     *
+     * @return array
+     */
+    public function getAlternatingSequence(): array
+    {
+        return $this->alternating_sequence;
     }
 }

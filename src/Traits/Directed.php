@@ -12,7 +12,7 @@ trait Directed
     public function hasDirected(): bool
     {
         foreach ($this->getEdges() as $edge) {
-            if ($edge->directed()) {
+            if ($edge->isDirected()) {
                 return true;
             }
         }
@@ -28,7 +28,7 @@ trait Directed
     public function hasUndirected(): bool
     {
         foreach ($this->getEdges() as $edge) {
-            if (!$edge->directed()) {
+            if (!$edge->isDirected()) {
                 return true;
             }
         }

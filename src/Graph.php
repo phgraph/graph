@@ -13,6 +13,11 @@ use PHGraph\Traits\Grouped;
 
 /**
  * Representation of a Mathematical Graph.
+ *
+ * @todo consider removal of vertices and edges, how would we best go about this?
+ * @todo consider merging Degreed trait into this to simplify overall code.
+ * @todo consider merging Directed trait into this to simplify overall code.
+ * @todo consider merging Grouped trait into this to simplify overall code.
  */
 class Graph implements Attributable, Directable
 {

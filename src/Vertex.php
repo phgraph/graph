@@ -112,7 +112,7 @@ class Vertex implements Attributable
         $has_loop = false;
 
         foreach ($this->edges_in as $edge) {
-            if ($edge->loop()) {
+            if ($edge->isLoop()) {
                 $has_loop = true;
             }
 
@@ -137,7 +137,7 @@ class Vertex implements Attributable
         $has_loop = false;
 
         foreach ($this->edges_out as $edge) {
-            if ($edge->loop()) {
+            if ($edge->isLoop()) {
                 $has_loop = true;
             }
 
@@ -188,7 +188,7 @@ class Vertex implements Attributable
      */
     public function addEdgeIn(Edge $edge): void
     {
-        if ($edge->directed() && $edge->getTo() !== $this) {
+        if ($edge->isDirected() && $edge->getTo() !== $this) {
             return;
         }
 
@@ -208,7 +208,7 @@ class Vertex implements Attributable
      */
     public function addEdgeOut(Edge $edge): void
     {
-        if ($edge->directed() && $edge->getFrom() !== $this) {
+        if ($edge->isDirected() && $edge->getFrom() !== $this) {
             return;
         }
 
@@ -217,6 +217,91 @@ class Vertex implements Attributable
         }
 
         $this->edges_out[] = $edge;
+    }
+
+    /**
+     * remove references to given edge.
+     *
+     * @param \PHGraph\Edge $edge edge to remove
+     *
+     * @return void
+     */
+    public function removeEdge(Edge $edge): void
+    {
+        $this->edges_in->remove($edge);
+        $this->edges_out->remove($edge);
+    }
+
+    /**
+     * get degree of this vertex (total number of edges).
+     *
+     * vertex degree counts the total number of edges attached to this vertex
+     * regardless of whether they're directed or not. loop edges are counted
+     * twice as both start and end form a 'line' to the same vertex.
+     *
+     * @return int
+     */
+    public function degree(): int
+    {
+        $edges = $this->getEdges();
+
+        return count($edges) + count($edges->filter(function ($edge) {
+            return $edge->isLoop();
+        }));
+    }
+
+    /**
+     * get indegree of this vertex.
+     *
+     * @return int
+     */
+    public function degreeIn(): int
+    {
+        return count($this->edges_in) + count($this->edges_out->filter(function ($edge) {
+            return $edge->isLoop() && !$edge->isDirected();
+        }));
+    }
+
+    /**
+     * get outdegree of this vertex.
+     *
+     * @return int
+     */
+    public function degreeOut(): int
+    {
+        return count($this->edges_out) + count($this->edges_in->filter(function ($edge) {
+            return $edge->isLoop() && !$edge->isDirected();
+        }));
+    }
+
+    /**
+     * check whether this vertex is isolated.
+     *
+     * @return bool
+     */
+    public function isIsolated(): bool
+    {
+        return count($this->getEdges()) === 0;
+    }
+
+    /**
+     * checks whether this vertex is a sink, i.e. its outdegree is zero.
+     *
+     * @return bool
+     */
+    public function isSink(): bool
+    {
+        return count($this->edges_out) === 0;
+    }
+
+    /**
+     * checks whether this vertex is a source, i.e. its indegree is zero.
+     *
+     * @return bool
+     */
+    public function isSource(): bool
+    {
+        return count($this->edges_in) === 0;
     }
 
     /**

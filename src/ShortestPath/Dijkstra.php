@@ -13,12 +13,16 @@ use SplPriorityQueue;
 use UnexpectedValueException;
 
 /**
- * For a given source node in the graph, the algorithm finds the shortest path between that node and every other.
+ * For a given source node in the graph, the algorithm finds the shortest path
+ * between that node and every other. This should be considered immutable on the
+ * graph as we will be caching edges when getEdges is called.
  */
 class Dijkstra implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
     protected $vertex;
+    /** @var \PHGraph\Support\EdgeCollection */
+    protected $edges;
 
     /**
      * instantiate new algorithm.
@@ -112,14 +116,13 @@ class Dijkstra implements ShortestPath
             return $path;
         }
 
-        // @todo this can be expensive... consider making this part of constructor
         $edges = $this->getEdges();
 
         do {
             $pre = null;
 
             foreach ($edges as $edge) {
-                if (!$edge->directed() && $edge->getFrom() === $current_vertex) {
+                if (!$edge->isDirected() && $edge->getFrom() === $current_vertex) {
                     $path->add($edge);
                     $pre = $edge->getTo();
 
@@ -172,6 +175,10 @@ class Dijkstra implements ShortestPath
      */
     public function getEdges(): EdgeCollection
     {
+        if ($this->edges !== null) {
+            return $this->edges;
+        }
+
         $vertices = $this->vertex->getGraph()->getVertices();
 
         $cost_to = [
@@ -201,7 +208,7 @@ class Dijkstra implements ShortestPath
             }
 
             foreach ($current_vertex->getEdgesOut() as $edge) {
-                $target_vertex = $edge->directed()
+                $target_vertex = $edge->isDirected()
                     ? $edge->getTo()
                     : $edge->getAdjacentVertex($current_vertex);
 
@@ -237,7 +244,7 @@ class Dijkstra implements ShortestPath
         foreach ($vertices as $vid => $vertex) {
             if ($lowest_cost_vertex_to[$vid] ?? false) {
                 $closest_edge = $lowest_cost_vertex_to[$vid]->getEdgesOut()->filter(function ($edge) use ($vertex) {
-                    return $edge->getTo() === $vertex || (!$edge->directed() && $edge->getFrom() === $vertex);
+                    return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
                 })->sortBy(function ($edge) {
                     return $edge->getAttribute('weight', 0);
                 })->first();
@@ -246,6 +253,8 @@ class Dijkstra implements ShortestPath
             }
         }
 
-        return $edges;
+        $this->edges = $edges;
+
+        return $this->edges;
     }
 }

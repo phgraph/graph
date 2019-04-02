@@ -97,7 +97,7 @@ class BreadthFirst implements ShortestPath
 
         do {
             foreach ($vertex_current->getEdgesOut() as $edge) {
-                $vertex_target = $edge->directed() ? $edge->getTo() : $edge->getAdjacentVertex($vertex_current);
+                $vertex_target = $edge->isDirected() ? $edge->getTo() : $edge->getAdjacentVertex($vertex_current);
                 $vid = $vertex_target->getId();
 
                 if (!isset($edges[$vid])) {

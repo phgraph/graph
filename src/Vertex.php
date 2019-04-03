@@ -342,7 +342,7 @@ class Vertex implements Attributable
     }
 
     /**
-     * Handle unset properties
+     * Handle unset properties.
      */
     public function __get(string $property)
     {

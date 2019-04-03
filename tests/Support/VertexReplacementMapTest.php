@@ -2,11 +2,9 @@
 
 namespace Tests\Support;
 
-use ArrayIterator;
 use InvalidArgumentException;
 use PHGraph\Graph;
 use PHGraph\Support\VertexReplacementMap;
-use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
 
 class VertexReplacementMapTest extends TestCase

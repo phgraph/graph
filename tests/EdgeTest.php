@@ -2,12 +2,12 @@
 
 namespace Tests;
 
+use Exception;
 use PHGraph\Edge;
 use PHGraph\Graph;
-use PHGraph\Vertex;
 use PHGraph\Support\VertexReplacementMap;
+use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
-use Exception;
 
 class EdgeTest extends TestCase
 {

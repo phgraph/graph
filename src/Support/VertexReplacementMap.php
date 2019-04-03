@@ -3,11 +3,9 @@
 namespace PHGraph\Support;
 
 use ArrayAccess;
-use ArrayIterator;
 use Countable;
 use InvalidArgumentException;
 use PHGraph\Vertex;
-use Traversable;
 
 /**
  * Allow for mapping replacements of Vertices.

@@ -5,7 +5,9 @@ namespace Tests;
 use PHGraph\Edge;
 use PHGraph\Graph;
 use PHGraph\Vertex;
+use PHGraph\Support\VertexReplacementMap;
 use PHPUnit\Framework\TestCase;
+use Exception;
 
 class EdgeTest extends TestCase
 {
@@ -212,10 +214,10 @@ class EdgeTest extends TestCase
         $vertex_c = new Vertex($this->graph);
         $vertex_d = new Vertex($this->graph);
 
-        $replacement_map = [
-            $vertex_a->getId() => $vertex_c,
-            $vertex_b->getId() => $vertex_d,
-        ];
+        $replacement_map = new VertexReplacementMap;
+
+        $replacement_map[$vertex_a] = $vertex_c;
+        $replacement_map[$vertex_b] = $vertex_d;
 
         $edge->replaceVerticesFromMap($replacement_map);
 
@@ -236,10 +238,10 @@ class EdgeTest extends TestCase
         $vertex_c = new Vertex($this->graph);
         $vertex_d = new Vertex($this->graph);
 
-        $replacement_map = [
-            $vertex_a->getId() => $vertex_c,
-            $vertex_b->getId() => $vertex_d,
-        ];
+        $replacement_map = new VertexReplacementMap;
+
+        $replacement_map[$vertex_a] = $vertex_c;
+        $replacement_map[$vertex_b] = $vertex_d;
 
         $edge->replaceVerticesFromMap($replacement_map);
 
@@ -299,5 +301,71 @@ class EdgeTest extends TestCase
         $edge = new Edge($vertex_a, $vertex_b);
 
         $this->assertFalse($edge->isLoop());
+    }
+
+    /**
+     * @covers PHGraph\Edge::destroy
+     *
+     * @return void
+     */
+    public function testDestroyGetFromThrowsError(): void
+    {
+        $this->expectException(Exception::class);
+
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->destroy();
+
+        $edge->getFrom();
+    }
+
+    /**
+     * @covers PHGraph\Edge::destroy
+     *
+     * @return void
+     */
+    public function testDestroyGetToThrowsError(): void
+    {
+        $this->expectException(Exception::class);
+
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->destroy();
+
+        $edge->getTo();
+    }
+
+    /**
+     * @covers PHGraph\Edge::destroy
+     *
+     * @return void
+     */
+    public function testDestroyVertexNoReference(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->destroy();
+
+        $this->assertEmpty($vertex_b->getEdges());
+    }
+
+    /**
+     * @covers PHGraph\Edge::__get
+     *
+     * @return void
+     */
+    public function testGetWithInvalidThrowsException(): void
+    {
+        $this->expectException(Exception::class);
+
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->destroy();
+
+        $edge->getTo();
     }
 }

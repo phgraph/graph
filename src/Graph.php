@@ -6,14 +6,13 @@ use PHGraph\Contracts\Attributable;
 use PHGraph\Contracts\Directable;
 use PHGraph\Support\EdgeCollection;
 use PHGraph\Support\VertexCollection;
+use PHGraph\Support\VertexReplacementMap;
 use PHGraph\Traits\Attributes;
 use UnderflowException;
 use UnexpectedValueException;
 
 /**
  * Representation of a Mathematical Graph.
- *
- * @todo consider removal of vertices and edges, how would we best go about this?
  */
 class Graph implements Attributable, Directable
 {
@@ -121,6 +120,20 @@ class Graph implements Attributable, Directable
     }
 
     /**
+     * remove Vertex from Graph.
+     *
+     * @param \PHGraph\Vertex $vertex vertex to remove
+     *
+     * @return void
+     */
+    public function removeVertex(Vertex $vertex): void
+    {
+        $this->vertices->remove($vertex);
+
+        $vertex->destroy();
+    }
+
+    /**
      * get the edges in the graph.
      *
      * @return \PHGraph\Support\EdgeCollection
@@ -147,12 +160,14 @@ class Graph implements Attributable, Directable
     {
         $new_graph = new static;
 
-        $vertex_replacement_map = array_map(function ($vertex) use ($new_graph) {
+        $vertex_replacement_map = new VertexReplacementMap;
+
+        foreach ($edges->getVertices() as $vertex) {
             $new_vertex = clone $vertex;
             $new_vertex->setGraph($new_graph);
 
-            return $new_vertex;
-        }, $edges->getVertices()->items());
+            $vertex_replacement_map[$vertex] = $new_vertex;
+        }
 
         foreach ($edges as $edge) {
             $new_edge = clone $edge;

@@ -2,6 +2,7 @@
 
 namespace PHGraph;
 
+use Exception;
 use PHGraph\Contracts\Attributable;
 use PHGraph\Support\EdgeCollection;
 use PHGraph\Support\VertexCollection;
@@ -63,6 +64,8 @@ class Vertex implements Attributable
 
     /**
      * Get associated graph.
+     *
+     * @throws Exception if this vertex has been destroyed
      *
      * @return \PHGraph\Graph
      */
@@ -305,6 +308,29 @@ class Vertex implements Attributable
     }
 
     /**
+     * destroy all references to edges and graphs for this vertex.
+     *
+     * @return void
+     */
+    public function destroy(): void
+    {
+        foreach ($this->edges_in as $edge) {
+            $edge->destroy();
+        }
+        foreach ($this->edges_out as $edge) {
+            $edge->destroy();
+        }
+
+        if (isset($this->graph)) {
+            $graph = $this->graph;
+
+            unset($this->graph);
+
+            $graph->removeVertex($this);
+        }
+    }
+
+    /**
      * Handle PHP native clone call. We disassociate all edges in this case.
      *
      * @return void
@@ -313,5 +339,13 @@ class Vertex implements Attributable
     {
         $this->edges_in = new EdgeCollection;
         $this->edges_out = new EdgeCollection;
+    }
+
+    /**
+     * Handle unset properties
+     */
+    public function __get(string $property)
+    {
+        throw new Exception('Undefined Property');
     }
 }

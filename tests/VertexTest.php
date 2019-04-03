@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Exception;
 use PHGraph\Edge;
 use PHGraph\Graph;
 use PHGraph\Vertex;
@@ -652,6 +653,44 @@ class VertexTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Vertex::destroy
+     *
+     * @return void
+     */
+    public function testDestroyRemovesEdges(): void
+    {
+        $graph = new Graph;
+
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+
+        $vertex_a->destroy();
+
+        $this->assertEmpty($vertex_a->getEdges());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::destroy
+     *
+     * @return void
+     */
+    public function testDestroyRemovesGraph(): void
+    {
+        $this->expectException(Exception::class);
+
+        $graph = new Graph;
+
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+
+        $vertex_b->destroy();
+
+        $vertex_b->getGraph();
+    }
+
+    /**
      * @covers PHGraph\Vertex::__clone
      *
      * @return void
@@ -667,5 +706,23 @@ class VertexTest extends TestCase
         $new_vertex = clone $vertex_a;
 
         $this->assertEmpty($new_vertex->getEdges());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::__get
+     *
+     * @return void
+     */
+    public function testGetWithInvalidThrowsException(): void
+    {
+        $this->expectException(Exception::class);
+
+        $graph = new Graph;
+
+        $vertex_a = new Vertex($graph);
+
+        $vertex_a->destroy();
+
+        $vertex_a->getGraph();
     }
 }

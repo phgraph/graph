@@ -5,6 +5,7 @@ namespace PHGraph;
 use Exception;
 use PHGraph\Contracts\Attributable;
 use PHGraph\Support\VertexCollection;
+use PHGraph\Support\VertexReplacementMap;
 use PHGraph\Traits\Attributes;
 
 /**
@@ -67,6 +68,8 @@ class Edge implements Attributable
     /**
      * Get edge from vertex.
      *
+     * @throws Exception if this was destroyed
+     *
      * @return \PHGraph\Vertex
      */
     public function getFrom(): Vertex
@@ -76,6 +79,8 @@ class Edge implements Attributable
 
     /**
      * Get edge to vertex.
+     *
+     * @throws Exception if this was destroyed
      *
      * @return \PHGraph\Vertex
      */
@@ -88,6 +93,8 @@ class Edge implements Attributable
      * Get the other vertex on this edge.
      *
      * @param \PHGraph\Vertex $vertex given vertex
+     *
+     * @throws Exception if this was destroyed
      *
      * @return \PHGraph\Vertex
      */
@@ -119,19 +126,17 @@ class Edge implements Attributable
     /**
      * Given a vertex replacement map replace the vertices pointed to by this edge.
      *
-     * @todo make vertex_map a proper well-defined support object
-     *
-     * @param array $vertex_map map of ids to vertices
+     * @param \PHGraph\Support\VertexReplacementMap $vertex_map map of ids to vertices
      *
      * @return void
      */
-    public function replaceVerticesFromMap(array $vertex_map): void
+    public function replaceVerticesFromMap(VertexReplacementMap $vertex_map): void
     {
         $this->to->removeEdge($this);
         $this->from->removeEdge($this);
 
-        $this->to = $vertex_map[$this->to->getId()] ?? $this->to;
-        $this->from = $vertex_map[$this->from->getId()] ?? $this->from;
+        $this->to = $vertex_map[$this->to] ?? $this->to;
+        $this->from = $vertex_map[$this->from] ?? $this->from;
 
         $this->to->addEdgeOut($this);
         $this->from->addEdgeIn($this);
@@ -155,5 +160,27 @@ class Edge implements Attributable
     public function isLoop(): bool
     {
         return $this->from === $this->to;
+    }
+
+    /**
+     * destroy this edge.
+     *
+     * @return void
+     */
+    public function destroy(): void
+    {
+        $this->to->removeEdge($this);
+        unset($this->to);
+
+        $this->from->removeEdge($this);
+        unset($this->from);
+    }
+
+    /**
+     * Handle unset properties
+     */
+    public function __get(string $property)
+    {
+        throw new Exception('Undefined Property');
     }
 }

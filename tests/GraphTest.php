@@ -85,6 +85,18 @@ class GraphTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Graph::getVertices
+     *
+     * @return void
+     */
+    public function testGetVerticesIsVertexCollection(): void
+    {
+        $graph = new Graph;
+
+        $this->assertInstanceOf(VertexCollection::class, $graph->getVertices());
+    }
+
+    /**
      * @covers PHGraph\Graph::addVertex
      *
      * @return void
@@ -125,15 +137,17 @@ class GraphTest extends TestCase
     }
 
     /**
-     * @covers PHGraph\Graph::getVertices
+     * @covers PHGraph\Graph::removeVertex
      *
      * @return void
      */
-    public function testGetVerticesIsVertexCollection(): void
+    public function testRemoveVertex(): void
     {
         $graph = new Graph;
+        $vertex = $graph->newVertex();
+        $graph->removeVertex($vertex);
 
-        $this->assertInstanceOf(VertexCollection::class, $graph->getVertices());
+        $this->assertFalse($graph->getVertices()->contains($vertex));
     }
 
     /**

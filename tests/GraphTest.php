@@ -509,6 +509,74 @@ class GraphTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Graph::isComplete
+     *
+     * @return void
+     */
+    public function testIsCompleteEmptyTrue(): void
+    {
+        $graph = new Graph;
+
+        $this->assertTrue($graph->isComplete());
+    }
+
+    /**
+     * @covers PHGraph\Graph::isComplete
+     *
+     * @return void
+     */
+    public function testIsCompleteOneVertexTrue(): void
+    {
+        $graph = new Graph;
+        $graph->newVertex();
+
+        $this->assertTrue($graph->isComplete());
+    }
+
+    /**
+     * @covers PHGraph\Graph::isComplete
+     *
+     * @return void
+     */
+    public function testIsCompleteMultipleVertexTrue(): void
+    {
+        $graph = new Graph;
+        $v1 = $graph->newVertex();
+        $v2 = $graph->newVertex();
+        $v3 = $graph->newVertex();
+        $v4 = $graph->newVertex();
+        $v1->createEdge($v2);
+        $v1->createEdge($v3);
+        $v1->createEdge($v4);
+        $v2->createEdge($v3);
+        $v2->createEdge($v4);
+        $v3->createEdge($v4);
+
+        $this->assertTrue($graph->isComplete());
+    }
+
+    /**
+     * @covers PHGraph\Graph::isComplete
+     *
+     * @return void
+     */
+    public function testIsCompleteMultipleVertexFalse(): void
+    {
+        $graph = new Graph;
+        $v1 = $graph->newVertex();
+        $v2 = $graph->newVertex();
+        $v3 = $graph->newVertex();
+        $v4 = $graph->newVertex();
+        $v1->createEdge($v2);
+        $v1->createEdge($v3);
+        $v1->createEdge($v4);
+        $v2->createEdge($v3);
+        $v2->createEdge($v4);
+
+        $this->assertFalse($graph->isComplete());
+    }
+
+    /**
      * @covers PHGraph\Graph::isRegular
      *
      * @return void

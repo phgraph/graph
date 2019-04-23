@@ -221,7 +221,31 @@ class EdgeTest extends TestCase
 
         $edge->replaceVerticesFromMap($replacement_map);
 
-        $this->assertEquals([$vertex_c, $vertex_d], $edge->getVertices()->all());
+        $this->assertEqualsCanonicalizing([$vertex_c, $vertex_d], $edge->getVertices()->all());
+    }
+
+    /**
+     * @covers PHGraph\Edge::replaceVerticesFromMap
+     *
+     * @return void
+     */
+    public function testReplaceVerticesFromMapUndirected(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = $vertex_a->createEdge($vertex_b);
+
+        $vertex_c = new Vertex($this->graph);
+        $vertex_d = new Vertex($this->graph);
+
+        $replacement_map = new VertexReplacementMap;
+
+        $replacement_map[$vertex_a] = $vertex_c;
+        $replacement_map[$vertex_b] = $vertex_d;
+
+        $edge->replaceVerticesFromMap($replacement_map);
+
+        $this->assertEqualsCanonicalizing([$vertex_c, $vertex_d], $edge->getVertices()->all());
     }
 
     /**

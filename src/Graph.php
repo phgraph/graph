@@ -301,6 +301,25 @@ class Graph implements Attributable, Directable
     }
 
     /**
+     * Complete: checks whether this graph is complete.
+     *
+     * @return bool
+     */
+    public function isComplete(): bool
+    {
+        foreach ($this->vertices as $vertex_a) {
+            $connected_vertices = $vertex_a->getVertices();
+            foreach ($this->vertices as $vertex_b) {
+                if ($vertex_a !== $vertex_b && !$connected_vertices->contains($vertex_b)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Degree: checks whether this graph is regular, i.e. each vertex has the
      * same indegree/outdegree.
      *

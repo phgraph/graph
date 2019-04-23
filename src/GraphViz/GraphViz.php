@@ -169,10 +169,6 @@ class GraphViz
             }
         } else {
             foreach ($this->graph->getVertices() as $vid => $vertex) {
-                if (count($vertex->getEdges()) !== 0) {
-                    continue;
-                }
-
                 $layout = $this->getLayoutVertex($vertex);
 
                 if ($layout || $vertex->isIsolated()) {
@@ -257,7 +253,7 @@ class GraphViz
             return $id;
         }
 
-        return '"' . str_replace(['&', '<', '>', '"', "'", '\\', "\n"], ['&amp;', '&lt;', '&gt;', '&quot;', '&apos;', '\\\\', '\\l'], $id) . '"';
+        return '"' . str_replace(['&', '<', '>', '"', '\\', "\n"], ['&amp;', '&lt;', '&gt;', '&quot;', '\\\\', '\\l'], $id) . '"';
     }
 
     /**

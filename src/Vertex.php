@@ -105,6 +105,31 @@ class Vertex implements Attributable
     }
 
     /**
+     * Get the vertices that this vertex has connections with.
+     *
+     * @return \PHGraph\Support\VertexCollection
+     */
+    public function getVertices(): VertexCollection
+    {
+        $vertices = new VertexCollection;
+        $has_loop = false;
+
+        foreach ($this->getEdges() as $edge) {
+            if ($edge->isLoop()) {
+                $has_loop = true;
+            }
+
+            $vertices = $vertices->merge($edge->getVertices());
+        }
+
+        if (!$has_loop) {
+            $vertices->remove($this);
+        }
+
+        return $vertices;
+    }
+
+    /**
      * Get the vertices that this vertex is connected from.
      *
      * @return \PHGraph\Support\VertexCollection

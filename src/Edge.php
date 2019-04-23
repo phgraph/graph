@@ -138,8 +138,13 @@ class Edge implements Attributable
         $this->to = $vertex_map[$this->to] ?? $this->to;
         $this->from = $vertex_map[$this->from] ?? $this->from;
 
-        $this->to->addEdgeOut($this);
-        $this->from->addEdgeIn($this);
+        $this->to->addEdgeIn($this);
+        $this->from->addEdgeOut($this);
+
+        if (!$this->isDirected()) {
+            $this->to->addEdgeOut($this);
+            $this->from->addEdgeIn($this);
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Tests;
 use Exception;
 use PHGraph\Edge;
 use PHGraph\Graph;
+use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
 
@@ -174,6 +175,49 @@ class VertexTest extends TestCase
         $edge_d = $vertex_d->createEdgeTo($vertex_a);
 
         $this->assertEquals([$edge_a, $edge_b, $edge_c], $vertex_a->getEdgesOut()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::getVertices
+     *
+     * @return void
+     */
+    public function testGetVertices(): void
+    {
+        $graph = new Graph;
+        $v1 = $graph->newVertex();
+        $v2 = $graph->newVertex();
+        $v3 = $graph->newVertex();
+        $v4 = $graph->newVertex();
+
+        $v1->createEdge($v2);
+        $v1->createEdge($v3);
+        $v4->createEdgeTo($v1);
+
+        $this->assertEqualsCanonicalizing([$v2, $v3, $v4], $v1->getVertices()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::getVertices
+     *
+     * @return void
+     */
+    public function testGetVerticesWithLoop(): void
+    {
+        $graph = new Graph;
+        $v1 = $graph->newVertex();
+        $v2 = $graph->newVertex();
+        $v3 = $graph->newVertex();
+        $v4 = $graph->newVertex();
+
+        $v1->createEdge($v2);
+        $v1->createEdge($v3);
+        $v1->createEdge($v4);
+        $v1->createEdge($v1);
+
+        $vertices = new VertexCollection([$v2, $v1, $v3, $v4]);
+
+        $this->assertEquals($vertices->all(), $v1->getVertices()->all());
     }
 
     /**

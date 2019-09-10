@@ -23,7 +23,8 @@ class Vertex implements Attributable
     protected $edges_out;
 
     /**
-     * @param \PHGraph\Graph $graph source graph
+     * @param \PHGraph\Graph $graph      source graph
+     * @param array          $attributes attributes to add to this
      *
      * @return void
      */
@@ -182,29 +183,31 @@ class Vertex implements Attributable
     /**
      * Create an undirected edge from this vertex the given vertex.
      *
-     * @param \PHGraph\Vertex $vertex vertex to connect to
+     * @param \PHGraph\Vertex $vertex     vertex to connect to
+     * @param array           $attributes attributes to add the edge
      *
      * @throws \Exception if vertices are on different graphs
      *
      * @return \PHGraph\Edge
      */
-    public function createEdge(Vertex $vertex): Edge
+    public function createEdge(Vertex $vertex, array $attributes = []): Edge
     {
-        return new Edge($this, $vertex, Edge::UNDIRECTED);
+        return new Edge($this, $vertex, Edge::UNDIRECTED, $attributes);
     }
 
     /**
      * Create a directed edge from this vertex to another vertex.
      *
      * @param \PHGraph\Vertex $vertex vertex to connect to
+     * @param array           $attributes attributes to add the edge
      *
      * @throws \Exception if vertices are on different graphs
      *
      * @return \PHGraph\Edge
      */
-    public function createEdgeTo(Vertex $vertex): Edge
+    public function createEdgeTo(Vertex $vertex, array $attributes = []): Edge
     {
-        return new Edge($this, $vertex, Edge::DIRECTED);
+        return new Edge($this, $vertex, Edge::DIRECTED, $attributes);
     }
 
     /**
@@ -353,6 +356,16 @@ class Vertex implements Attributable
 
             $graph->removeVertex($this);
         }
+    }
+
+    /**
+     * Handle PHP native string repesentation.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getId();
     }
 
     /**

@@ -735,6 +735,18 @@ class VertexTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Vertex::__toString
+     *
+     * @return void
+     */
+    public function testToStringReturnsString(): void
+    {
+        $vertex_a = new Vertex(new Graph);
+
+        $this->assertIsString((string) $vertex_a);
+    }
+
+    /**
      * @covers PHGraph\Vertex::__clone
      *
      * @return void

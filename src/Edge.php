@@ -28,15 +28,16 @@ class Edge implements Attributable
     protected $direction;
 
     /**
-     * @param \PHGraph\Vertex $from      source vertex
-     * @param \PHGraph\Vertex $to        target vertex
-     * @param int             $direction directed
+     * @param \PHGraph\Vertex $from       source vertex
+     * @param \PHGraph\Vertex $to         target vertex
+     * @param int             $direction  directed
+     * @param array           $attributes attributes to add to this
      *
      * @throws Exception if vertices are on different graphs
      *
      * @return void
      */
-    public function __construct(Vertex $from, Vertex $to, int $direction = self::DIRECTED)
+    public function __construct(Vertex $from, Vertex $to, int $direction = self::DIRECTED, array $attributes = [])
     {
         if ($from->getGraph() !== $to->getGraph()) {
             throw new Exception('trying to create an edge cross graph');
@@ -53,6 +54,8 @@ class Edge implements Attributable
             $this->to->addEdgeOut($this);
             $this->from->addEdgeIn($this);
         }
+
+        $this->setAttributes($attributes);
     }
 
     /**

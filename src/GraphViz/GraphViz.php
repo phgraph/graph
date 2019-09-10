@@ -201,8 +201,8 @@ class GraphViz
             if ($flow !== null) {
                 // null capacity = infinite capacity
                 $label = $flow . '/' . ($capacity === null ? '∞' : $capacity);
-            // capacity set, but not flow (assume zero flow)
             } elseif ($capacity !== null) {
+                // capacity set, but not flow (assume zero flow)
                 $label = '0/' . $capacity;
             }
 

@@ -90,6 +90,18 @@ class CollectionTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Support\Collection::diff
+     *
+     * @return void
+     */
+    public function testDiff(): void
+    {
+        $c = new Collection(['id' => 1, 'first_word' => 'Hello']);
+
+        $this->assertEquals(['id' => 1], $c->diff(new Collection(['first_word' => 'Hello', 'last_word' => 'World']))->items());
+    }
+
+    /**
      * @covers PHGraph\Support\Collection::filter
      *
      * @return void

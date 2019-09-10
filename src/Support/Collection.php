@@ -73,6 +73,18 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * Get the items in the collection that are not present in the given items.
+     *
+     * @param  iterable  $items
+     *
+     * @return static
+     */
+    public function diff(iterable $items)
+    {
+        return new static(array_diff($this->items, $items instanceof self ? $items->items : (array) $items));
+    }
+
+    /**
      * Run a filter over each of the items.
      *
      * @param  callable|null  $callback

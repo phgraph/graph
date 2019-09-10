@@ -122,6 +122,10 @@ class Dijkstra implements ShortestPath
             $pre = null;
 
             foreach ($edges as $edge) {
+                if ($path->contains($edge)) {
+                    continue;
+                }
+
                 if (!$edge->isDirected() && $edge->getFrom() === $current_vertex) {
                     $path->add($edge);
                     $pre = $edge->getTo();
@@ -223,8 +227,10 @@ class Dijkstra implements ShortestPath
                     $target_vertex_cost = $weight;
                 }
 
-                if ((!isset($lowest_cost_vertex_to[$target_vertex->getId()]))
-                    || $cost_to[$target_vertex->getId()] > $target_vertex_cost) {
+                if (
+                    !isset($lowest_cost_vertex_to[$target_vertex->getId()])
+                    || $cost_to[$target_vertex->getId()] > $target_vertex_cost
+                ) {
                     $vertex_queue->insert($target_vertex, -$target_vertex_cost);
 
                     $cost_to[$target_vertex->getId()] = $target_vertex_cost;

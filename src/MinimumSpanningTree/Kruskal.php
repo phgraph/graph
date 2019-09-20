@@ -46,7 +46,7 @@ class Kruskal implements MinimumSpanningTree
      */
     public function createGraph(): Graph
     {
-        return $this->graph->newFromEdges($this->getEdges());;
+        return $this->graph->newFromEdges($this->getEdges());
     }
 
     /**

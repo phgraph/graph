@@ -93,6 +93,8 @@ here is a list of the currently supported ones:
 - [Minimum Spanning Tree](https://en.wikipedia.org/wiki/Minimum_spanning_tree)
   - [Kruskal’s algorithm](https://en.wikipedia.org/wiki/Kruskal%27s_algorithm)
   - [Prim’s algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm)
+- [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
+  - [Nearest Neighbor](https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm)
 
 # Development
 

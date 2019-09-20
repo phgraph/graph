@@ -1,21 +1,22 @@
 <?php
 
-namespace PHGraph\MinimumSpanningTree;
+namespace PHGraph\TravelingSalesman;
 
-use PHGraph\Contracts\MinimumSpanningTree;
+use PHGraph\Contracts\TravelingSalesman;
 use PHGraph\Graph;
 use PHGraph\Support\EdgeCollection;
 use PHGraph\Support\VertexCollection;
+use PHGraph\Vertex;
 use RuntimeException;
 use SplPriorityQueue;
 use UnexpectedValueException;
 
 /**
- * Prim’s minimum spanning tree algorithm.
+ * Nearest neighbor traveling salesman problem algorithm.
  *
- * @see https://en.wikipedia.org/wiki/Prim%27s_algorithm
+ * @see https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
  */
-class Prim implements MinimumSpanningTree
+class NearestNeighbor implements TravelingSalesman
 {
     /** @var \PHGraph\Graph */
     protected $graph;
@@ -23,7 +24,8 @@ class Prim implements MinimumSpanningTree
     protected $start_vertex;
 
     /**
-     * instantiate new algorithm.
+     * instantiate new algorithm. A starting vertex is chosen at random per the
+     * algorithm, but this may be overriden.
      *
      * @param \PHGraph\Graph $graph Graph to operate on
      *
@@ -33,16 +35,24 @@ class Prim implements MinimumSpanningTree
      */
     public function __construct(Graph $graph)
     {
-        if ($graph->hasDirected()) {
-            throw new UnexpectedValueException('Cannot create MST for directed graph');
-        }
-
         $this->graph = $graph;
         $this->start_vertex = $graph->getVertices()->random();
     }
 
     /**
-     * create new resulting graph with only edges in the minimum spanning tree.
+     * Set a particular starting vertex for the algorithm.
+     *
+     * @param \PHGraph\Vertex $vertex starting vertex
+     *
+     * @return void
+     */
+    public function setStartVertex(Vertex $vertex): void
+    {
+        $this->start_vertex = $vertex;
+    }
+
+    /**
+     * create new resulting graph with only edges in the path.
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
@@ -54,7 +64,7 @@ class Prim implements MinimumSpanningTree
     }
 
     /**
-     * Get all the edges in the minimum spanning tree.
+     * Get all the edges in the path.
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
@@ -62,7 +72,10 @@ class Prim implements MinimumSpanningTree
      */
     public function getEdges(): EdgeCollection
     {
-        $edge_queue = new SplPriorityQueue();
+        if ($this->start_vertex === null) {
+            throw new UnexpectedValueException('Graph is empty');
+        }
+
         $edges = new EdgeCollection();
 
         $vertex_current = $this->start_vertex;
@@ -72,6 +85,8 @@ class Prim implements MinimumSpanningTree
 
         for ($i = 0; $i < $itterations; $i++) {
             $marked->add($vertex_current);
+
+            $edge_queue = new SplPriorityQueue();
 
             /** @var \PHGraph\Edge $edge */
             foreach ($vertex_current->getEdgesOut() as $edge) {
@@ -87,7 +102,7 @@ class Prim implements MinimumSpanningTree
                 } catch (RuntimeException $e) {
                     throw new UnexpectedValueException('Graph has more than one component', 0, $e);
                 }
-            } while (!($marked->contains($cheapest_edge->getFrom()) xor $marked->contains($cheapest_edge->getTo())));
+            } while ($marked->contains($cheapest_edge->getFrom()) && $marked->contains($cheapest_edge->getTo()));
 
             $edges[] = $cheapest_edge;
 
@@ -98,7 +113,25 @@ class Prim implements MinimumSpanningTree
             }
         }
 
-        if ($edges->count() !== $itterations) {
+        // try to connect back to start vertex
+        if ($vertex_current->getVertices()->contains($this->start_vertex)) {
+            $edge_queue = new SplPriorityQueue();
+            /** @var \PHGraph\Edge $edge */
+            foreach ($vertex_current->getEdgesOut() as $edge) {
+                if (!$edge->isLoop() && !$edges->contains($edge)) {
+                    $edge_queue->insert($edge, -$edge->getAttribute('weight', 0));
+                }
+            }
+
+            do {
+                /** @var \PHGraph\Edge $cheapest_edge */
+                $cheapest_edge = $edge_queue->extract();
+            } while (!$cheapest_edge->getVertices()->contains($this->start_vertex));
+
+            $edges[] = $cheapest_edge;
+        }
+
+        if ($edges->count() !== (count($this->graph->getVertices()))) {
             throw new UnexpectedValueException('Graph is not connected');
         }
 

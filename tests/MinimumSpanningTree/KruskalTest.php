@@ -2,12 +2,8 @@
 
 namespace Tests\MinimumSpanningTree;
 
-use OutOfBoundsException;
 use PHGraph\Graph;
 use PHGraph\MinimumSpanningTree\Kruskal;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Vertex;
-use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 

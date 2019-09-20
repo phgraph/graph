@@ -3,6 +3,7 @@
 [![StyleCI](https://github.styleci.io/repos/176066306/shield?branch=master)](https://github.styleci.io/repos/176066306)
 
 # phgraph/graph
+
 PHGraph is a modern mathematical graph/network library written in PHP.
 
 ## Installation
@@ -40,13 +41,15 @@ $search = new BreadthFirst($cincinnati);
 if ($search->hasVertex($cleveland)) {
     echo "We can get from Cincinnati to Cleveland\n";
 } else {
-    echo "We can't get from Cincinnati to Cleveland\n";
+    echo "We can’t get from Cincinnati to Cleveland\n";
 }
 ```
 
 ### Graph drawing
 
-This library has support for visualizing graphs as images using [GraphViz](http://www.graphviz.org/) "Graph Visualization Software". You will need GraphViz installed on your system for this to work.
+This library has support for visualizing graphs as images using
+[GraphViz](http://www.graphviz.org/) "Graph Visualization Software". You will
+need GraphViz installed on your system for this to work.
 
 ```php
 use PHGraph\Graph;
@@ -77,26 +80,33 @@ output:
 
 ### Algorithms
 
-A graph library is rather boring without the ability to use algorithms on it, here is a list of the currently supported ones:
+A graph library is rather boring without the ability to use algorithms on it,
+here is a list of the currently supported ones:
 
-* [Search](https://en.wikipedia.org/wiki/Graph_traversal)
-    * [Depth first](https://en.wikipedia.org/wiki/Depth-first_search)
-    * [Breadth first](https://en.wikipedia.org/wiki/Breadth-first_search)
-* [Shortest path](https://en.wikipedia.org/wiki/Shortest_path_problem)
-    * [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
-    * [Moore-Bellman-Ford](https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm)
-    * [Least Hops](https://en.wikipedia.org/wiki/Best-first_search)
+- [Search](https://en.wikipedia.org/wiki/Graph_traversal)
+  - [Depth first](https://en.wikipedia.org/wiki/Depth-first_search)
+  - [Breadth first](https://en.wikipedia.org/wiki/Breadth-first_search)
+- [Shortest path](https://en.wikipedia.org/wiki/Shortest_path_problem)
+  - [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+  - [Moore-Bellman-Ford](https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm)
+  - [Least Hops](https://en.wikipedia.org/wiki/Best-first_search)
+- [Minimum Spanning Tree](https://en.wikipedia.org/wiki/Minimum_spanning_tree)
+  - [Kruskal’s algorithm](https://en.wikipedia.org/wiki/Kruskal%27s_algorithm)
+  - [Prim’s algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm)
 
 # Development
 
 ## Installing dependencies
-You will need [Composer](https://getcomposer.org/) for the development dependencies. Once you have that, run the following
+
+You will need [Composer](https://getcomposer.org/) for the development
+dependencies. Once you have that, run the following
 
 ```bash
 $ composer install
 ```
 
 ## Running tests
+
 You can run the current test suite with the following command
 
 ```bash
@@ -110,7 +120,9 @@ $ composer analyse
 ```
 
 ## Bug Reports
-Bug reports for the current release version can be opened in this repository's [issue tracker](https://github.com/phgraph/graph/issues).
+
+Bug reports for the current release version can be opened in this repository’s
+[issue tracker](https://github.com/phgraph/graph/issues).
 
 ## Thanks
 

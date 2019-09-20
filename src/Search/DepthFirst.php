@@ -7,7 +7,9 @@ use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 
 /**
- * Depth First searcher.
+ * Depth First search algorithm.
+ *
+ * @see https://en.wikipedia.org/wiki/Depth-first_search
  */
 class DepthFirst implements Search
 {

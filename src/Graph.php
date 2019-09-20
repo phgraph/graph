@@ -46,7 +46,7 @@ class Graph implements Attributable, Directable
             $i = $vertex->degree();
 
             if ($i !== $degree) {
-                throw new UnexpectedValueException('Graph is not k-regular (vertex degrees differ)');
+                throw new UnexpectedValueException('Graph is not k-regular');
             }
         }
 
@@ -60,7 +60,7 @@ class Graph implements Attributable, Directable
      */
     public function getDegreeMin(): int
     {
-        return $this->vertices->sortBy(function ($vertex) {
+        return $this->vertices->sortBy(function (Vertex $vertex) {
             return $vertex->degree();
         })->first()->degree();
     }
@@ -72,7 +72,7 @@ class Graph implements Attributable, Directable
      */
     public function getDegreeMax(): int
     {
-        return $this->vertices->sortByDesc(function ($vertex) {
+        return $this->vertices->sortByDesc(function (Vertex $vertex) {
             return $vertex->degree();
         })->first()->degree();
     }
@@ -142,6 +142,7 @@ class Graph implements Attributable, Directable
     {
         $edges = new EdgeCollection;
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
             $edges = $edges->merge($vertex->getEdges());
         }
@@ -162,6 +163,7 @@ class Graph implements Attributable, Directable
 
         $vertex_replacement_map = new VertexReplacementMap;
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($edges->getVertices() as $vertex) {
             $new_vertex = clone $vertex;
             $new_vertex->setGraph($new_graph);
@@ -169,6 +171,7 @@ class Graph implements Attributable, Directable
             $vertex_replacement_map[$vertex] = $new_vertex;
         }
 
+        /** @var \PHGraph\Edge $edge */
         foreach ($edges as $edge) {
             $new_edge = clone $edge;
 
@@ -189,7 +192,8 @@ class Graph implements Attributable, Directable
     }
 
     /**
-     * Grouped: checks whether the input graph's vertex groups are a valid bipartition.
+     * Grouped: checks whether the input graph’s vertex groups are a valid
+     * bipartition.
      *
      * @return bool
      */
@@ -199,9 +203,11 @@ class Graph implements Attributable, Directable
             return false;
         }
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
             $group = $vertex->getAttribute('group');
 
+            /** @var \PHGraph\Vertex $vertex_neighbor */
             foreach ($vertex->getVerticesTo() as $vertex_neighbor) {
                 if ($vertex_neighbor->getAttribute('group') === $group) {
                     return false;
@@ -310,7 +316,10 @@ class Graph implements Attributable, Directable
         foreach ($this->vertices as $vertex_a) {
             $connected_vertices = $vertex_a->getVertices();
             foreach ($this->vertices as $vertex_b) {
-                if ($vertex_a !== $vertex_b && !$connected_vertices->contains($vertex_b)) {
+                if (
+                    $vertex_a !== $vertex_b
+                    && !$connected_vertices->contains($vertex_b)
+                ) {
                     return false;
                 }
             }

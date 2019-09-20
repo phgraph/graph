@@ -11,6 +11,8 @@ use UnexpectedValueException;
 
 /**
  * Create GraphViz related things.
+ *
+ * @see http://www.graphviz.org/
  */
 class GraphViz
 {

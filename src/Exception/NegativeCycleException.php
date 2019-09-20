@@ -5,6 +5,12 @@ namespace PHGraph\Exception;
 use Exception;
 use PHGraph\Walk;
 
+/**
+ * If a graph contains a "negative cycle" (i.e. a cycle whose edges sum to a
+ * negative value) that is reachable from the source, then there is no cheapest
+ * path: any path that has a point on the negative cycle can be made cheaper by
+ * one more walk around the negative cycle.
+ */
 class NegativeCycleException extends Exception
 {
     /** @var \PHGraph\Walk */

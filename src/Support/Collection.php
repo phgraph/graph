@@ -150,6 +150,20 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * Get one item randomly from the collection.
+     *
+     * @return mixed
+     */
+    public function random()
+    {
+        if ($this->count() === 0) {
+            return null;
+        }
+
+        return $this->all()[random_int(0, $this->count() - 1)];
+    }
+
+    /**
      * Remove item from collection.
      *
      * @param mixed $value value to remove

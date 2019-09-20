@@ -2,6 +2,9 @@
 
 namespace PHGraph\Traits;
 
+/**
+ * Give a class attributes.
+ */
 trait Attributes
 {
     /** @var array */

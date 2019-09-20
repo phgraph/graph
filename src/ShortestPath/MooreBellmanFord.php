@@ -16,6 +16,8 @@ use UnderflowException;
  * For a given source node in the graph, the algorithm finds the shortest path
  * between that node and every other. This should be considered immutable on the
  * graph as we will be caching edges when getEdges is called.
+ *
+ * @see https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm
  */
 class MooreBellmanFord implements ShortestPath
 {
@@ -41,7 +43,7 @@ class MooreBellmanFord implements ShortestPath
      *
      * @param \PHGraph\Vertex $vertex
      *
-     * @throws OutOfBoundsException if there's no path to the given end vertex
+     * @throws OutOfBoundsException if there’s no path to the given end vertex
      *
      * @return \PHGraph\Walk
      */
@@ -51,7 +53,7 @@ class MooreBellmanFord implements ShortestPath
     }
 
     /**
-     * checks whether there's a path from this start vertex to given end vertex.
+     * checks whether there’s a path from this start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -83,7 +85,7 @@ class MooreBellmanFord implements ShortestPath
      *
      * @param \PHGraph\Vertex $vertex
      *
-     * @throws OutOfBoundsException if there's no path to given end vertex
+     * @throws OutOfBoundsException if there’s no path to given end vertex
      *
      * @return float
      */
@@ -273,7 +275,7 @@ class MooreBellmanFord implements ShortestPath
     /**
      * get negative cycle.
      *
-     * @throws UnderflowException if there's no negative cycle
+     * @throws UnderflowException if there’s no negative cycle
      *
      * @return \PHGraph\Walk
      */

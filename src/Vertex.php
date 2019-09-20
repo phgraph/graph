@@ -267,7 +267,7 @@ class Vertex implements Attributable
      * get degree of this vertex (total number of edges).
      *
      * vertex degree counts the total number of edges attached to this vertex
-     * regardless of whether they're directed or not. loop edges are counted
+     * regardless of whether they’re directed or not. loop edges are counted
      * twice as both start and end form a 'line' to the same vertex.
      *
      * @return int

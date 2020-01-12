@@ -29,7 +29,7 @@ class DepthFirst implements Search
     }
 
     /**
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {

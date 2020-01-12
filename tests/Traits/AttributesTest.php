@@ -138,7 +138,7 @@ class AttributesClass
     use Attributes;
 
     /**
-     * @param array $attributes
+     * @param mixed[] $attributes
      *
      * @return void
      */

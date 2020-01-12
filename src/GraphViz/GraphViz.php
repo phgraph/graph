@@ -157,7 +157,7 @@ class GraphViz
             // put each group of vertices in a separate subgraph cluster
             foreach ($this->graph->getGroups() as $group) {
                 $script .= sprintf('  subgraph cluster_%s {%s', $gid++, PHP_EOL);
-                $script .= sprintf('    label = %s%s', $this->escape($group), PHP_EOL);
+                $script .= sprintf('    label = %s%s', $this->escape((string) $group), PHP_EOL);
                 foreach ($this->graph->getVerticesGroup($group) as $vid => $vertex) {
                     $layout = $this->getLayoutVertex($vertex);
 

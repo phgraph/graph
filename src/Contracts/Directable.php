@@ -30,7 +30,7 @@ interface Directable
     /**
      * get the edges in the graph.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection;
 }

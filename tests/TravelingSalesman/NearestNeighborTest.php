@@ -139,10 +139,7 @@ class NearestNeighborTest extends TestCase
         $e[4] = $v[0]->createEdge($v[4], ['weight' => 3]);
 
         $nearest_neighbor = new NearestNeighbor($graph);
-        //print_r(array_map(function ($e) {
-        //    return sprintf('%s <-> %s', $e->getFrom()->getAttribute('name'), $e->getTo()->getAttribute('name'));
-        //}, $nearest_neighbor->getEdges()->all()));
-        //        die();
+
         $this->assertEquals(5, $nearest_neighbor->getEdges()->count());
     }
 

@@ -109,7 +109,7 @@ class Dijkstra implements ShortestPath
      *
      * @throws OutOfBoundsException
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdgesTo(Vertex $vertex): EdgeCollection
     {
@@ -180,7 +180,7 @@ class Dijkstra implements ShortestPath
      *
      * @throws UnexpectedValueException
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {

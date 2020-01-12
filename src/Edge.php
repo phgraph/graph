@@ -31,7 +31,7 @@ class Edge implements Attributable
      * @param \PHGraph\Vertex $from       source vertex
      * @param \PHGraph\Vertex $to         target vertex
      * @param int             $direction  directed
-     * @param array           $attributes attributes to add to this
+     * @param mixed[]         $attributes attributes to add to this
      *
      * @throws Exception if vertices are on different graphs
      *
@@ -109,7 +109,7 @@ class Edge implements Attributable
     /**
      * Get target vertices of this edge.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getTargets(): VertexCollection
     {
@@ -119,7 +119,7 @@ class Edge implements Attributable
     /**
      * Get the vertices on this edge.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {
@@ -186,6 +186,12 @@ class Edge implements Attributable
 
     /**
      * Handle unset properties.
+     *
+     * @throws \Exception always
+     *
+     * @param string  $property  dynamic property to get
+     *
+     * @return void
      */
     public function __get(string $property)
     {

@@ -29,8 +29,6 @@ class NearestNeighbor implements TravelingSalesman
      *
      * @param \PHGraph\Graph $graph Graph to operate on
      *
-     * @throws UnexpectedValueException if graph has directed edges
-     *
      * @return void
      */
     public function __construct(Graph $graph)
@@ -68,7 +66,7 @@ class NearestNeighbor implements TravelingSalesman
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {

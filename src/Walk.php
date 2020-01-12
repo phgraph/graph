@@ -14,18 +14,18 @@ class Walk
 {
     /** @var \PHGraph\Vertex */
     protected $start_vertex;
-    /** @var \PHGraph\Support\VertexCollection */
+    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
     protected $vertices;
-    /** @var \PHGraph\Support\EdgeCollection */
+    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
     protected $edges;
     /** @var \PHGraph\Graph */
     protected $graph;
-    /** @var array */
+    /** @var mixed[] */
     protected $alternating_sequence = [];
 
     /**
-     * @param \PHGraph\Vertex                 $start_vertex vertex that the walk starts from
-     * @param \PHGraph\Support\EdgeCollection $edges        collection of edges for the walk
+     * @param \PHGraph\Vertex                                $start_vertex vertex that the walk starts from
+     * @param \PHGraph\Support\EdgeCollection<\PHGraph\Edge> $edges        collection of edges for the walk
      *
      * @return void
      */
@@ -77,7 +77,7 @@ class Walk
     /**
      * return all edges of walk.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {
@@ -87,7 +87,7 @@ class Walk
     /**
      * return all vertices of walk.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {
@@ -97,7 +97,7 @@ class Walk
     /**
      * get alternating sequence: V1, E1, V2, ... Vx.
      *
-     * @return array
+     * @return mixed[]
      */
     public function getAlternatingSequence(): array
     {

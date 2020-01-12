@@ -101,7 +101,7 @@ class MooreBellmanFord implements ShortestPath
      *
      * @throws OutOfBoundsException
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdgesTo(Vertex $vertex): EdgeCollection
     {
@@ -167,7 +167,7 @@ class MooreBellmanFord implements ShortestPath
      *
      * @throws \PHGraph\Exception\NegativeCycleException
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {

@@ -21,7 +21,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return void
      */
-    public function __construct(iterable $items = [])
+    final public function __construct(iterable $items = [])
     {
         foreach ($items as $key => $item) {
             $this[$key] = $item;

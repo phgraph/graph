@@ -17,7 +17,7 @@ interface TravelingSalesman
     /**
      * Get all the edges in the path.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection;
 }

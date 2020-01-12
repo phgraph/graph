@@ -14,11 +14,11 @@ use UnexpectedValueException;
 /**
  * Representation of a Mathematical Graph.
  */
-class Graph implements Attributable, Directable
+final class Graph implements Attributable, Directable
 {
     use Attributes;
 
-    /** @var \PHGraph\Support\VertexCollection */
+    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
     protected $vertices;
 
     /**
@@ -80,7 +80,7 @@ class Graph implements Attributable, Directable
     /**
      * get the vertices in the graph.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {
@@ -106,7 +106,7 @@ class Graph implements Attributable, Directable
     /**
      * create a new Vertex in this Graph.
      *
-     * @param array $attributes attributes for the vertex
+     * @param mixed[] $attributes attributes for the vertex
      *
      * @return \PHGraph\Vertex
      */
@@ -136,7 +136,7 @@ class Graph implements Attributable, Directable
     /**
      * get the edges in the graph.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {
@@ -153,7 +153,7 @@ class Graph implements Attributable, Directable
     /**
      * Create a copy of this graph with only the supplied edges.
      *
-     * @param \PHGraph\Support\EdgeCollection $edges edges to use
+     * @param \PHGraph\Support\EdgeCollection<\PHGraph\Edge> $edges edges to use
      *
      * @return \PHGraph\Graph
      */
@@ -221,14 +221,15 @@ class Graph implements Attributable, Directable
     /**
      * Grouped: get vector of all group numbers.
      *
-     * @return array
+     * @return array<int>
      */
     public function getGroups(): array
     {
         $groups = [];
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
-            $groups[$vertex->getAttribute('group')] = true;
+            $groups[(int) $vertex->getAttribute('group')] = true;
         }
 
         return array_keys($groups);
@@ -239,7 +240,7 @@ class Graph implements Attributable, Directable
      *
      * @param int $group
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVerticesGroup(int $group): VertexCollection
     {

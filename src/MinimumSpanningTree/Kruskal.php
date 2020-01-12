@@ -54,7 +54,7 @@ class Kruskal implements MinimumSpanningTree
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {

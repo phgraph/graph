@@ -124,7 +124,7 @@ class BreadthFirst implements ShortestPath
      *
      * @throws OutOfBoundsException
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdgesTo(Vertex $vertex): EdgeCollection
     {
@@ -156,7 +156,7 @@ class BreadthFirst implements ShortestPath
     /**
      * Get all the edges that were mapped out.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {

@@ -382,9 +382,9 @@ class Vertex implements Attributable
     /**
      * Handle unset properties.
      *
-     * @throws \Exception always
-     *
      * @param string  $property  dynamic property to get
+     *
+     * @throws \Exception always
      *
      * @return void
      */

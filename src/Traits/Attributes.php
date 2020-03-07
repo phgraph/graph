@@ -2,9 +2,12 @@
 
 namespace PHGraph\Traits;
 
+/**
+ * Give a class attributes.
+ */
 trait Attributes
 {
-    /** @var array */
+    /** @var mixed[] */
     protected $attributes = [];
 
     /**
@@ -25,7 +28,7 @@ trait Attributes
      *
      * @param string $prefix
      *
-     * @return array
+     * @return mixed[]
      */
     public function getAttributesWithPrefix(string $prefix): array
     {
@@ -59,7 +62,7 @@ trait Attributes
     /**
      * set a array of attributes.
      *
-     * @param array $attributes
+     * @param mixed[] $attributes
      *
      * @return void
      */

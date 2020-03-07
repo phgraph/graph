@@ -14,14 +14,14 @@ interface ShortestPath
      *
      * @param \PHGraph\Vertex $vertex
      *
-     * @throws OutOfBoundsException if there's no path to the given end vertex
+     * @throws OutOfBoundsException if there’s no path to the given end vertex
      *
      * @return \PHGraph\Walk
      */
     public function getWalkTo(Vertex $vertex): Walk;
 
     /**
-     * checks whether there's a path from this start vertex to given end vertex.
+     * checks whether there’s a path from this start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *

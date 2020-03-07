@@ -21,7 +21,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return void
      */
-    public function __construct(iterable $items = [])
+    final public function __construct(iterable $items = [])
     {
         foreach ($items as $key => $item) {
             $this[$key] = $item;
@@ -147,6 +147,20 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     public function merge(iterable $items): self
     {
         return new static(array_merge($this->items, $items instanceof self ? $items->items : $items));
+    }
+
+    /**
+     * Get one item randomly from the collection.
+     *
+     * @return mixed
+     */
+    public function random()
+    {
+        if ($this->count() === 0) {
+            return null;
+        }
+
+        return $this->all()[random_int(0, $this->count() - 1)];
     }
 
     /**

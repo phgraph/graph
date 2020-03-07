@@ -14,11 +14,11 @@ use UnexpectedValueException;
 /**
  * Representation of a Mathematical Graph.
  */
-class Graph implements Attributable, Directable
+final class Graph implements Attributable, Directable
 {
     use Attributes;
 
-    /** @var \PHGraph\Support\VertexCollection */
+    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
     protected $vertices;
 
     /**
@@ -46,7 +46,7 @@ class Graph implements Attributable, Directable
             $i = $vertex->degree();
 
             if ($i !== $degree) {
-                throw new UnexpectedValueException('Graph is not k-regular (vertex degrees differ)');
+                throw new UnexpectedValueException('Graph is not k-regular');
             }
         }
 
@@ -60,7 +60,7 @@ class Graph implements Attributable, Directable
      */
     public function getDegreeMin(): int
     {
-        return $this->vertices->sortBy(function ($vertex) {
+        return $this->vertices->sortBy(function (Vertex $vertex) {
             return $vertex->degree();
         })->first()->degree();
     }
@@ -72,7 +72,7 @@ class Graph implements Attributable, Directable
      */
     public function getDegreeMax(): int
     {
-        return $this->vertices->sortByDesc(function ($vertex) {
+        return $this->vertices->sortByDesc(function (Vertex $vertex) {
             return $vertex->degree();
         })->first()->degree();
     }
@@ -80,7 +80,7 @@ class Graph implements Attributable, Directable
     /**
      * get the vertices in the graph.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {
@@ -106,7 +106,7 @@ class Graph implements Attributable, Directable
     /**
      * create a new Vertex in this Graph.
      *
-     * @param array $attributes attributes for the vertex
+     * @param mixed[] $attributes attributes for the vertex
      *
      * @return \PHGraph\Vertex
      */
@@ -136,12 +136,13 @@ class Graph implements Attributable, Directable
     /**
      * get the edges in the graph.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {
         $edges = new EdgeCollection;
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
             $edges = $edges->merge($vertex->getEdges());
         }
@@ -152,7 +153,7 @@ class Graph implements Attributable, Directable
     /**
      * Create a copy of this graph with only the supplied edges.
      *
-     * @param \PHGraph\Support\EdgeCollection $edges edges to use
+     * @param \PHGraph\Support\EdgeCollection<\PHGraph\Edge> $edges edges to use
      *
      * @return \PHGraph\Graph
      */
@@ -162,6 +163,7 @@ class Graph implements Attributable, Directable
 
         $vertex_replacement_map = new VertexReplacementMap;
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($edges->getVertices() as $vertex) {
             $new_vertex = clone $vertex;
             $new_vertex->setGraph($new_graph);
@@ -169,6 +171,7 @@ class Graph implements Attributable, Directable
             $vertex_replacement_map[$vertex] = $new_vertex;
         }
 
+        /** @var \PHGraph\Edge $edge */
         foreach ($edges as $edge) {
             $new_edge = clone $edge;
 
@@ -189,7 +192,8 @@ class Graph implements Attributable, Directable
     }
 
     /**
-     * Grouped: checks whether the input graph's vertex groups are a valid bipartition.
+     * Grouped: checks whether the input graph’s vertex groups are a valid
+     * bipartition.
      *
      * @return bool
      */
@@ -199,9 +203,11 @@ class Graph implements Attributable, Directable
             return false;
         }
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
             $group = $vertex->getAttribute('group');
 
+            /** @var \PHGraph\Vertex $vertex_neighbor */
             foreach ($vertex->getVerticesTo() as $vertex_neighbor) {
                 if ($vertex_neighbor->getAttribute('group') === $group) {
                     return false;
@@ -215,14 +221,15 @@ class Graph implements Attributable, Directable
     /**
      * Grouped: get vector of all group numbers.
      *
-     * @return array
+     * @return array<int>
      */
     public function getGroups(): array
     {
         $groups = [];
 
+        /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
-            $groups[$vertex->getAttribute('group')] = true;
+            $groups[(int) $vertex->getAttribute('group')] = true;
         }
 
         return array_keys($groups);
@@ -233,7 +240,7 @@ class Graph implements Attributable, Directable
      *
      * @param int $group
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVerticesGroup(int $group): VertexCollection
     {
@@ -310,7 +317,10 @@ class Graph implements Attributable, Directable
         foreach ($this->vertices as $vertex_a) {
             $connected_vertices = $vertex_a->getVertices();
             foreach ($this->vertices as $vertex_b) {
-                if ($vertex_a !== $vertex_b && !$connected_vertices->contains($vertex_b)) {
+                if (
+                    $vertex_a !== $vertex_b
+                    && !$connected_vertices->contains($vertex_b)
+                ) {
                     return false;
                 }
             }

@@ -40,7 +40,6 @@ class GraphVizTest extends TestCase
      */
     public function testDisplayOpenMacos(): void
     {
-        /** @var \Mockery\Mock */
         $executableFinderMock = Mockery::mock('overload:' . ExecutableFinder::class);
         $executableFinderMock->shouldReceive('find')->andReturnUsing(function ($arg) {
             return [
@@ -50,7 +49,6 @@ class GraphVizTest extends TestCase
             ][$arg];
         });
 
-        /** @var \Mockery\Mock */
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) {
             if ($command[0] === 'dot') {
@@ -75,7 +73,6 @@ class GraphVizTest extends TestCase
      */
     public function testDisplayOpenLinux(): void
     {
-        /** @var \Mockery\Mock */
         $executableFinderMock = Mockery::mock('overload:' . ExecutableFinder::class);
         $executableFinderMock->shouldReceive('find')->andReturnUsing(function ($arg) {
             return [
@@ -85,7 +82,6 @@ class GraphVizTest extends TestCase
             ][$arg];
         });
 
-        /** @var \Mockery\Mock */
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) {
             if ($command[0] === 'dot') {
@@ -110,7 +106,6 @@ class GraphVizTest extends TestCase
      */
     public function testDisplayOpenWindows(): void
     {
-        /** @var \Mockery\Mock */
         $executableFinderMock = Mockery::mock('overload:' . ExecutableFinder::class);
         $executableFinderMock->shouldReceive('find')->andReturnUsing(function ($arg) {
             return [
@@ -120,7 +115,6 @@ class GraphVizTest extends TestCase
             ][$arg];
         });
 
-        /** @var \Mockery\Mock */
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) {
             if ($command[0] === 'dot') {
@@ -145,7 +139,6 @@ class GraphVizTest extends TestCase
      */
     public function testCreateImageDataEmptyGraph(): void
     {
-        /** @var \Mockery\Mock */
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) {
             file_put_contents($command[5], 'test');
@@ -169,7 +162,6 @@ class GraphVizTest extends TestCase
     {
         $return_file = null;
 
-        /** @var \Mockery\Mock */
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) use (&$return_file) {
             $return_file = $command[5];
@@ -194,7 +186,6 @@ class GraphVizTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
 
-        /** @var \Mockery\Mock */
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->andReturnSelf();
         $processMock->shouldReceive('run');
@@ -261,8 +252,10 @@ class GraphVizTest extends TestCase
         $graph->setAttribute('graphviz.node.color', 'blue');
         $graph->setAttribute('graphviz.edge.color', 'grey');
 
-        $this->assertEquals("graph {\n  graph [bgcolor=\"transparent\"]\n  node [color=\"blue\"]\n  edge [color=\"grey\"]\n}\n",
-            $graphviz->createScript());
+        $this->assertEquals(
+            "graph {\n  graph [bgcolor=\"transparent\"]\n  node [color=\"blue\"]\n  edge [color=\"grey\"]\n}\n",
+            $graphviz->createScript()
+        );
     }
 
     /**

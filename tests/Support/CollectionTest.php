@@ -235,6 +235,32 @@ class CollectionTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Support\Collection::random
+     *
+     * @return void
+     */
+    public function testRandom()
+    {
+        $data = new Collection([1, 2, 3, 4, 5, 6]);
+        $random = $data->random();
+
+        $this->assertContains($random, $data->all());
+    }
+
+    /**
+     * @covers PHGraph\Support\Collection::random
+     *
+     * @return void
+     */
+    public function testRandomEmptyCollectionReturnsNull()
+    {
+        $data = new Collection();
+        $random = $data->random();
+
+        $this->assertNull($random);
+    }
+
+    /**
      * @covers PHGraph\Support\Collection::remove
      *
      * @return void

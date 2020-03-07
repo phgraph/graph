@@ -17,14 +17,14 @@ class Vertex implements Attributable
 
     /** @var \PHGraph\Graph */
     protected $graph;
-    /** @var \PHGraph\Support\EdgeCollection */
+    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
     protected $edges_in;
-    /** @var \PHGraph\Support\EdgeCollection */
+    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
     protected $edges_out;
 
     /**
      * @param \PHGraph\Graph $graph      source graph
-     * @param array          $attributes attributes to add to this
+     * @param mixed[]        $attributes attributes to add to this
      *
      * @return void
      */
@@ -78,7 +78,7 @@ class Vertex implements Attributable
     /**
      * Get all edges connected to this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {
@@ -88,7 +88,7 @@ class Vertex implements Attributable
     /**
      * Get the edges leading in to this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdgesIn(): EdgeCollection
     {
@@ -98,7 +98,7 @@ class Vertex implements Attributable
     /**
      * Get the edges leading out from this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdgesOut(): EdgeCollection
     {
@@ -108,7 +108,7 @@ class Vertex implements Attributable
     /**
      * Get the vertices that this vertex has connections with.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {
@@ -133,7 +133,7 @@ class Vertex implements Attributable
     /**
      * Get the vertices that this vertex is connected from.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVerticesFrom(): VertexCollection
     {
@@ -158,7 +158,7 @@ class Vertex implements Attributable
     /**
      * Get the vertices that this vertex is connected to.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVerticesTo(): VertexCollection
     {
@@ -184,7 +184,7 @@ class Vertex implements Attributable
      * Create an undirected edge from this vertex the given vertex.
      *
      * @param \PHGraph\Vertex $vertex     vertex to connect to
-     * @param array           $attributes attributes to add the edge
+     * @param mixed[]         $attributes attributes to add the edge
      *
      * @throws \Exception if vertices are on different graphs
      *
@@ -199,7 +199,7 @@ class Vertex implements Attributable
      * Create a directed edge from this vertex to another vertex.
      *
      * @param \PHGraph\Vertex $vertex vertex to connect to
-     * @param array           $attributes attributes to add the edge
+     * @param mixed[]         $attributes attributes to add the edge
      *
      * @throws \Exception if vertices are on different graphs
      *
@@ -267,7 +267,7 @@ class Vertex implements Attributable
      * get degree of this vertex (total number of edges).
      *
      * vertex degree counts the total number of edges attached to this vertex
-     * regardless of whether they're directed or not. loop edges are counted
+     * regardless of whether they’re directed or not. loop edges are counted
      * twice as both start and end form a 'line' to the same vertex.
      *
      * @return int
@@ -381,6 +381,12 @@ class Vertex implements Attributable
 
     /**
      * Handle unset properties.
+     *
+     * @param string  $property  dynamic property to get
+     *
+     * @throws \Exception always
+     *
+     * @return void
      */
     public function __get(string $property)
     {

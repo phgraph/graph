@@ -40,7 +40,7 @@ class EdgeCollection extends Collection
     /**
      * Get all vertices related to edges in collection.
      *
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {

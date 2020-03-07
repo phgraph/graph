@@ -7,7 +7,9 @@ use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 
 /**
- * Breadth First searcher.
+ * Breadth First search algorithm.
+ *
+ * @see https://en.wikipedia.org/wiki/Breadth-first_search
  */
 class BreadthFirst implements Search
 {
@@ -27,7 +29,7 @@ class BreadthFirst implements Search
     }
 
     /**
-     * @return \PHGraph\Support\VertexCollection
+     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
      */
     public function getVertices(): VertexCollection
     {
@@ -36,10 +38,12 @@ class BreadthFirst implements Search
         $visited = new VertexCollection;
 
         do {
+            /** @var \PHGraph\Vertex $current_vertex */
             $current_vertex = array_shift($queue);
             $visited->add($current_vertex);
             $children = $current_vertex->getVerticesTo();
 
+            /** @var \PHGraph\Vertex $vertex */
             foreach ($children as $vertex) {
                 if (!$marked->contains($vertex)) {
                     $queue[] = $vertex;

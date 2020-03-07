@@ -9,6 +9,11 @@ use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 
+/**
+ * Breadth first (least hops) shortest path algorithm.
+ *
+ * @see https://en.wikipedia.org/wiki/Best-first_search
+ */
 class BreadthFirst implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
@@ -31,7 +36,7 @@ class BreadthFirst implements ShortestPath
      *
      * @param \PHGraph\Vertex $vertex
      *
-     * @throws OutOfBoundsException if there's no path to the given end vertex
+     * @throws OutOfBoundsException if there’s no path to the given end vertex
      *
      * @return \PHGraph\Walk
      */
@@ -41,7 +46,7 @@ class BreadthFirst implements ShortestPath
     }
 
     /**
-     * checks whether there's a path from this start vertex to given end vertex.
+     * checks whether there’s a path from this start vertex to given end vertex.
      *
      * @param \PHGraph\Vertex $vertex
      *
@@ -73,7 +78,7 @@ class BreadthFirst implements ShortestPath
      *
      * @param \PHGraph\Vertex $vertex
      *
-     * @throws OutOfBoundsException if there's no path to given end vertex
+     * @throws OutOfBoundsException if there’s no path to given end vertex
      *
      * @return float
      */
@@ -119,7 +124,7 @@ class BreadthFirst implements ShortestPath
      *
      * @throws OutOfBoundsException
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdgesTo(Vertex $vertex): EdgeCollection
     {
@@ -151,12 +156,13 @@ class BreadthFirst implements ShortestPath
     /**
      * Get all the edges that were mapped out.
      *
-     * @return \PHGraph\Support\EdgeCollection
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
      */
     public function getEdges(): EdgeCollection
     {
         $all_edges = new EdgeCollection;
 
+        /** @var \PHGraph\Support\EdgeCollection $edges */
         foreach ($this->getEdgesMap() as $edges) {
             $all_edges = $all_edges->merge($edges);
         }

@@ -434,7 +434,7 @@ class DijkstraTest extends TestCase
     /**
      * Get a predefined larger graph to test with.
      *
-     * @return array
+     * @return mixed[]
      */
     public function getLargeTestGraph(): array
     {

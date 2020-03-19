@@ -2,3 +2,4 @@
 /report/
 .vscode/
 .phpunit.result.cache
+build/logs/clover.xml

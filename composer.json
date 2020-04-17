@@ -43,7 +43,7 @@
             "./vendor/bin/phpstan analyse --ansi"
         ],
         "coverage": [
-            "./vendor/bin/phpunit --colors=always --coverage-clover=./report/coverage.clover --coverage-html=./report"
+            "phpdbg -qrr ./vendor/bin/phpunit --colors=always --coverage-clover=./report/coverage.clover --coverage-html=./report"
         ],
         "test": [
             "./vendor/bin/phpunit --colors=always"

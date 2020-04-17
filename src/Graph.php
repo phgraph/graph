@@ -160,6 +160,7 @@ final class Graph implements Attributable, Directable
     public function newFromEdges(EdgeCollection $edges): Graph
     {
         $new_graph = new static;
+        $new_graph->attributes = $this->attributes;
 
         $vertex_replacement_map = new VertexReplacementMap;
 

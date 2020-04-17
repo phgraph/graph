@@ -211,7 +211,7 @@ class GraphTest extends TestCase
         $graph = new Graph;
         $graph->setAttribute('testing', 'test');
 
-        $this->assertNotSame('test', $graph->newFromEdges(new EdgeCollection)->getAttribute('testing'));
+        $this->assertSame('test', $graph->newFromEdges(new EdgeCollection)->getAttribute('testing'));
     }
 
     /**

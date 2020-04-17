@@ -149,15 +149,35 @@ class GraphViz
             $script .= sprintf('  %s %s%s', $part, $this->escapeAttributes($attributes), PHP_EOL);
         }
 
+        $ungrouped = $this->graph->getVertices()->filter(function ($vertex) {
+            return $vertex->getAttribute('group') === null;
+        });
+        foreach ($ungrouped as $vid => $vertex) {
+            $layout = $this->getLayoutVertex($vertex);
+
+            if ($layout || $vertex->isIsolated()) {
+                $script .= sprintf('  %s', $this->escape($layout['name'] ?? $vertex->getAttribute('name', $vid)));
+                unset($layout['name']);
+                if (count($layout)) {
+                    $script .= sprintf(' %s', $this->escapeAttributes($layout));
+                }
+                $script .= PHP_EOL;
+            }
+        }
+
         // only append group number to vertex label if there are at least 2 different groups
         $showGroups = ($this->graph->getNumberOfGroups() > 1);
 
         if ($showGroups) {
             $gid = 0;
             // put each group of vertices in a separate subgraph cluster
+            $groupAttributes = $this->graph->getAttributesWithPrefix('graphviz.group.');
             foreach ($this->graph->getGroups() as $group) {
                 $script .= sprintf('  subgraph cluster_%s {%s', $gid++, PHP_EOL);
-                $script .= sprintf('    label = %s%s', $this->escape((string) $group), PHP_EOL);
+                $script .= vsprintf('    label = %s%s', [
+                    $this->escape((string) ($groupAttributes["$group.label"] ?? $group)),
+                    PHP_EOL,
+                ]);
                 foreach ($this->graph->getVerticesGroup($group) as $vid => $vertex) {
                     $layout = $this->getLayoutVertex($vertex);
 
@@ -168,19 +188,6 @@ class GraphViz
                     $script .= PHP_EOL;
                 }
                 $script .= sprintf('  }%s', PHP_EOL);
-            }
-        } else {
-            foreach ($this->graph->getVertices() as $vid => $vertex) {
-                $layout = $this->getLayoutVertex($vertex);
-
-                if ($layout || $vertex->isIsolated()) {
-                    $script .= sprintf('  %s', $this->escape($layout['name'] ?? $vertex->getAttribute('name', $vid)));
-                    unset($layout['name']);
-                    if (count($layout)) {
-                        $script .= sprintf(' %s', $this->escapeAttributes($layout));
-                    }
-                    $script .= PHP_EOL;
-                }
             }
         }
 

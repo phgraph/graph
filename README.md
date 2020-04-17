@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/phgraph/graph.svg?branch=master)](https://travis-ci.org/phgraph/graph)
 [![Coverage Status](https://coveralls.io/repos/github/phgraph/graph/badge.svg?branch=master)](https://coveralls.io/github/phgraph/graph?branch=master)
 [![StyleCI](https://github.styleci.io/repos/176066306/shield?branch=master)](https://github.styleci.io/repos/176066306)
+[![Maintainability](https://api.codeclimate.com/v1/badges/2f1941293e8f431a3c9d/maintainability)](https://codeclimate.com/github/phgraph/graph/maintainability)
 
 # phgraph/graph
 

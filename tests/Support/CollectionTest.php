@@ -202,6 +202,20 @@ class CollectionTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Support\Collection::map
+     *
+     * @return void
+     */
+    public function testMap()
+    {
+        $data = new Collection(['first' => 'bore', 'last' => 'jim']);
+        $data = $data->map(function ($item, $key) {
+            return $key . '-' . strrev($item);
+        });
+        $this->assertEquals(['first' => 'first-erob', 'last' => 'last-mij'], $data->items());
+    }
+
+    /**
      * @covers PHGraph\Support\Collection::merge
      *
      * @return void

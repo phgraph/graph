@@ -372,12 +372,14 @@ class Vertex implements Attributable
     }
 
     /**
-     * Handle PHP native clone call. We disassociate all edges in this case.
+     * Handle PHP native clone call. We disassociate all edges and reset id in
+     * this case.
      *
      * @return void
      */
     public function __clone()
     {
+        $this->id = spl_object_hash($this);
         $this->edges_in = new EdgeCollection;
         $this->edges_out = new EdgeCollection;
     }

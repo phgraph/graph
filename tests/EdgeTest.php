@@ -183,7 +183,7 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
 
-        $this->assertEquals([$vertex_a, $vertex_b], $edge->getTargets()->all());
+        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b], $edge->getTargets()->all());
     }
 
     /**

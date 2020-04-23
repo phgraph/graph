@@ -188,6 +188,16 @@ class Edge implements Attributable
     }
 
     /**
+     * Handle PHP native clone call. We reset id.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->id = spl_object_hash($this);
+    }
+
+    /**
      * Handle unset properties.
      *
      * @param string  $property  dynamic property to get

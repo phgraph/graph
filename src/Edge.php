@@ -20,6 +20,8 @@ class Edge implements Attributable
     /** @var int */
     const UNDIRECTED = 1;
 
+    /** @var string */
+    protected $id;
     /** @var \PHGraph\Vertex */
     protected $from;
     /** @var \PHGraph\Vertex */
@@ -43,6 +45,7 @@ class Edge implements Attributable
             throw new Exception('trying to create an edge cross graph');
         }
 
+        $this->id = spl_object_hash($this);
         $this->from = $from;
         $this->to = $to;
         $this->direction = $direction;
@@ -65,7 +68,7 @@ class Edge implements Attributable
      */
     public function getId(): string
     {
-        return spl_object_hash($this);
+        return $this->id;
     }
 
     /**

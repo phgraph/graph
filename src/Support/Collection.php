@@ -138,11 +138,12 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Run a map over each of the items.
+     * Run a map over each of the items. This will return a generic collection,
+     * as typed collections make little sense as a map.
      *
      * @param callable $callback
      *
-     * @return static
+     * @return self
      */
     public function map(callable $callback)
     {
@@ -150,7 +151,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
 
         $items = array_map($callback, $this->items, $keys);
 
-        return new static(array_combine($keys, $items));
+        return new self(array_combine($keys, $items));
     }
 
     /**

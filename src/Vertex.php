@@ -15,6 +15,8 @@ class Vertex implements Attributable
 {
     use Attributes;
 
+    /** @var string */
+    protected $id;
     /** @var \PHGraph\Graph */
     protected $graph;
     /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
@@ -30,6 +32,7 @@ class Vertex implements Attributable
      */
     public function __construct(Graph $graph, array $attributes = [])
     {
+        $this->id = spl_object_hash($this);
         $this->setGraph($graph);
         $this->edges_in = new EdgeCollection;
         $this->edges_out = new EdgeCollection;
@@ -43,7 +46,7 @@ class Vertex implements Attributable
      */
     public function getId(): string
     {
-        return spl_object_hash($this);
+        return $this->id;
     }
 
     /**

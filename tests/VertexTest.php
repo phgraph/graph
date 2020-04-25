@@ -303,6 +303,28 @@ class VertexTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Vertex::getVerticesTo
+     *
+     * @return void
+     */
+    public function testGetVerticesToAfterRemoval(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $vertex_a->createEdge($vertex_b);
+        $to_delete = $vertex_a->createEdge($vertex_c);
+        $vertex_d->createEdgeTo($vertex_a);
+
+        $to_delete->destroy();
+
+        $this->assertEquals([$vertex_b], $vertex_a->getVerticesTo()->all());
+    }
+
+    /**
      * @covers PHGraph\Vertex::createEdge
      *
      * @return void
@@ -497,7 +519,7 @@ class VertexTest extends TestCase
         $edge_a = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
         $edge_b = new Edge($vertex_a, $vertex_c, Edge::UNDIRECTED);
 
-        $vertex_b->removeEdge($edge_b);
+        $vertex_b->removeEdge($edge_b, $vertex_a);
 
         $this->assertEquals([$edge_a], $vertex_b->getEdges()->all());
     }
@@ -757,11 +779,26 @@ class VertexTest extends TestCase
         $vertex_a = new Vertex($graph);
         $vertex_b = new Vertex($graph);
 
-        $edge = $vertex_a->createEdgeTo($vertex_b);
+        $vertex_a->createEdgeTo($vertex_b);
 
         $new_vertex = clone $vertex_a;
 
         $this->assertEmpty($new_vertex->getEdges());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::__clone
+     *
+     * @return void
+     */
+    public function testCloneHasNewId(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+
+        $new_vertex = clone $vertex_a;
+
+        $this->assertNotEquals($new_vertex->getId(), $vertex_a->getId());
     }
 
     /**

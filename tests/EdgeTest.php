@@ -377,6 +377,71 @@ class EdgeTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Edge::enable
+     *
+     * @return void
+     */
+    public function testEnableRestoresVertexReference(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->disable();
+        $edge->enable();
+
+        $this->assertEquals([$edge], $vertex_b->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\Edge::enable
+     *
+     * @return void
+     */
+    public function testEnableRestoresVertexReferenceUndirected(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
+        $edge->disable();
+        $edge->enable();
+
+        $this->assertEquals([$edge], $vertex_b->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\Edge::disable
+     *
+     * @return void
+     */
+    public function testDisableVertexNoReference(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->disable();
+
+        $this->assertEmpty($vertex_b->getEdges());
+    }
+
+    /**
+     * @covers PHGraph\Edge::__clone
+     *
+     * @return void
+     */
+    public function testCloneHasNewId(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+
+        $edge = $vertex_a->createEdgeTo($vertex_b);
+
+        $new_edge = clone $edge;
+
+        $this->assertNotEquals($new_edge->getId(), $edge->getId());
+    }
+
+    /**
      * @covers PHGraph\Edge::__get
      *
      * @return void

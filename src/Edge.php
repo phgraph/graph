@@ -138,8 +138,8 @@ class Edge implements Attributable
      */
     public function replaceVerticesFromMap(VertexReplacementMap $vertex_map): void
     {
-        $this->to->removeEdge($this);
-        $this->from->removeEdge($this);
+        $this->to->removeEdge($this, $this->from);
+        $this->from->removeEdge($this, $this->to);
 
         $this->to = $vertex_map[$this->to] ?? $this->to;
         $this->from = $vertex_map[$this->from] ?? $this->from;
@@ -180,11 +180,37 @@ class Edge implements Attributable
      */
     public function destroy(): void
     {
-        $this->to->removeEdge($this);
+        $this->to->removeEdge($this, $this->from);
+        $this->from->removeEdge($this, $this->to);
         unset($this->to);
-
-        $this->from->removeEdge($this);
         unset($this->from);
+    }
+
+    /**
+     * Enable this edge. Only useful if the edge was previously disabled.
+     *
+     * @return void
+     */
+    public function enable(): void
+    {
+        $this->to->addEdgeIn($this);
+        $this->from->addEdgeOut($this);
+
+        if (!$this->isDirected()) {
+            $this->to->addEdgeOut($this);
+            $this->from->addEdgeIn($this);
+        }
+    }
+
+    /**
+     * Disable this edge. It should not be traversed, but may be renabled later.
+     *
+     * @return void
+     */
+    public function disable(): void
+    {
+        $this->to->removeEdge($this, $this->from);
+        $this->from->removeEdge($this, $this->to);
     }
 
     /**
@@ -208,6 +234,6 @@ class Edge implements Attributable
      */
     public function __get(string $property)
     {
-        throw new Exception('Undefined Property');
+        throw new Exception('Undefined Property: ' . $property);
     }
 }

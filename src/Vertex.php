@@ -23,6 +23,8 @@ class Vertex implements Attributable
     protected $edges_in;
     /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
     protected $edges_out;
+    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
+    protected $adjacent;
 
     /**
      * @param \PHGraph\Graph $graph      source graph
@@ -36,6 +38,7 @@ class Vertex implements Attributable
         $this->setGraph($graph);
         $this->edges_in = new EdgeCollection;
         $this->edges_out = new EdgeCollection;
+        $this->adjacent = new VertexCollection;
         $this->setAttributes($attributes);
     }
 
@@ -165,22 +168,7 @@ class Vertex implements Attributable
      */
     public function getVerticesTo(): VertexCollection
     {
-        $vertices = new VertexCollection;
-        $has_loop = false;
-
-        foreach ($this->edges_out as $edge) {
-            if ($edge->isLoop()) {
-                $has_loop = true;
-            }
-
-            $vertices = $vertices->merge($edge->getVertices());
-        }
-
-        if (!$has_loop) {
-            $vertices->remove($this);
-        }
-
-        return $vertices;
+        return $this->adjacent;
     }
 
     /**
@@ -250,6 +238,7 @@ class Vertex implements Attributable
             return;
         }
 
+        $this->adjacent[] = $edge->getAdjacentVertex($this);
         $this->edges_out[] = $edge;
     }
 
@@ -257,13 +246,15 @@ class Vertex implements Attributable
      * remove references to given edge.
      *
      * @param \PHGraph\Edge $edge edge to remove
+     * @param \PHGraph\Vertex $adjacent vertex to remove from adjacency list
      *
      * @return void
      */
-    public function removeEdge(Edge $edge): void
+    public function removeEdge(Edge $edge, Vertex $adjacent): void
     {
         $this->edges_in->remove($edge);
         $this->edges_out->remove($edge);
+        $this->adjacent->remove($adjacent);
     }
 
     /**
@@ -395,6 +386,6 @@ class Vertex implements Attributable
      */
     public function __get(string $property)
     {
-        throw new Exception('Undefined Property');
+        throw new Exception('Undefined Property: ' . $property);
     }
 }

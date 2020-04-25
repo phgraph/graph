@@ -377,6 +377,51 @@ class EdgeTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Edge::enabled
+     *
+     * @return void
+     */
+    public function testDefaultEnabledTrue(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+
+        $this->assertTrue($edge->enabled());
+    }
+
+    /**
+     * @covers PHGraph\Edge::enabled
+     *
+     * @return void
+     */
+    public function testDisableSetsEnabledFalse(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->disable();
+
+        $this->assertFalse($edge->enabled());
+    }
+
+    /**
+     * @covers PHGraph\Edge::enabled
+     *
+     * @return void
+     */
+    public function testEnableSetsEnabled(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = new Edge($vertex_a, $vertex_b);
+        $edge->disable();
+        $edge->enable();
+
+        $this->assertTrue($edge->enabled());
+    }
+
+    /**
      * @covers PHGraph\Edge::enable
      *
      * @return void

@@ -28,6 +28,8 @@ class Edge implements Attributable
     protected $to;
     /** @var int */
     protected $direction;
+    /** @var bool */
+    protected $enabled = true;
 
     /**
      * @param \PHGraph\Vertex $from       source vertex
@@ -187,12 +189,24 @@ class Edge implements Attributable
     }
 
     /**
+     * Get enabled status.
+     *
+     * @return bool
+     */
+    public function enabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
      * Enable this edge. Only useful if the edge was previously disabled.
      *
      * @return void
      */
     public function enable(): void
     {
+        $this->enabled = true;
+
         $this->to->addEdgeIn($this);
         $this->from->addEdgeOut($this);
 
@@ -209,6 +223,8 @@ class Edge implements Attributable
      */
     public function disable(): void
     {
+        $this->enabled = false;
+
         $this->to->removeEdge($this, $this->from);
         $this->from->removeEdge($this, $this->to);
     }

@@ -140,8 +140,8 @@ class Edge implements Attributable
      */
     public function replaceVerticesFromMap(VertexReplacementMap $vertex_map): void
     {
-        $this->to->removeEdge($this, $this->from);
-        $this->from->removeEdge($this, $this->to);
+        $this->to->removeEdge($this);
+        $this->from->removeEdge($this);
 
         $this->to = $vertex_map[$this->to] ?? $this->to;
         $this->from = $vertex_map[$this->from] ?? $this->from;
@@ -182,8 +182,8 @@ class Edge implements Attributable
      */
     public function destroy(): void
     {
-        $this->to->removeEdge($this, $this->from);
-        $this->from->removeEdge($this, $this->to);
+        $this->to->removeEdge($this);
+        $this->from->removeEdge($this);
         unset($this->to);
         unset($this->from);
     }
@@ -207,13 +207,8 @@ class Edge implements Attributable
     {
         $this->enabled = true;
 
-        $this->to->addEdgeIn($this);
-        $this->from->addEdgeOut($this);
-
-        if (!$this->isDirected()) {
-            $this->to->addEdgeOut($this);
-            $this->from->addEdgeIn($this);
-        }
+        $this->to->enableEdge($this);
+        $this->from->enableEdge($this);
     }
 
     /**
@@ -225,8 +220,8 @@ class Edge implements Attributable
     {
         $this->enabled = false;
 
-        $this->to->removeEdge($this, $this->from);
-        $this->from->removeEdge($this, $this->to);
+        $this->to->disableEdge($this);
+        $this->from->disableEdge($this);
     }
 
     /**

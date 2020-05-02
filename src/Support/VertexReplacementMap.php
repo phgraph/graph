@@ -9,10 +9,12 @@ use PHGraph\Vertex;
 
 /**
  * Allow for mapping replacements of Vertices.
+ *
+ * @implements ArrayAccess<\PHGraph\Vertex,\PHGraph\Vertex>
  */
 class VertexReplacementMap implements ArrayAccess, Countable
 {
-    /** @var array */
+    /** @var array<string,\PHGraph\Vertex> */
     protected $replacements = [];
 
     /**

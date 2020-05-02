@@ -24,7 +24,7 @@ class BreadthFirstTest extends TestCase
      *
      * @return void
      */
-    public function testArrayAccessOffsetSetIgnoresOffset(): void
+    public function testSearch(): void
     {
         $vertex = [];
         $graph = new Graph;

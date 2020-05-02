@@ -178,6 +178,48 @@ class VertexTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Vertex::getDisabledEdgesOut
+     *
+     * @return void
+     */
+    public function testGetDisabledEdgesOut(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_b);
+        $edge_b = $vertex_a->createEdge($vertex_c);
+        $edge_c = $vertex_d->createEdgeTo($vertex_a);
+
+        $edge_a->disable();
+
+        $this->assertEquals([$edge_a], $vertex_a->getDisabledEdgesOut()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::getDisabledEdgesOut
+     *
+     * @return void
+     */
+    public function testGetDisabledEdgesOutDefaultEmpty(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_b);
+        $edge_b = $vertex_a->createEdge($vertex_c);
+        $edge_c = $vertex_d->createEdgeTo($vertex_a);
+
+        $this->assertEquals([], $vertex_a->getDisabledEdgesOut()->all());
+    }
+
+    /**
      * @covers PHGraph\Vertex::getVertices
      *
      * @return void
@@ -519,9 +561,74 @@ class VertexTest extends TestCase
         $edge_a = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
         $edge_b = new Edge($vertex_a, $vertex_c, Edge::UNDIRECTED);
 
-        $vertex_b->removeEdge($edge_b, $vertex_a);
+        $vertex_b->removeEdge($edge_b);
 
         $this->assertEquals([$edge_a], $vertex_b->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::removeEdge
+     *
+     * @return void
+     */
+    public function testRemoveEdgeWithDisable(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+
+        $edge_a = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
+        $edge_b = new Edge($vertex_a, $vertex_c, Edge::UNDIRECTED);
+
+        $vertex_b->removeEdge($edge_a, true);
+
+        $this->assertEquals([], $vertex_b->getEdges()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::disableEdge
+     *
+     * @return void
+     */
+    public function testDisableEdge(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_b);
+        $edge_b = $vertex_a->createEdge($vertex_c);
+        $edge_c = $vertex_d->createEdgeTo($vertex_a);
+
+        $vertex_a->disableEdge($edge_a);
+
+        $this->assertEquals([$edge_a], $vertex_a->getDisabledEdgesOut()->all());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::enableEdge
+     *
+     * @return void
+     */
+    public function testEnableEdge(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_b);
+        $edge_b = $vertex_a->createEdge($vertex_c);
+        $edge_c = $vertex_d->createEdgeTo($vertex_a);
+
+        $edge_a->disable();
+        $vertex_a->enableEdge($edge_a);
+
+        $this->assertEquals([], $vertex_a->getDisabledEdgesOut()->all());
     }
 
     /**

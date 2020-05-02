@@ -23,7 +23,11 @@ class Vertex implements Attributable
     protected $edges_in;
     /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
     protected $edges_out;
-    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
+    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    protected $edges_in_disabled;
+    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    protected $edges_out_disabled;
+    /** @var \PHGraph\Vertex[] */
     protected $adjacent;
 
     /**
@@ -38,7 +42,9 @@ class Vertex implements Attributable
         $this->setGraph($graph);
         $this->edges_in = new EdgeCollection;
         $this->edges_out = new EdgeCollection;
-        $this->adjacent = new VertexCollection;
+        $this->edges_in_disabled = new EdgeCollection;
+        $this->edges_out_disabled = new EdgeCollection;
+        $this->adjacent = [];
         $this->setAttributes($attributes);
     }
 
@@ -112,6 +118,16 @@ class Vertex implements Attributable
     }
 
     /**
+     * Get the edges leading out from this vertex.
+     *
+     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     */
+    public function getDisabledEdgesOut(): EdgeCollection
+    {
+        return $this->edges_out_disabled;
+    }
+
+    /**
      * Get the vertices that this vertex has connections with.
      *
      * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
@@ -168,7 +184,7 @@ class Vertex implements Attributable
      */
     public function getVerticesTo(): VertexCollection
     {
-        return $this->adjacent;
+        return new VertexCollection($this->adjacent);
     }
 
     /**
@@ -238,7 +254,7 @@ class Vertex implements Attributable
             return;
         }
 
-        $this->adjacent[] = $edge->getAdjacentVertex($this);
+        $this->adjacent[$edge->getId()] = $edge->getAdjacentVertex($this);
         $this->edges_out[] = $edge;
     }
 
@@ -246,15 +262,59 @@ class Vertex implements Attributable
      * remove references to given edge.
      *
      * @param \PHGraph\Edge $edge edge to remove
-     * @param \PHGraph\Vertex $adjacent vertex to remove from adjacency list
+     * @param bool $disable add to disabled edges
      *
      * @return void
      */
-    public function removeEdge(Edge $edge, Vertex $adjacent): void
+    public function removeEdge(Edge $edge, bool $disable = false): void
     {
-        $this->edges_in->remove($edge);
-        $this->edges_out->remove($edge);
-        $this->adjacent->remove($adjacent);
+        if ($this->edges_in->contains($edge)) {
+            if ($disable) {
+                $this->edges_in_disabled[] = $edge;
+            }
+            $this->edges_in->remove($edge);
+        }
+
+        if ($this->edges_out->contains($edge)) {
+            if ($disable) {
+                $this->edges_out_disabled[] = $edge;
+            }
+            $this->edges_out->remove($edge);
+
+            unset($this->adjacent[$edge->getId()]);
+        }
+    }
+
+    /**
+     * disable references to given edge.
+     *
+     * @param \PHGraph\Edge $edge edge to remove
+     *
+     * @return void
+     */
+    public function disableEdge(Edge $edge): void
+    {
+        $this->removeEdge($edge, true);
+    }
+
+    /**
+     * disable references to given edge.
+     *
+     * @param \PHGraph\Edge $edge edge to remove
+     *
+     * @return void
+     */
+    public function enableEdge(Edge $edge): void
+    {
+        if ($this->edges_in_disabled->contains($edge)) {
+            $this->edges_in_disabled->remove($edge);
+            $this->addEdgeIn($edge);
+        }
+
+        if ($this->edges_out_disabled->contains($edge)) {
+            $this->edges_out_disabled->remove($edge);
+            $this->addEdgeOut($edge);
+        }
     }
 
     /**

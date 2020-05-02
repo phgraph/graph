@@ -4,8 +4,7 @@ namespace PHGraph\MinimumSpanningTree;
 
 use PHGraph\Contracts\MinimumSpanningTree;
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
+use SplObjectStorage;
 use SplPriorityQueue;
 use UnexpectedValueException;
 
@@ -54,9 +53,9 @@ class Kruskal implements MinimumSpanningTree
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
         $edge_queue = new SplPriorityQueue();
 
@@ -67,8 +66,8 @@ class Kruskal implements MinimumSpanningTree
             }
         }
 
-        $edges = new EdgeCollection();
-        /** @var \PHGraph\Support\VertexCollection[] $forests */
+        $edges = [];
+        /** @var SplObjectStorage[] $forests */
         $forests = [];
 
         while ($edge_queue->count()) {
@@ -88,8 +87,8 @@ class Kruskal implements MinimumSpanningTree
                             $marked !== $forest
                             && ($forest->contains($from) || $forest->contains($to))
                         ) {
+                            $forests[$key]->addAll($forests[$merge_key]);
                             unset($forests[$merge_key]);
-                            $forests[$key] = $marked->merge($forest);
                             break;
                         }
                     }
@@ -98,16 +97,16 @@ class Kruskal implements MinimumSpanningTree
                 }
             }
             if ($use_forest === null) {
-                $use_forest = new VertexCollection();
+                $use_forest = new SplObjectStorage;
                 $forests[] = $use_forest;
             }
 
-            $edges[] = $edge;
-            $use_forest->add($edge->getFrom());
-            $use_forest->add($edge->getTo());
+            $edges[$edge->getId()] = $edge;
+            $use_forest->attach($edge->getFrom());
+            $use_forest->attach($edge->getTo());
         }
 
-        if ($edges->count() !== (count($this->graph->getVertices()) - 1)) {
+        if (count($edges) !== (count($this->graph->getVertices()) - 1)) {
             throw new UnexpectedValueException('Graph is not connected');
         }
 

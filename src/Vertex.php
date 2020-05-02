@@ -336,6 +336,7 @@ class Vertex implements Attributable
     public function degree(): int
     {
         $edges = $this->getEdges();
+
         return count($edges) + count(array_filter($edges, function ($edge) {
             return $edge->isLoop();
         }));

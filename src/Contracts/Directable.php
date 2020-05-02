@@ -2,8 +2,6 @@
 
 namespace PHGraph\Contracts;
 
-use PHGraph\Support\EdgeCollection;
-
 interface Directable
 {
     /**

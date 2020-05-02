@@ -2,11 +2,11 @@
 
 namespace PHGraph\MinimumSpanningTree;
 
+use Exception;
 use PHGraph\Contracts\MinimumSpanningTree;
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use RuntimeException;
+use SplObjectStorage;
 use SplPriorityQueue;
 use UnexpectedValueException;
 
@@ -38,7 +38,10 @@ class Prim implements MinimumSpanningTree
         }
 
         $this->graph = $graph;
-        $this->start_vertex = $graph->getVertices()->random();
+        $vertices = $graph->getVertices();
+        $this->start_vertex = count($vertices)
+            ? $vertices[array_rand($vertices)]
+            : null;
     }
 
     /**
@@ -58,22 +61,21 @@ class Prim implements MinimumSpanningTree
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
         $edge_queue = new SplPriorityQueue();
-        $edges = new EdgeCollection();
+        $edges = [];
 
         $vertex_current = $this->start_vertex;
-        $marked = new VertexCollection();
+        $marked = new SplObjectStorage;
 
-        $itterations = $this->graph->getVertices()->count() - 1;
+        $itterations = count($this->graph->getVertices()) - 1;
 
         for ($i = 0; $i < $itterations; $i++) {
-            $marked->add($vertex_current);
+            $marked->attach($vertex_current);
 
-            /** @var \PHGraph\Edge $edge */
             foreach ($vertex_current->getEdgesOut() as $edge) {
                 if (!$edge->isLoop()) {
                     $edge_queue->insert($edge, -$edge->getAttribute('weight', 0));
@@ -98,7 +100,7 @@ class Prim implements MinimumSpanningTree
             }
         }
 
-        if ($edges->count() !== $itterations) {
+        if (count($edges) !== $itterations) {
             throw new UnexpectedValueException('Graph is not connected');
         }
 

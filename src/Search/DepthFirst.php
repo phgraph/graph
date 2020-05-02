@@ -3,7 +3,6 @@
 namespace PHGraph\Search;
 
 use PHGraph\Contracts\Search;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 
 /**
@@ -29,16 +28,16 @@ class DepthFirst implements Search
     }
 
     /**
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
-        $visited = new VertexCollection;
+        $visited = [];
         $queue = [$this->vertex];
         while ($vertex = array_shift($queue)) {
-            if (!$visited->contains($vertex)) {
-                $visited->add($vertex);
-                foreach ($vertex->getVerticesTo()->reverse() as $nextVertex) {
+            if (!($visited[$vertex->getId()] ?? false)) {
+                $visited[$vertex->getId()] = $vertex;
+                foreach (array_reverse($vertex->getVerticesTo()) as $nextVertex) {
                     $queue[] = $nextVertex;
                 }
             }

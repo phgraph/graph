@@ -102,7 +102,7 @@ class PrimTest extends TestCase
 
         $prim = new Prim($graph);
 
-        $this->assertEquals(4, $prim->getEdges()->count());
+        $this->assertCount(4, $prim->getEdges());
     }
 
     /**
@@ -138,7 +138,12 @@ class PrimTest extends TestCase
 
         $prim = new Prim($graph);
 
-        $this->assertEquals(39, $prim->getEdges()->sumAttribute('weight'));
+        $edges = $prim->getEdges();
+        $sum_weight = array_sum(array_map(function ($edge) {
+            return $edge->getAttribute('weight');
+        }, $edges));
+
+        $this->assertEquals(39, $sum_weight);
     }
 
     /**
@@ -159,6 +164,7 @@ class PrimTest extends TestCase
 
         $prim = new Prim($graph);
 
-        $this->assertEquals(3, $prim->getEdges()->first()->getAttribute('weight'));
+        $edges = $prim->getEdges();
+        $this->assertEquals(3, reset($edges)->getAttribute('weight'));
     }
 }

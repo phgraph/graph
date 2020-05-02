@@ -37,6 +37,6 @@ class DepthFirstTest extends TestCase
 
         $df = new DepthFirst($vertex[0]);
 
-        $this->assertEquals($vertex, $df->getVertices()->all());
+        $this->assertEqualsCanonicalizing($vertex, $df->getVertices());
     }
 }

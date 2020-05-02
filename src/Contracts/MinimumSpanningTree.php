@@ -17,7 +17,7 @@ interface MinimumSpanningTree
     /**
      * Get all the edges in the minimum spanning tree.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection;
+    public function getEdges(): array;
 }

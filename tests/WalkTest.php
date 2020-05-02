@@ -3,7 +3,6 @@
 namespace Tests;
 
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;

@@ -4,7 +4,6 @@ namespace PHGraph;
 
 use Exception;
 use PHGraph\Contracts\Attributable;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Support\VertexReplacementMap;
 use PHGraph\Traits\Attributes;
 
@@ -114,21 +113,23 @@ class Edge implements Attributable
     /**
      * Get target vertices of this edge.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getTargets(): VertexCollection
+    public function getTargets(): array
     {
-        return new VertexCollection($this->isDirected() ? [$this->to] : [$this->to, $this->from]);
+        return $this->isDirected()
+            ? [$this->to->getId() => $this->to]
+            : [$this->to->getId() => $this->to, $this->from->getId() => $this->from];
     }
 
     /**
      * Get the vertices on this edge.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
-        return new VertexCollection([$this->to, $this->from]);
+        return [$this->to->getId() => $this->to, $this->from->getId() => $this->from];
     }
 
     /**

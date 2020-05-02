@@ -4,8 +4,6 @@ namespace PHGraph;
 
 use Exception;
 use PHGraph\Contracts\Attributable;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Traits\Attributes;
 
 /**
@@ -19,13 +17,13 @@ class Vertex implements Attributable
     protected $id;
     /** @var \PHGraph\Graph */
     protected $graph;
-    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    /** @var \PHGraph\Edge[] */
     protected $edges_in;
-    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    /** @var \PHGraph\Edge[] */
     protected $edges_out;
-    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    /** @var \PHGraph\Edge[] */
     protected $edges_in_disabled;
-    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    /** @var \PHGraph\Edge[] */
     protected $edges_out_disabled;
     /** @var \PHGraph\Vertex[] */
     protected $adjacent;
@@ -40,10 +38,10 @@ class Vertex implements Attributable
     {
         $this->id = spl_object_hash($this);
         $this->setGraph($graph);
-        $this->edges_in = new EdgeCollection;
-        $this->edges_out = new EdgeCollection;
-        $this->edges_in_disabled = new EdgeCollection;
-        $this->edges_out_disabled = new EdgeCollection;
+        $this->edges_in = [];
+        $this->edges_out = [];
+        $this->edges_in_disabled = [];
+        $this->edges_out_disabled = [];
         $this->adjacent = [];
         $this->setAttributes($attributes);
     }
@@ -90,19 +88,19 @@ class Vertex implements Attributable
     /**
      * Get all edges connected to this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
-        return $this->edges_in->merge($this->edges_out);
+        return array_merge($this->edges_in, $this->edges_out);
     }
 
     /**
      * Get the edges leading in to this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdgesIn(): EdgeCollection
+    public function getEdgesIn(): array
     {
         return $this->edges_in;
     }
@@ -110,9 +108,9 @@ class Vertex implements Attributable
     /**
      * Get the edges leading out from this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdgesOut(): EdgeCollection
+    public function getEdgesOut(): array
     {
         return $this->edges_out;
     }
@@ -120,9 +118,9 @@ class Vertex implements Attributable
     /**
      * Get the edges leading out from this vertex.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getDisabledEdgesOut(): EdgeCollection
+    public function getDisabledEdgesOut(): array
     {
         return $this->edges_out_disabled;
     }
@@ -130,11 +128,11 @@ class Vertex implements Attributable
     /**
      * Get the vertices that this vertex has connections with.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
-        $vertices = new VertexCollection;
+        $vertices = [];
         $has_loop = false;
 
         foreach ($this->getEdges() as $edge) {
@@ -142,11 +140,13 @@ class Vertex implements Attributable
                 $has_loop = true;
             }
 
-            $vertices = $vertices->merge($edge->getVertices());
+            foreach ($edge->getVertices() as $vertex) {
+                $vertices[$vertex->id] = $vertex;
+            }
         }
 
         if (!$has_loop) {
-            $vertices->remove($this);
+            unset($vertices[$this->id]);
         }
 
         return $vertices;
@@ -155,11 +155,11 @@ class Vertex implements Attributable
     /**
      * Get the vertices that this vertex is connected from.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVerticesFrom(): VertexCollection
+    public function getVerticesFrom(): array
     {
-        $vertices = new VertexCollection;
+        $vertices = [];
         $has_loop = false;
 
         foreach ($this->edges_in as $edge) {
@@ -167,11 +167,13 @@ class Vertex implements Attributable
                 $has_loop = true;
             }
 
-            $vertices = $vertices->merge($edge->getVertices());
+            foreach ($edge->getVertices() as $vertex) {
+                $vertices[$vertex->id] = $vertex;
+            }
         }
 
         if (!$has_loop) {
-            $vertices->remove($this);
+            unset($vertices[$this->id]);
         }
 
         return $vertices;
@@ -180,11 +182,16 @@ class Vertex implements Attributable
     /**
      * Get the vertices that this vertex is connected to.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVerticesTo(): VertexCollection
+    public function getVerticesTo(): array
     {
-        return new VertexCollection($this->adjacent);
+        $adjacent = [];
+        foreach ($this->adjacent as $vertex) {
+            $adjacent[$vertex->id] = $vertex;
+        }
+
+        return $adjacent;
     }
 
     /**
@@ -234,7 +241,7 @@ class Vertex implements Attributable
             return;
         }
 
-        $this->edges_in[] = $edge;
+        $this->edges_in[$edge->getId()] = $edge;
     }
 
     /**
@@ -255,7 +262,7 @@ class Vertex implements Attributable
         }
 
         $this->adjacent[$edge->getId()] = $edge->getAdjacentVertex($this);
-        $this->edges_out[] = $edge;
+        $this->edges_out[$edge->getId()] = $edge;
     }
 
     /**
@@ -268,18 +275,18 @@ class Vertex implements Attributable
      */
     public function removeEdge(Edge $edge, bool $disable = false): void
     {
-        if ($this->edges_in->contains($edge)) {
+        if ($this->edges_in[$edge->getId()] ?? false) {
             if ($disable) {
-                $this->edges_in_disabled[] = $edge;
+                $this->edges_in_disabled[$edge->getId()] = $edge;
             }
-            $this->edges_in->remove($edge);
+            unset($this->edges_in[$edge->getId()]);
         }
 
-        if ($this->edges_out->contains($edge)) {
+        if ($this->edges_out[$edge->getId()] ?? false) {
             if ($disable) {
-                $this->edges_out_disabled[] = $edge;
+                $this->edges_out_disabled[$edge->getId()] = $edge;
             }
-            $this->edges_out->remove($edge);
+            unset($this->edges_out[$edge->getId()]);
 
             unset($this->adjacent[$edge->getId()]);
         }
@@ -306,13 +313,13 @@ class Vertex implements Attributable
      */
     public function enableEdge(Edge $edge): void
     {
-        if ($this->edges_in_disabled->contains($edge)) {
-            $this->edges_in_disabled->remove($edge);
+        if ($this->edges_in_disabled[$edge->getId()] ?? false) {
+            unset($this->edges_in_disabled[$edge->getId()]);
             $this->addEdgeIn($edge);
         }
 
-        if ($this->edges_out_disabled->contains($edge)) {
-            $this->edges_out_disabled->remove($edge);
+        if ($this->edges_out_disabled[$edge->getId()] ?? false) {
+            unset($this->edges_out_disabled[$edge->getId()]);
             $this->addEdgeOut($edge);
         }
     }
@@ -329,8 +336,7 @@ class Vertex implements Attributable
     public function degree(): int
     {
         $edges = $this->getEdges();
-
-        return count($edges) + count($edges->filter(function ($edge) {
+        return count($edges) + count(array_filter($edges, function ($edge) {
             return $edge->isLoop();
         }));
     }
@@ -342,7 +348,7 @@ class Vertex implements Attributable
      */
     public function degreeIn(): int
     {
-        return count($this->edges_in) + count($this->edges_out->filter(function ($edge) {
+        return count($this->edges_in) + count(array_filter($this->edges_out, function ($edge) {
             return $edge->isLoop() && !$edge->isDirected();
         }));
     }
@@ -354,7 +360,7 @@ class Vertex implements Attributable
      */
     public function degreeOut(): int
     {
-        return count($this->edges_out) + count($this->edges_in->filter(function ($edge) {
+        return count($this->edges_out) + count(array_filter($this->edges_in, function ($edge) {
             return $edge->isLoop() && !$edge->isDirected();
         }));
     }
@@ -431,8 +437,8 @@ class Vertex implements Attributable
     public function __clone()
     {
         $this->id = spl_object_hash($this);
-        $this->edges_in = new EdgeCollection;
-        $this->edges_out = new EdgeCollection;
+        $this->edges_in = [];
+        $this->edges_out = [];
     }
 
     /**

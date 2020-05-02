@@ -149,7 +149,7 @@ class GraphViz
             $script .= sprintf('  %s %s%s', $part, $this->escapeAttributes($attributes), PHP_EOL);
         }
 
-        $ungrouped = $this->graph->getVertices()->filter(function ($vertex) {
+        $ungrouped = array_filter($this->graph->getVertices(), function ($vertex) {
             return $vertex->getAttribute('group') === null;
         });
         foreach ($ungrouped as $vid => $vertex) {

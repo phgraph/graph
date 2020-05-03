@@ -19,7 +19,6 @@ class PrimTest extends TestCase
         $this->assertInstanceOf(Prim::class, new Prim(new Graph));
     }
 
-
     /**
      * @covers PHGraph\MinimumSpanningTree\Prim::__construct
      *

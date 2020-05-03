@@ -2,7 +2,6 @@
 
 namespace PHGraph\MinimumSpanningTree;
 
-use Exception;
 use PHGraph\Contracts\MinimumSpanningTree;
 use PHGraph\Graph;
 use RuntimeException;

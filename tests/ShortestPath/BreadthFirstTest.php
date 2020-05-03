@@ -5,7 +5,6 @@ namespace Tests\ShortestPath;
 use OutOfBoundsException;
 use PHGraph\Graph;
 use PHGraph\ShortestPath\BreadthFirst;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
@@ -202,7 +201,7 @@ class BreadthFirstTest extends TestCase
 
         $bf = new BreadthFirst($vertex_a);
 
-        $this->assertInstanceOf(EdgeCollection::class, $bf->getEdgesTo($vertex_b));
+        $this->assertIsArray($bf->getEdgesTo($vertex_b));
     }
 
     /**
@@ -239,6 +238,6 @@ class BreadthFirstTest extends TestCase
 
         $bf = new BreadthFirst($vertex_a);
 
-        $this->assertEquals([$edge], $bf->getEdges()->all());
+        $this->assertEquals([$edge], $bf->getEdges());
     }
 }

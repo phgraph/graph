@@ -4,7 +4,6 @@ namespace Tests\Exception;
 
 use PHGraph\Exception\NegativeCycleException;
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +19,7 @@ class NegativeCycleExceptionTest extends TestCase
     {
         $graph = new Graph;
         $vertex = new Vertex($graph);
-        $walk = new Walk($vertex, new EdgeCollection);
+        $walk = new Walk($vertex, []);
         $exception = new NegativeCycleException('', 0, null, $walk);
 
         $this->assertInstanceOf(NegativeCycleException::class, $exception);
@@ -35,7 +34,7 @@ class NegativeCycleExceptionTest extends TestCase
     {
         $graph = new Graph;
         $vertex = new Vertex($graph);
-        $walk = new Walk($vertex, new EdgeCollection);
+        $walk = new Walk($vertex, []);
         $exception = new NegativeCycleException('', 0, null, $walk);
 
         $this->assertInstanceOf(Walk::class, $exception->getCycle());

@@ -5,7 +5,6 @@ namespace Tests\ShortestPath;
 use OutOfBoundsException;
 use PHGraph\Graph;
 use PHGraph\ShortestPath\Dijkstra;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
@@ -193,7 +192,7 @@ class DijkstraTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesIsEdgeCollection(): void
+    public function testGetEdgesIsArray(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -202,7 +201,7 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertInstanceOf(EdgeCollection::class, $bf->getEdgesTo($vertex_b));
+        $this->assertIsArray($bf->getEdgesTo($vertex_b));
     }
 
     /**
@@ -228,7 +227,10 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b], $bf->getEdgesTo($vertex_e)->all());
+        $this->assertEquals([
+            $edge_a->getId() => $edge_a,
+            $edge_b->getId() => $edge_b,
+        ], $bf->getEdgesTo($vertex_e));
     }
 
     /**
@@ -244,7 +246,7 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertEmpty($bf->getEdgesTo($vertex_a)->all());
+        $this->assertEmpty($bf->getEdgesTo($vertex_a));
     }
 
     /**
@@ -304,7 +306,7 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertEquals([$edge], $bf->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $bf->getEdges());
     }
 
     /**
@@ -321,12 +323,12 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $edges = $bf->getEdges()->all();
+        $edges = $bf->getEdges();
 
         $vertex_c = new Vertex($graph);
         $vertex_a->createEdgeTo($vertex_c);
 
-        $this->assertEquals($edges, $bf->getEdges()->all());
+        $this->assertEquals($edges, $bf->getEdges());
     }
 
     /**
@@ -347,7 +349,9 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertEquals([$edge_b], $bf->getEdges()->all());
+        $this->assertEquals([
+            $edge_b->getId() => $edge_b,
+        ], $bf->getEdges());
     }
 
     /**
@@ -373,7 +377,10 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertEquals([$edge_b, $edge_c], $bf->getEdges()->all());
+        $this->assertEquals([
+            $edge_b->getId() => $edge_b,
+            $edge_c->getId() => $edge_c,
+        ], $bf->getEdges());
     }
 
     /**
@@ -395,7 +402,9 @@ class DijkstraTest extends TestCase
 
         $bf = new Dijkstra($vertex_a);
 
-        $this->assertEquals([$edge_b], $bf->getEdges()->all());
+        $this->assertEquals([
+            $edge_b->getId() => $edge_b,
+        ], $bf->getEdges());
     }
 
     /**
@@ -410,25 +419,25 @@ class DijkstraTest extends TestCase
         $bf = new Dijkstra($v[250]);
 
         $this->assertEquals([
-            $e[249],
-            $e[248],
-            $e[247],
-            $e[246],
-            $e[245],
-            $e[244],
-            $e[243],
-            $e[242],
-            $e[278],
-            $e[106],
-            $e[105],
-            $e[104],
-            $e[103],
-            $e[102],
-            $e[101],
-            $e[340],
-            $e[350],
-            $e[356],
-        ], $bf->getEdgesTo($v[0])->ordered()->all());
+            $e[249]->getId() => $e[249],
+            $e[248]->getId() => $e[248],
+            $e[247]->getId() => $e[247],
+            $e[246]->getId() => $e[246],
+            $e[245]->getId() => $e[245],
+            $e[244]->getId() => $e[244],
+            $e[243]->getId() => $e[243],
+            $e[242]->getId() => $e[242],
+            $e[278]->getId() => $e[278],
+            $e[106]->getId() => $e[106],
+            $e[105]->getId() => $e[105],
+            $e[104]->getId() => $e[104],
+            $e[103]->getId() => $e[103],
+            $e[102]->getId() => $e[102],
+            $e[101]->getId() => $e[101],
+            $e[340]->getId() => $e[340],
+            $e[350]->getId() => $e[350],
+            $e[356]->getId() => $e[356],
+        ], $bf->getEdgesTo($v[0]));
     }
 
     /**

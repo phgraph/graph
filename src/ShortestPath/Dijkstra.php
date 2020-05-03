@@ -23,7 +23,7 @@ class Dijkstra implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
     protected $vertex;
-    /** @var \PHGraph\Support\EdgeCollection */
+    /** @var \PHGraph\Edge[] */
     protected $edges;
 
     /**

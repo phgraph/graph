@@ -3,7 +3,6 @@
 namespace PHGraph\Contracts;
 
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
 
 interface TravelingSalesman
 {
@@ -17,7 +16,7 @@ interface TravelingSalesman
     /**
      * Get all the edges in the path.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection;
+    public function getEdges(): array;
 }

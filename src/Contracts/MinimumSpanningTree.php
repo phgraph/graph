@@ -3,7 +3,6 @@
 namespace PHGraph\Contracts;
 
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
 
 interface MinimumSpanningTree
 {

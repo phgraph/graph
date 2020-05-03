@@ -403,17 +403,13 @@ class MooreBellmanFordTest extends TestCase
         $vertex_c = new Vertex($graph);
         $vertex_d = new Vertex($graph);
         $vertex_e = new Vertex($graph);
-        $edge_a = $vertex_a->createEdgeTo($vertex_b);
-        $edge_b = $vertex_b->createEdgeTo($vertex_e);
-        $edge_c = $vertex_b->createEdgeTo($vertex_c);
-        $edge_d = $vertex_c->createEdgeTo($vertex_d);
-        $edge_e = $vertex_d->createEdgeTo($vertex_b);
 
-        $edge_a->setAttribute('weight', 2);
-        $edge_b->setAttribute('weight', 2);
-        $edge_c->setAttribute('weight', -2);
-        $edge_d->setAttribute('weight', 2);
-        $edge_e->setAttribute('weight', -2);
+        $vertex_a->createEdgeTo($vertex_b, ['weight' => 2]);
+        $vertex_b->createEdgeTo($vertex_e, ['weight' => 2]);
+        $vertex_b->createEdgeTo($vertex_c, ['weight' => -2]);
+        $vertex_b->createEdgeTo($vertex_c, ['weight' => -3]);
+        $vertex_c->createEdgeTo($vertex_d, ['weight' => 2]);
+        $vertex_d->createEdgeTo($vertex_b, ['weight' => -2]);
 
         $bf = new MooreBellmanFord($vertex_a);
 

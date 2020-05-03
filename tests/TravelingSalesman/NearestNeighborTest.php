@@ -20,6 +20,19 @@ class NearestNeighborTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\TravelingSalesman\NearestNeighbor::__construct
+     *
+     * @return void
+     */
+    public function testInstantiationWithVertices(): void
+    {
+        $g = new Graph;
+        $g->newVertex();
+
+        $this->assertInstanceOf(NearestNeighbor::class, new NearestNeighbor($g));
+    }
+
+    /**
      * @covers PHGraph\TravelingSalesman\NearestNeighbor::setStartVertex
      *
      * @return void
@@ -40,7 +53,7 @@ class NearestNeighborTest extends TestCase
         $nearest_neighbor = new NearestNeighbor($graph);
         $nearest_neighbor->setStartVertex($a);
 
-        $this->assertEquals(36, $nearest_neighbor->getEdges()->sumAttribute('weight'));
+        $this->assertEquals(36, $this->sumAttribute($nearest_neighbor->getEdges(), 'weight'));
     }
 
     /**
@@ -140,7 +153,7 @@ class NearestNeighborTest extends TestCase
 
         $nearest_neighbor = new NearestNeighbor($graph);
 
-        $this->assertEquals(5, $nearest_neighbor->getEdges()->count());
+        $this->assertCount(5, $nearest_neighbor->getEdges());
     }
 
     /**
@@ -187,7 +200,7 @@ class NearestNeighborTest extends TestCase
         $nearest_neighbor = new NearestNeighbor($graph);
         $nearest_neighbor->setStartVertex($g);
 
-        $this->assertEquals(51, $nearest_neighbor->getEdges()->sumAttribute('weight'));
+        $this->assertEquals(51, $this->sumAttribute($nearest_neighbor->getEdges(), 'weight'));
     }
 
     /**
@@ -247,6 +260,21 @@ class NearestNeighborTest extends TestCase
 
         $nearest_neighbor = new NearestNeighbor($graph);
 
-        $this->assertEquals(7, $nearest_neighbor->getEdges()->sumAttribute('weight'));
+        $this->assertEquals(7, $this->sumAttribute($nearest_neighbor->getEdges(), 'weight'));
+    }
+
+    /**
+     * Sum given attribute.
+     *
+     * @param \PHGraph\Edge[] $collection collection of attributable to sum
+     * @param string $attribute name of attribute to sum
+     *
+     * @return float
+     */
+    public function sumAttribute(array $collection, string $attribute): float
+    {
+        return array_sum(array_map(function ($attributable) use ($attribute) {
+            return $attributable->getAttribute($attribute, 0);
+        }, $collection));
     }
 }

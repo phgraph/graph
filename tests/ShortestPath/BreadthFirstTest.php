@@ -192,7 +192,7 @@ class BreadthFirstTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesIsEdgeCollection(): void
+    public function testGetEdgesIsArray(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);

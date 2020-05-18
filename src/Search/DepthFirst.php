@@ -4,6 +4,7 @@ namespace PHGraph\Search;
 
 use PHGraph\Contracts\Search;
 use PHGraph\Vertex;
+use SplQueue;
 
 /**
  * Depth First search algorithm.
@@ -32,14 +33,22 @@ class DepthFirst implements Search
      */
     public function getVertices(): array
     {
+        /** @var \PHGraph\Vertex[] */
         $visited = [];
-        $queue = [$this->vertex];
-        while ($vertex = array_shift($queue)) {
-            if (!($visited[$vertex->getId()] ?? false)) {
-                $visited[$vertex->getId()] = $vertex;
-                foreach (array_reverse($vertex->getVerticesTo()) as $nextVertex) {
-                    $queue[] = $nextVertex;
-                }
+        $queue = new SplQueue;
+        $queue->enqueue($this->vertex);
+
+        while (!$queue->isEmpty()) {
+            /** @var \PHGraph\Vertex */
+            $vertex = $queue->dequeue();
+
+            if (isset($visited[$vertex->getId()])) {
+                continue;
+            }
+
+            $visited[$vertex->getId()] = $vertex;
+            foreach (array_reverse($vertex->getVerticesTo()) as $next_vertex) {
+                $queue->enqueue($next_vertex);
             }
         }
 

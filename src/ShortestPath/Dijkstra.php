@@ -114,44 +114,43 @@ class Dijkstra implements ShortestPath
      */
     public function getEdgesTo(Vertex $vertex): array
     {
-        $current_vertex = $vertex;
-        $path = [];
-
         if ($vertex === $this->vertex) {
-            return $path;
+            return [];
         }
 
         $edges = $this->getEdges();
+        /** @var \PHGraph\Edge[] */
+        $path = [];
+        $current_vertex = $vertex;
 
         do {
-            $pre = null;
+            $previous_vertex = null;
 
-            /** @var \PHGraph\Edge $edge */
             foreach ($edges as $edge) {
-                if ($path[$edge->getId()] ?? false) {
+                if (isset($path[$edge->getId()])) {
                     continue;
                 }
 
                 if (!$edge->isDirected() && $edge->getFrom() === $current_vertex) {
                     $path[$edge->getId()] = $edge;
-                    $pre = $edge->getTo();
+                    $previous_vertex = $edge->getTo();
 
                     break;
                 }
 
                 if ($edge->getTo() === $current_vertex) {
                     $path[$edge->getId()] = $edge;
-                    $pre = $edge->getFrom();
+                    $previous_vertex = $edge->getFrom();
 
                     break;
                 }
             }
 
-            if ($pre === null) {
+            if ($previous_vertex === null) {
                 throw new OutOfBoundsException('No edge leading to vertex');
             }
 
-            $current_vertex = $pre;
+            $current_vertex = $previous_vertex;
         } while ($current_vertex !== $this->vertex);
 
         return array_reverse($path);
@@ -258,7 +257,7 @@ class Dijkstra implements ShortestPath
         /** @var \PHGraph\Edge[] $edges */
         $edges = [];
         foreach ($vertices as $vid => $vertex) {
-            if ($lowest_cost_vertex_to[$vid] ?? false) {
+            if (isset($lowest_cost_vertex_to[$vid])) {
                 /** @var \PHGraph\Edge[] $closest_edges */
                 $closest_edges = array_filter(
                     $lowest_cost_vertex_to[$vid]->getEdgesOut(),

@@ -259,7 +259,7 @@ class Vertex implements Attributable
      */
     public function removeEdge(Edge $edge, bool $disable = false): void
     {
-        if ($this->edges_in[$edge->getId()] ?? false) {
+        if (isset($this->edges_in[$edge->getId()])) {
             if ($disable) {
                 $this->edges_in_disabled[$edge->getId()] = $edge;
             }
@@ -267,7 +267,7 @@ class Vertex implements Attributable
             unset($this->adjacent_in[$edge->getId()]);
         }
 
-        if ($this->edges_out[$edge->getId()] ?? false) {
+        if (isset($this->edges_out[$edge->getId()])) {
             if ($disable) {
                 $this->edges_out_disabled[$edge->getId()] = $edge;
             }
@@ -297,12 +297,12 @@ class Vertex implements Attributable
      */
     public function enableEdge(Edge $edge): void
     {
-        if ($this->edges_in_disabled[$edge->getId()] ?? false) {
+        if (isset($this->edges_in_disabled[$edge->getId()])) {
             unset($this->edges_in_disabled[$edge->getId()]);
             $this->addEdgeIn($edge);
         }
 
-        if ($this->edges_out_disabled[$edge->getId()] ?? false) {
+        if (isset($this->edges_out_disabled[$edge->getId()])) {
             unset($this->edges_out_disabled[$edge->getId()]);
             $this->addEdgeOut($edge);
         }
@@ -410,7 +410,7 @@ class Vertex implements Attributable
      */
     public function __toString(): string
     {
-        return $this->getId();
+        return $this->id;
     }
 
     /**

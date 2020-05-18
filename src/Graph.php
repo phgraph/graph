@@ -17,15 +17,7 @@ final class Graph implements Attributable, Directable
     use Attributes;
 
     /** @var \PHGraph\Vertex[] */
-    protected $vertices;
-
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->vertices = [];
-    }
+    protected $vertices = [];
 
     /**
      * Degree: get degree for k-regular-graph (only if each vertex has the same
@@ -68,13 +60,9 @@ final class Graph implements Attributable, Directable
             throw new UnderflowException('Graph is empty');
         }
 
-        //min(array_map(function($item) { return $item->degree(); }, $this->vertices))
-        $sortable = $this->vertices;
-        uasort($sortable, function ($a, $b) {
-            return $a->degree() - $b->degree();
-        });
-
-        return reset($sortable)->degree();
+        return min(array_map(function ($item) {
+            return $item->degree();
+        }, $this->vertices));
     }
 
     /**
@@ -90,12 +78,9 @@ final class Graph implements Attributable, Directable
             throw new UnderflowException('Graph is empty');
         }
 
-        $sortable = $this->vertices;
-        uasort($sortable, function ($a, $b) {
-            return $b->degree() - $a->degree();
-        });
-
-        return reset($sortable)->degree();
+        return max(array_map(function ($item) {
+            return $item->degree();
+        }, $this->vertices));
     }
 
     /**
@@ -350,7 +335,7 @@ final class Graph implements Attributable, Directable
             foreach ($this->vertices as $vertex_b) {
                 if (
                     $vertex_a !== $vertex_b
-                    && !($connected_vertices[$vertex_b->getId()] ?? false)
+                    && !isset($connected_vertices[$vertex_b->getId()])
                 ) {
                     return false;
                 }

@@ -116,11 +116,11 @@ class NearestNeighbor implements TravelingSalesman
         }
 
         // try to connect back to start vertex
-        if ($vertex_current->getVertices()[$this->start_vertex->getId()] ?? false) {
+        if (isset($vertex_current->getVertices()[$this->start_vertex->getId()])) {
             $edge_queue = new SplPriorityQueue();
             /** @var \PHGraph\Edge $edge */
             foreach ($vertex_current->getEdgesOut() as $edge) {
-                if (!$edge->isLoop() && !($edges[$edge->getId()] ?? false)) {
+                if (!$edge->isLoop() && !isset($edges[$edge->getId()])) {
                     $edge_queue->insert($edge, -$edge->getAttribute('weight', 0));
                 }
             }
@@ -128,7 +128,7 @@ class NearestNeighbor implements TravelingSalesman
             do {
                 /** @var \PHGraph\Edge $cheapest_edge */
                 $cheapest_edge = $edge_queue->extract();
-            } while (!($cheapest_edge->getVertices()[$this->start_vertex->getId()] ?? false));
+            } while (!isset($cheapest_edge->getVertices()[$this->start_vertex->getId()]));
 
             $edges[$cheapest_edge->getId()] = $cheapest_edge;
         }

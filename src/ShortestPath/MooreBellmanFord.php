@@ -222,7 +222,7 @@ class MooreBellmanFord implements ShortestPath
 
         $edges = [];
         foreach ($vertices as $vid => $vertex) {
-            if ($lowest_cost_vertex_to[$vid] ?? false) {
+            if (isset($lowest_cost_vertex_to[$vid])) {
                 /** @var \PHGraph\Edge[] $closest_edges */
                 $closest_edges = array_filter(
                     $lowest_cost_vertex_to[$vid]->getEdgesOut(),

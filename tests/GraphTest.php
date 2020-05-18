@@ -11,16 +11,6 @@ use UnexpectedValueException;
 class GraphTest extends TestCase
 {
     /**
-     * @covers PHGraph\Graph::__construct
-     *
-     * @return void
-     */
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf(Graph::class, new Graph);
-    }
-
-    /**
      * @covers PHGraph\Graph::getDegree
      *
      * @return void

@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^7.2.0",
+        "php": "^7.3.0",
         "symfony/process": "^5.0"
     },
     "autoload": {
@@ -32,11 +32,11 @@
         }
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.4",
-        "phpunit/phpunit": "^8.0",
-        "php-coveralls/php-coveralls": "^2.1",
         "mockery/mockery": "^1.2",
-        "phpstan/phpstan-mockery": "^0.12.3"
+        "php-coveralls/php-coveralls": "^2.1",
+        "phpstan/phpstan": "^0.12.4",
+        "phpstan/phpstan-mockery": "^0.12.3",
+        "phpunit/phpunit": "^9.1"
     },
     "scripts": {
         "analyse": [
@@ -48,5 +48,8 @@
         "test": [
             "./vendor/bin/phpunit --colors=always"
         ]
+    },
+    "config": {
+        "sort-packages": true
     }
 }

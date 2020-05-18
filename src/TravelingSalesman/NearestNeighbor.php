@@ -8,6 +8,7 @@ use PHGraph\Vertex;
 use RuntimeException;
 use SplObjectStorage;
 use SplPriorityQueue;
+use UnderflowException;
 use UnexpectedValueException;
 
 /**
@@ -28,15 +29,20 @@ class NearestNeighbor implements TravelingSalesman
      *
      * @param \PHGraph\Graph $graph Graph to operate on
      *
+     * @throws UnderflowException if graph is empty
+     *
      * @return void
      */
     public function __construct(Graph $graph)
     {
         $this->graph = $graph;
         $vertices = $graph->getVertices();
-        $this->start_vertex = count($vertices)
-            ? $vertices[array_rand($vertices)]
-            : null;
+
+        if (count($vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
+        $this->start_vertex = $vertices[array_rand($vertices)];
     }
 
     /**
@@ -72,10 +78,6 @@ class NearestNeighbor implements TravelingSalesman
      */
     public function getEdges(): array
     {
-        if ($this->start_vertex === null) {
-            throw new UnexpectedValueException('Graph is empty');
-        }
-
         $edges = [];
 
         $vertex_current = $this->start_vertex;

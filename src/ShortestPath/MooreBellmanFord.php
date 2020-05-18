@@ -147,7 +147,7 @@ class MooreBellmanFord implements ShortestPath
     /**
      * get map of vertex IDs to distance.
      *
-     * @return array
+     * @return float[]
      */
     public function getDistanceMap(): array
     {
@@ -231,6 +231,13 @@ class MooreBellmanFord implements ShortestPath
                     }
                 );
 
+                if (count($closest_edges) === 0) {
+                    // @todo determine if this can actually happen
+                    // @codeCoverageIgnoreStart
+                    continue;
+                    // @codeCoverageIgnoreEnd
+                }
+
                 uasort($closest_edges, function ($a, $b) {
                     return $a->getAttribute('weight', 0) - $b->getAttribute('weight', 0);
                 });
@@ -270,6 +277,13 @@ class MooreBellmanFord implements ShortestPath
                             || (!$edge->isDirected() && $edge->getTo() === $predecessor_vertex);
                     }
                 );
+
+                if (count($closest_edges) === 0) {
+                    // @todo determine if this can actually happen
+                    // @codeCoverageIgnoreStart
+                    continue;
+                    // @codeCoverageIgnoreEnd
+                }
 
                 uasort($closest_edges, function ($a, $b) {
                     return $a->getAttribute('weight', 0) - $b->getAttribute('weight', 0);

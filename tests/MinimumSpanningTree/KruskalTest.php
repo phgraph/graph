@@ -165,6 +165,12 @@ class KruskalTest extends TestCase
         $kruskal = new Kruskal($graph);
 
         $edges = $kruskal->getEdges();
-        $this->assertEquals(3, reset($edges)->getAttribute('weight'));
+
+        $edge = reset($edges);
+        if ($edge === false) {
+            $this->fail('No edges returned');
+        } else {
+            $this->assertEquals(3, $edge->getAttribute('weight'));
+        }
     }
 }

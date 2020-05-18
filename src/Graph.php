@@ -38,6 +38,10 @@ final class Graph implements Attributable, Directable
      */
     public function getDegree(): int
     {
+        if (count($this->vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
         $degree = reset($this->vertices)->degree();
 
         foreach ($this->vertices as $vertex) {
@@ -54,10 +58,16 @@ final class Graph implements Attributable, Directable
     /**
      * Degree: get minimum degree of vertices.
      *
+     * @throws UnderflowException if graph is empty
+     *
      * @return int
      */
     public function getDegreeMin(): int
     {
+        if (count($this->vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
         //min(array_map(function($item) { return $item->degree(); }, $this->vertices))
         $sortable = $this->vertices;
         uasort($sortable, function ($a, $b) {
@@ -70,10 +80,16 @@ final class Graph implements Attributable, Directable
     /**
      * Degree: get maximum degree of vertices.
      *
+     * @throws UnderflowException if graph is empty
+     *
      * @return int
      */
     public function getDegreeMax(): int
     {
+        if (count($this->vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
         $sortable = $this->vertices;
         uasort($sortable, function ($a, $b) {
             return $b->degree() - $a->degree();

@@ -5,6 +5,7 @@ namespace Tests;
 use PHGraph\Graph;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
+use UnderflowException;
 use UnexpectedValueException;
 
 class GraphTest extends TestCase
@@ -32,6 +33,20 @@ class GraphTest extends TestCase
         $v1->createEdgeTo($v2);
 
         $this->assertEquals(1, $graph->getDegree());
+    }
+
+    /**
+     * @covers PHGraph\Graph::getDegree
+     *
+     * @return void
+     */
+    public function testGetDegreeEmpty(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        $graph = new Graph;
+
+        $graph->getDegree();
     }
 
     /**
@@ -68,6 +83,20 @@ class GraphTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Graph::getDegreeMin
+     *
+     * @return void
+     */
+    public function testGetDegreeMinEmpty(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        $graph = new Graph;
+
+        $graph->getDegreeMin();
+    }
+
+    /**
      * @covers PHGraph\Graph::getDegreeMax
      *
      * @return void
@@ -80,6 +109,20 @@ class GraphTest extends TestCase
         $v1->createEdgeTo($v2);
 
         $this->assertEquals(1, $graph->getDegreeMax());
+    }
+
+    /**
+     * @covers PHGraph\Graph::getDegreeMax
+     *
+     * @return void
+     */
+    public function testGetDegreeMaxEmpty(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        $graph = new Graph;
+
+        $graph->getDegreeMax();
     }
 
     /**

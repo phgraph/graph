@@ -5,6 +5,7 @@ namespace Tests\TravelingSalesman;
 use PHGraph\Graph;
 use PHGraph\TravelingSalesman\NearestNeighbor;
 use PHPUnit\Framework\TestCase;
+use UnderflowException;
 use UnexpectedValueException;
 
 class NearestNeighborTest extends TestCase
@@ -16,7 +17,10 @@ class NearestNeighborTest extends TestCase
      */
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf(NearestNeighbor::class, new NearestNeighbor(new Graph));
+        $g = new Graph;
+        $g->newVertex();
+
+        $this->assertInstanceOf(NearestNeighbor::class, new NearestNeighbor($g));
     }
 
     /**
@@ -24,12 +28,11 @@ class NearestNeighborTest extends TestCase
      *
      * @return void
      */
-    public function testInstantiationWithVertices(): void
+    public function testInstantiationThrowsExceptionOnEmptyGraph(): void
     {
-        $g = new Graph;
-        $g->newVertex();
+        $this->expectException(UnderflowException::class);
 
-        $this->assertInstanceOf(NearestNeighbor::class, new NearestNeighbor($g));
+        new NearestNeighbor(new Graph);
     }
 
     /**
@@ -61,27 +64,17 @@ class NearestNeighborTest extends TestCase
      *
      * @return void
      */
-    public function testCreateGraphEmptyGraphThrowsException(): void
+    public function testCreateGraphWithDisconnectedGraphThrowsException(): void
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $nearest_neighbor = new NearestNeighbor(new Graph);
+        $graph = new Graph();
+        $graph->newVertex()->createEdge($graph->newVertex());
+        $graph->newVertex()->createEdge($graph->newVertex());
+
+        $nearest_neighbor = new NearestNeighbor($graph);
 
         $nearest_neighbor->createGraph();
-    }
-
-    /**
-     * @covers PHGraph\TravelingSalesman\NearestNeighbor::getEdges
-     *
-     * @return void
-     */
-    public function testGetEdgesWithEmptyGraphThrowsException(): void
-    {
-        $this->expectException(UnexpectedValueException::class);
-
-        $nearest_neighbor = new NearestNeighbor(new Graph);
-
-        $nearest_neighbor->getEdges();
     }
 
     /**

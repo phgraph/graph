@@ -268,7 +268,7 @@ class GraphViz
     /**
      * get escaped attribute string for given array of (unescaped) attributes.
      *
-     * @param array $attrs
+     * @param string[] $attrs
      *
      * @return string
      */
@@ -291,7 +291,7 @@ class GraphViz
      *
      * @param \PHGraph\Vertex $vertex vertex to get attributes for
      *
-     * @return array
+     * @return string[]
      */
     public function getLayoutVertex(Vertex $vertex): array
     {

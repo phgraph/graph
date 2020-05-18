@@ -160,7 +160,7 @@ class Dijkstra implements ShortestPath
     /**
      * get map of vertex IDs to distance.
      *
-     * @return array
+     * @return float[]
      */
     public function getDistanceMap(): array
     {
@@ -219,7 +219,6 @@ class Dijkstra implements ShortestPath
                 continue;
             }
 
-            /** @var \PHGraph\Edge $edge */
             foreach ($current_vertex->getEdgesOut() as $edge) {
                 $target_vertex = $edge->isDirected()
                     ? $edge->getTo()
@@ -256,8 +255,8 @@ class Dijkstra implements ShortestPath
             unset($lowest_cost_vertex_to[$this->vertex->getId()]);
         }
 
+        /** @var \PHGraph\Edge[] $edges */
         $edges = [];
-        /** @var \PHGraph\Vertex $vertex */
         foreach ($vertices as $vid => $vertex) {
             if ($lowest_cost_vertex_to[$vid] ?? false) {
                 /** @var \PHGraph\Edge[] $closest_edges */
@@ -267,6 +266,13 @@ class Dijkstra implements ShortestPath
                         return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
                     }
                 );
+
+                if (count($closest_edges) === 0) {
+                    // @todo determine if this can actually happen
+                    // @codeCoverageIgnoreStart
+                    continue;
+                    // @codeCoverageIgnoreEnd
+                }
 
                 uasort($closest_edges, function ($a, $b) {
                     return $a->getAttribute('weight', 0) - $b->getAttribute('weight', 0);

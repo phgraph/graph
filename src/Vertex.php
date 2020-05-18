@@ -26,7 +26,9 @@ class Vertex implements Attributable
     /** @var \PHGraph\Edge[] */
     protected $edges_out_disabled;
     /** @var \PHGraph\Vertex[] */
-    protected $adjacent;
+    protected $adjacent_in;
+    /** @var \PHGraph\Vertex[] */
+    protected $adjacent_out;
 
     /**
      * @param \PHGraph\Graph $graph      source graph
@@ -42,7 +44,8 @@ class Vertex implements Attributable
         $this->edges_out = [];
         $this->edges_in_disabled = [];
         $this->edges_out_disabled = [];
-        $this->adjacent = [];
+        $this->adjacent_in = [];
+        $this->adjacent_out = [];
         $this->setAttributes($attributes);
     }
 
@@ -153,45 +156,25 @@ class Vertex implements Attributable
     }
 
     /**
-     * Get the vertices that this vertex is connected from.
+     * Get the vertices that this vertex is connected from. This can have
+     * multiple copies of a vertex if multiple edges are between them.
      *
      * @return \PHGraph\Vertex[]
      */
     public function getVerticesFrom(): array
     {
-        $vertices = [];
-        $has_loop = false;
-
-        foreach ($this->edges_in as $edge) {
-            if ($edge->isLoop()) {
-                $has_loop = true;
-            }
-
-            foreach ($edge->getVertices() as $vertex) {
-                $vertices[$vertex->id] = $vertex;
-            }
-        }
-
-        if (!$has_loop) {
-            unset($vertices[$this->id]);
-        }
-
-        return $vertices;
+        return $this->adjacent_in;
     }
 
     /**
-     * Get the vertices that this vertex is connected to.
+     * Get the vertices that this vertex is connected to. This can have multiple
+     * copies of a vertex if multiple edges are between them.
      *
      * @return \PHGraph\Vertex[]
      */
     public function getVerticesTo(): array
     {
-        $adjacent = [];
-        foreach ($this->adjacent as $vertex) {
-            $adjacent[$vertex->id] = $vertex;
-        }
-
-        return $adjacent;
+        return $this->adjacent_out;
     }
 
     /**
@@ -241,6 +224,7 @@ class Vertex implements Attributable
             return;
         }
 
+        $this->adjacent_in[$edge->getId()] = $edge->getAdjacentVertex($this);
         $this->edges_in[$edge->getId()] = $edge;
     }
 
@@ -261,7 +245,7 @@ class Vertex implements Attributable
             return;
         }
 
-        $this->adjacent[$edge->getId()] = $edge->getAdjacentVertex($this);
+        $this->adjacent_out[$edge->getId()] = $edge->getAdjacentVertex($this);
         $this->edges_out[$edge->getId()] = $edge;
     }
 
@@ -280,6 +264,7 @@ class Vertex implements Attributable
                 $this->edges_in_disabled[$edge->getId()] = $edge;
             }
             unset($this->edges_in[$edge->getId()]);
+            unset($this->adjacent_in[$edge->getId()]);
         }
 
         if ($this->edges_out[$edge->getId()] ?? false) {
@@ -287,8 +272,7 @@ class Vertex implements Attributable
                 $this->edges_out_disabled[$edge->getId()] = $edge;
             }
             unset($this->edges_out[$edge->getId()]);
-
-            unset($this->adjacent[$edge->getId()]);
+            unset($this->adjacent_out[$edge->getId()]);
         }
     }
 

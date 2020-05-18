@@ -5,6 +5,7 @@ namespace Tests\MinimumSpanningTree;
 use PHGraph\Graph;
 use PHGraph\MinimumSpanningTree\Prim;
 use PHPUnit\Framework\TestCase;
+use UnderflowException;
 use UnexpectedValueException;
 
 class PrimTest extends TestCase
@@ -15,16 +16,6 @@ class PrimTest extends TestCase
      * @return void
      */
     public function testInstantiation(): void
-    {
-        $this->assertInstanceOf(Prim::class, new Prim(new Graph));
-    }
-
-    /**
-     * @covers PHGraph\MinimumSpanningTree\Prim::__construct
-     *
-     * @return void
-     */
-    public function testInstantiationWithVertices(): void
     {
         $g = new Graph;
         $g->newVertex();
@@ -48,15 +39,31 @@ class PrimTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\MinimumSpanningTree\Prim::__construct
+     *
+     * @return void
+     */
+    public function testInstantiationThrowsExceptionOnEmptyGraph(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        new Prim(new Graph);
+    }
+
+    /**
      * @covers PHGraph\MinimumSpanningTree\Prim::createGraph
      *
      * @return void
      */
-    public function testCreateGraphEmptyGraphThrowsException(): void
+    public function testCreateGraphWithDisconnectedGraphThrowsException(): void
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $prim = new Prim(new Graph);
+        $graph = new Graph();
+        $graph->newVertex()->createEdge($graph->newVertex());
+        $graph->newVertex()->createEdge($graph->newVertex());
+
+        $prim = new Prim($graph);
 
         $prim->createGraph();
     }
@@ -66,26 +73,13 @@ class PrimTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesWithEmptyGraphThrowsException(): void
+    public function testGetEdgesWithMultipleComponentsThrowsException(): void
     {
         $this->expectException(UnexpectedValueException::class);
-
-        $prim = new Prim(new Graph);
-
-        $prim->getEdges();
-    }
-
-    /**
-     * @covers PHGraph\MinimumSpanningTree\Prim::getEdges
-     *
-     * @return void
-     */
-    public function testGetEdgesWithDisconnectedGraphThrowsException(): void
-    {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Graph has more than one component');
 
         $graph = new Graph;
-        $graph->newVertex();
+        $graph->newVertex()->createEdge($graph->newVertex());
         $graph->newVertex();
 
         $prim = new Prim($graph);
@@ -178,6 +172,12 @@ class PrimTest extends TestCase
         $prim = new Prim($graph);
 
         $edges = $prim->getEdges();
-        $this->assertEquals(3, reset($edges)->getAttribute('weight'));
+
+        $edge = reset($edges);
+        if ($edge === false) {
+            $this->fail('No edges returned');
+        } else {
+            $this->assertEquals(3, $edge->getAttribute('weight'));
+        }
     }
 }

@@ -7,6 +7,7 @@ use PHGraph\Graph;
 use RuntimeException;
 use SplObjectStorage;
 use SplPriorityQueue;
+use UnderflowException;
 use UnexpectedValueException;
 
 /**
@@ -27,6 +28,7 @@ class Prim implements MinimumSpanningTree
      * @param \PHGraph\Graph $graph Graph to operate on
      *
      * @throws UnexpectedValueException if graph has directed edges
+     * @throws UnderflowException if graph is empty
      *
      * @return void
      */
@@ -38,9 +40,12 @@ class Prim implements MinimumSpanningTree
 
         $this->graph = $graph;
         $vertices = $graph->getVertices();
-        $this->start_vertex = count($vertices)
-            ? $vertices[array_rand($vertices)]
-            : null;
+
+        if (count($vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
+        $this->start_vertex = $vertices[array_rand($vertices)];
     }
 
     /**
@@ -97,10 +102,6 @@ class Prim implements MinimumSpanningTree
             } else {
                 $vertex_current = $cheapest_edge->getFrom();
             }
-        }
-
-        if (count($edges) !== $itterations) {
-            throw new UnexpectedValueException('Graph is not connected');
         }
 
         return $edges;

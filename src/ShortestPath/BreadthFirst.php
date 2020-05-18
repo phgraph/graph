@@ -89,7 +89,7 @@ class BreadthFirst implements ShortestPath
     /**
      * get array of edges on the walk for each vertex (vertex ID => array of walk edges).
      *
-     * @return array
+     * @return array<string, \PHGraph\Edge[]>
      */
     public function getEdgesMap(): array
     {
@@ -143,7 +143,7 @@ class BreadthFirst implements ShortestPath
     /**
      * get map of vertex IDs to distance.
      *
-     * @return array
+     * @return int[]
      */
     public function getDistanceMap(): array
     {

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\ShortestPath;
 
 use OutOfBoundsException;
 use PHGraph\Contracts\ShortestPath;
-use PHGraph\Exception\NegativeCycleException;
+use PHGraph\Exception\NegativeCycle;
 use PHGraph\Graph;
 use PHGraph\Vertex;
 use PHGraph\Walk;
@@ -62,7 +64,7 @@ class MooreBellmanFord implements ShortestPath
     {
         try {
             $this->getEdgesTo($vertex);
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $exception) {
             return false;
         }
 
@@ -90,7 +92,7 @@ class MooreBellmanFord implements ShortestPath
      */
     public function getDistance(Vertex $vertex): float
     {
-        return array_sum(array_map(function ($vertex) {
+        return array_sum(array_map(static function ($vertex) {
             return $vertex->getAttribute('weight', 0);
         }, $this->getEdgesTo($vertex)));
     }
@@ -166,7 +168,7 @@ class MooreBellmanFord implements ShortestPath
     /**
      * Get cheapest edges (lowest weight) for given map.
      *
-     * @throws \PHGraph\Exception\NegativeCycleException
+     * @throws \PHGraph\Exception\NegativeCycle
      *
      * @return \PHGraph\Edge[]
      */
@@ -188,7 +190,8 @@ class MooreBellmanFord implements ShortestPath
             $this->vertex->getId() => $this->vertex,
         ];
 
-        for ($i = 0; $i < count($vertices); $i++) {
+        $vertex_count = count($vertices);
+        for ($i = 0; $i < $vertex_count; $i++) {
             $change_vertex = null;
 
             foreach ($edges as $edge) {
@@ -226,7 +229,7 @@ class MooreBellmanFord implements ShortestPath
                 /** @var \PHGraph\Edge[] $closest_edges */
                 $closest_edges = array_filter(
                     $lowest_cost_vertex_to[$vid]->getEdgesOut(),
-                    function ($edge) use ($vertex) {
+                    static function ($edge) use ($vertex) {
                         return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
                     }
                 );
@@ -238,8 +241,8 @@ class MooreBellmanFord implements ShortestPath
                     // @codeCoverageIgnoreEnd
                 }
 
-                uasort($closest_edges, function ($a, $b) {
-                    return $a->getAttribute('weight', 0) - $b->getAttribute('weight', 0);
+                uasort($closest_edges, static function ($left, $right) {
+                    return $left->getAttribute('weight', 0) - $right->getAttribute('weight', 0);
                 });
 
                 $closest_edge = end($closest_edges);
@@ -264,7 +267,7 @@ class MooreBellmanFord implements ShortestPath
             }
 
             $edges = [];
-            $cycle_vertices = new SplObjectStorage;
+            $cycle_vertices = new SplObjectStorage();
             $current_vertex = $change_vertex;
             do {
                 $predecessor_vertex = $lowest_cost_vertex_to[$current_vertex->getId()];
@@ -272,7 +275,7 @@ class MooreBellmanFord implements ShortestPath
                 /** @var \PHGraph\Edge[] $closest_edges */
                 $closest_edges = array_filter(
                     $current_vertex->getEdgesIn(),
-                    function ($edge) use ($predecessor_vertex) {
+                    static function ($edge) use ($predecessor_vertex) {
                         return $edge->getFrom() === $predecessor_vertex
                             || (!$edge->isDirected() && $edge->getTo() === $predecessor_vertex);
                     }
@@ -285,8 +288,8 @@ class MooreBellmanFord implements ShortestPath
                     // @codeCoverageIgnoreEnd
                 }
 
-                uasort($closest_edges, function ($a, $b) {
-                    return $a->getAttribute('weight', 0) - $b->getAttribute('weight', 0);
+                uasort($closest_edges, static function ($left, $right) {
+                    return $left->getAttribute('weight', 0) - $right->getAttribute('weight', 0);
                 });
 
                 $closest_edge = end($closest_edges);
@@ -297,7 +300,7 @@ class MooreBellmanFord implements ShortestPath
             } while ($change_vertex !== $current_vertex && !$cycle_vertices->contains($current_vertex));
 
             $cycle = new Walk($change_vertex, array_reverse($edges));
-            throw new NegativeCycleException('Negative cycle found', 0, null, $cycle);
+            throw new NegativeCycle('Negative cycle found', 0, null, $cycle);
         }
 
         $this->edges = $edges;
@@ -316,8 +319,8 @@ class MooreBellmanFord implements ShortestPath
     {
         try {
             $this->getEdges();
-        } catch (NegativeCycleException $e) {
-            return $e->getCycle();
+        } catch (NegativeCycle $exception) {
+            return $exception->getCycle();
         }
 
         throw new UnderflowException('No cycle found');

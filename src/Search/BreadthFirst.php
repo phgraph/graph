@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\Search;
 
 use PHGraph\Contracts\Search;
@@ -34,7 +36,7 @@ class BreadthFirst implements Search
     public function getVertices(): array
     {
         $queue = [$this->vertex];
-        $marked = new SplObjectStorage;
+        $marked = new SplObjectStorage();
         $marked->attach($this->vertex);
         $visited = [];
 

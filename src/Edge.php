@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph;
 
 use Exception;
@@ -14,10 +16,8 @@ class Edge implements Attributable
 {
     use Attributes;
 
-    /** @var int */
-    const DIRECTED = 0;
-    /** @var int */
-    const UNDIRECTED = 1;
+    public const DIRECTED = 0;
+    public const UNDIRECTED = 1;
 
     /** @var string */
     protected $id;
@@ -60,6 +60,30 @@ class Edge implements Attributable
         }
 
         $this->setAttributes($attributes);
+    }
+
+    /**
+     * Handle PHP native clone call. We reset id.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->id = spl_object_hash($this);
+    }
+
+    /**
+     * Handle unset properties.
+     *
+     * @param string  $property  dynamic property to get
+     *
+     * @throws \Exception always
+     *
+     * @return void
+     */
+    public function __get(string $property): void
+    {
+        throw new Exception('Undefined Property: ' . $property);
     }
 
     /**
@@ -107,7 +131,7 @@ class Edge implements Attributable
      */
     public function getAdjacentVertex(Vertex $vertex): Vertex
     {
-        return ($this->to === $vertex) ? $this->from : $this->to;
+        return $this->to === $vertex ? $this->from : $this->to;
     }
 
     /**
@@ -223,29 +247,5 @@ class Edge implements Attributable
 
         $this->to->disableEdge($this);
         $this->from->disableEdge($this);
-    }
-
-    /**
-     * Handle PHP native clone call. We reset id.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->id = spl_object_hash($this);
-    }
-
-    /**
-     * Handle unset properties.
-     *
-     * @param string  $property  dynamic property to get
-     *
-     * @throws \Exception always
-     *
-     * @return void
-     */
-    public function __get(string $property)
-    {
-        throw new Exception('Undefined Property: ' . $property);
     }
 }

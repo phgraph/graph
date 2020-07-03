@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\ShortestPath;
 
 use OutOfBoundsException;
@@ -70,7 +72,7 @@ class Dijkstra implements ShortestPath
     {
         try {
             $this->getEdgesTo($vertex);
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $exception) {
             return false;
         }
 
@@ -98,7 +100,7 @@ class Dijkstra implements ShortestPath
      */
     public function getDistance(Vertex $vertex): float
     {
-        return array_sum(array_map(function ($vertex) {
+        return array_sum(array_map(static function ($vertex) {
             return $vertex->getAttribute('weight', 0);
         }, $this->getEdgesTo($vertex)));
     }
@@ -119,7 +121,7 @@ class Dijkstra implements ShortestPath
         }
 
         $edges = $this->getEdges();
-        /** @var \PHGraph\Edge[] */
+        /** @var \PHGraph\Edge[] $path */
         $path = [];
         $current_vertex = $vertex;
 
@@ -195,16 +197,16 @@ class Dijkstra implements ShortestPath
             $this->vertex->getId() => INF,
         ];
 
-        $vertex_queue = new SplPriorityQueue;
+        $vertex_queue = new SplPriorityQueue();
         $vertex_queue->insert($this->vertex, 1);
 
         $lowest_cost_vertex_to = [
             $this->vertex->getId() => $this->vertex,
         ];
 
-        $used_vertices = new SplObjectStorage;
-
-        for ($i = 0; $i < count($vertices); $i++) {
+        $used_vertices = new SplObjectStorage();
+        $vertex_count = count($vertices);
+        for ($i = 0; $i < $vertex_count; $i++) {
             if ($vertex_queue->isEmpty()) {
                 break;
             }
@@ -261,7 +263,7 @@ class Dijkstra implements ShortestPath
                 /** @var \PHGraph\Edge[] $closest_edges */
                 $closest_edges = array_filter(
                     $lowest_cost_vertex_to[$vid]->getEdgesOut(),
-                    function (Edge $edge) use ($vertex) {
+                    static function (Edge $edge) use ($vertex) {
                         return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
                     }
                 );
@@ -273,8 +275,8 @@ class Dijkstra implements ShortestPath
                     // @codeCoverageIgnoreEnd
                 }
 
-                uasort($closest_edges, function ($a, $b) {
-                    return $a->getAttribute('weight', 0) - $b->getAttribute('weight', 0);
+                uasort($closest_edges, static function ($left, $right) {
+                    return $left->getAttribute('weight', 0) - $right->getAttribute('weight', 0);
                 });
 
                 $closest_edge = end($closest_edges);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\MinimumSpanningTree;
 
 use PHGraph\Contracts\MinimumSpanningTree;
@@ -73,7 +75,7 @@ class Prim implements MinimumSpanningTree
         $edges = [];
 
         $vertex_current = $this->start_vertex;
-        $marked = new SplObjectStorage;
+        $marked = new SplObjectStorage();
 
         $itterations = count($this->graph->getVertices()) - 1;
 
@@ -90,8 +92,8 @@ class Prim implements MinimumSpanningTree
                 try {
                     /** @var \PHGraph\Edge $cheapest_edge */
                     $cheapest_edge = $edge_queue->extract();
-                } catch (RuntimeException $e) {
-                    throw new UnexpectedValueException('Graph has more than one component', 0, $e);
+                } catch (RuntimeException $exception) {
+                    throw new UnexpectedValueException('Graph has more than one component', 0, $exception);
                 }
             } while (!($marked->contains($cheapest_edge->getFrom()) xor $marked->contains($cheapest_edge->getTo())));
 

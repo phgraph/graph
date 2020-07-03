@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\Search;
 
 use PHGraph\Contracts\Search;
@@ -33,13 +35,13 @@ class DepthFirst implements Search
      */
     public function getVertices(): array
     {
-        /** @var \PHGraph\Vertex[] */
+        /** @var \PHGraph\Vertex[] $visited */
         $visited = [];
-        $queue = new SplQueue;
+        $queue = new SplQueue();
         $queue->enqueue($this->vertex);
 
         while (!$queue->isEmpty()) {
-            /** @var \PHGraph\Vertex */
+            /** @var \PHGraph\Vertex $vertex */
             $vertex = $queue->dequeue();
 
             if (isset($visited[$vertex->getId()])) {

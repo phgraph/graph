@@ -3,7 +3,7 @@
 namespace Tests\ShortestPath;
 
 use OutOfBoundsException;
-use PHGraph\Exception\NegativeCycleException;
+use PHGraph\Exception\NegativeCycle;
 use PHGraph\Graph;
 use PHGraph\ShortestPath\MooreBellmanFord;
 use PHGraph\Vertex;
@@ -393,9 +393,9 @@ class MooreBellmanFordTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesThrowsNegativeCycleException(): void
+    public function testGetEdgesThrowsNegativeCycle(): void
     {
-        $this->expectException(NegativeCycleException::class);
+        $this->expectException(NegativeCycle::class);
 
         $graph = new Graph;
         $vertex_a = new Vertex($graph);

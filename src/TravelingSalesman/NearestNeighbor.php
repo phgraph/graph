@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\TravelingSalesman;
 
 use PHGraph\Contracts\TravelingSalesman;
@@ -81,7 +83,7 @@ class NearestNeighbor implements TravelingSalesman
         $edges = [];
 
         $vertex_current = $this->start_vertex;
-        $marked = new SplObjectStorage;
+        $marked = new SplObjectStorage();
 
         $itterations = count($this->graph->getVertices()) - 1;
 
@@ -101,8 +103,8 @@ class NearestNeighbor implements TravelingSalesman
                 try {
                     /** @var \PHGraph\Edge $cheapest_edge */
                     $cheapest_edge = $edge_queue->extract();
-                } catch (RuntimeException $e) {
-                    throw new UnexpectedValueException('Graph has more than one component', 0, $e);
+                } catch (RuntimeException $exception) {
+                    throw new UnexpectedValueException('Graph has more than one component', 0, $exception);
                 }
             } while ($marked->contains($cheapest_edge->getFrom()) && $marked->contains($cheapest_edge->getTo()));
 
@@ -133,7 +135,7 @@ class NearestNeighbor implements TravelingSalesman
             $edges[$cheapest_edge->getId()] = $cheapest_edge;
         }
 
-        if (count($edges) !== (count($this->graph->getVertices()))) {
+        if (count($edges) !== count($this->graph->getVertices())) {
             throw new UnexpectedValueException('Graph is not connected');
         }
 

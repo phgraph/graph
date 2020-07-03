@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph;
 
 use PHGraph\Contracts\Attributable;
@@ -60,7 +62,7 @@ final class Graph implements Attributable, Directable
             throw new UnderflowException('Graph is empty');
         }
 
-        return min(array_map(function ($item) {
+        return min(array_map(static function ($item) {
             return $item->degree();
         }, $this->vertices));
     }
@@ -78,7 +80,7 @@ final class Graph implements Attributable, Directable
             throw new UnderflowException('Graph is empty');
         }
 
-        return max(array_map(function ($item) {
+        return max(array_map(static function ($item) {
             return $item->degree();
         }, $this->vertices));
     }
@@ -167,10 +169,10 @@ final class Graph implements Attributable, Directable
      */
     public function newFromEdges(array $edges): Graph
     {
-        $new_graph = new static;
+        $new_graph = new static();
         $new_graph->attributes = $this->attributes;
 
-        $vertex_replacement_map = new VertexReplacementMap;
+        $vertex_replacement_map = new VertexReplacementMap();
 
         $vertices = [];
         foreach ($edges as $edge) {
@@ -260,7 +262,7 @@ final class Graph implements Attributable, Directable
      */
     public function getVerticesGroup(int $group): array
     {
-        return array_filter($this->vertices, function ($vertex) use ($group) {
+        return array_filter($this->vertices, static function ($vertex) use ($group) {
             return $vertex->getAttribute('group') === $group;
         });
     }

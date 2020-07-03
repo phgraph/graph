@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\Exception;
 
 use Exception;
@@ -11,7 +13,7 @@ use PHGraph\Walk;
  * path: any path that has a point on the negative cycle can be made cheaper by
  * one more walk around the negative cycle.
  */
-class NegativeCycleException extends Exception
+class NegativeCycle extends Exception
 {
     /** @var \PHGraph\Walk */
     private $cycle;
@@ -32,6 +34,8 @@ class NegativeCycleException extends Exception
     }
 
     /**
+     * Get the cycle that was found to be negative.
+     *
      * @return \PHGraph\Walk
      */
     public function getCycle(): Walk

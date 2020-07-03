@@ -33,6 +33,7 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.2",
+        "nunomaduro/phpinsights": "^1.14",
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/phpstan": "^0.12.4",
         "phpstan/phpstan-mockery": "^0.12.3",
@@ -41,6 +42,9 @@
     "scripts": {
         "analyse": [
             "./vendor/bin/phpstan analyse --ansi"
+        ],
+        "insights": [
+            "./vendor/bin/phpinsights -n --ansi"
         ],
         "coverage": [
             "phpdbg -qrr ./vendor/bin/phpunit --colors=always --coverage-clover=./report/coverage.clover --coverage-html=./report"

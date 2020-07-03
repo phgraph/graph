@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\Traits;
 
 /**
@@ -32,7 +34,7 @@ trait Attributes
      */
     public function getAttributesWithPrefix(string $prefix): array
     {
-        $attributes = array_filter($this->attributes, function ($key) use ($prefix) {
+        $attributes = array_filter($this->attributes, static function ($key) use ($prefix) {
             return strpos($key, $prefix) === 0;
         }, ARRAY_FILTER_USE_KEY);
 

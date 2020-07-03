@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\MinimumSpanningTree;
 
 use PHGraph\Contracts\MinimumSpanningTree;
@@ -97,7 +99,7 @@ class Kruskal implements MinimumSpanningTree
                 }
             }
             if ($use_forest === null) {
-                $use_forest = new SplObjectStorage;
+                $use_forest = new SplObjectStorage();
                 $forests[] = $use_forest;
             }
 
@@ -106,7 +108,7 @@ class Kruskal implements MinimumSpanningTree
             $use_forest->attach($edge->getTo());
         }
 
-        if (count($edges) !== (count($this->graph->getVertices()) - 1)) {
+        if (count($edges) !== count($this->graph->getVertices()) - 1) {
             throw new UnexpectedValueException('Graph is not connected');
         }
 

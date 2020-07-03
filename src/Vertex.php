@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph;
 
 use Exception;
@@ -47,6 +49,43 @@ class Vertex implements Attributable
         $this->adjacent_in = [];
         $this->adjacent_out = [];
         $this->setAttributes($attributes);
+    }
+
+    /**
+     * Handle PHP native string repesentation.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Handle PHP native clone call. We disassociate all edges and reset id in
+     * this case.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->id = spl_object_hash($this);
+        $this->edges_in = [];
+        $this->edges_out = [];
+    }
+
+    /**
+     * Handle unset properties.
+     *
+     * @param string  $property  dynamic property to get
+     *
+     * @throws \Exception always
+     *
+     * @return void
+     */
+    public function __get(string $property): void
+    {
+        throw new Exception('Undefined Property: ' . $property);
     }
 
     /**
@@ -321,7 +360,7 @@ class Vertex implements Attributable
     {
         $edges = $this->getEdges();
 
-        return count($edges) + count(array_filter($edges, function ($edge) {
+        return count($edges) + count(array_filter($edges, static function ($edge) {
             return $edge->isLoop();
         }));
     }
@@ -333,7 +372,7 @@ class Vertex implements Attributable
      */
     public function degreeIn(): int
     {
-        return count($this->edges_in) + count(array_filter($this->edges_out, function ($edge) {
+        return count($this->edges_in) + count(array_filter($this->edges_out, static function ($edge) {
             return $edge->isLoop() && !$edge->isDirected();
         }));
     }
@@ -345,7 +384,7 @@ class Vertex implements Attributable
      */
     public function degreeOut(): int
     {
-        return count($this->edges_out) + count(array_filter($this->edges_in, function ($edge) {
+        return count($this->edges_out) + count(array_filter($this->edges_in, static function ($edge) {
             return $edge->isLoop() && !$edge->isDirected();
         }));
     }
@@ -401,42 +440,5 @@ class Vertex implements Attributable
 
             $graph->removeVertex($this);
         }
-    }
-
-    /**
-     * Handle PHP native string repesentation.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * Handle PHP native clone call. We disassociate all edges and reset id in
-     * this case.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->id = spl_object_hash($this);
-        $this->edges_in = [];
-        $this->edges_out = [];
-    }
-
-    /**
-     * Handle unset properties.
-     *
-     * @param string  $property  dynamic property to get
-     *
-     * @throws \Exception always
-     *
-     * @return void
-     */
-    public function __get(string $property)
-    {
-        throw new Exception('Undefined Property: ' . $property);
     }
 }

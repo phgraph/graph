@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\ShortestPath;
 
 use OutOfBoundsException;
@@ -55,7 +57,7 @@ class BreadthFirst implements ShortestPath
     {
         try {
             $this->getEdgesTo($vertex);
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $exception) {
             return false;
         }
 
@@ -128,7 +130,7 @@ class BreadthFirst implements ShortestPath
     public function getEdgesTo(Vertex $vertex): array
     {
         if ($vertex->getGraph() !== $this->vertex->getGraph()) {
-            throw new OutOfBoundsException;
+            throw new OutOfBoundsException();
         }
 
         $map = $this->getEdgesMap();
@@ -137,7 +139,7 @@ class BreadthFirst implements ShortestPath
             return $map[$vertex->getId()];
         }
 
-        throw new OutOfBoundsException;
+        throw new OutOfBoundsException();
     }
 
     /**
@@ -147,7 +149,7 @@ class BreadthFirst implements ShortestPath
      */
     public function getDistanceMap(): array
     {
-        return array_map(function ($edges) {
+        return array_map(static function ($edges) {
             return count($edges);
         }, $this->getEdgesMap());
     }

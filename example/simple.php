@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $cwd = dirname(__FILE__);
 
 require_once $cwd . '/../vendor/autoload.php';
@@ -7,7 +9,7 @@ require_once $cwd . '/../vendor/autoload.php';
 use PHGraph\Graph;
 use PHGraph\GraphViz\GraphViz;
 
-$graph = new Graph;
+$graph = new Graph();
 $columbus = $graph->newVertex([
     'name' => 'Columbus',
 ]);

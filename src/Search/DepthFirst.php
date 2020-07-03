@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\Search;
 
 use PHGraph\Contracts\Search;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
+use SplQueue;
 
 /**
  * Depth First search algorithm.
@@ -29,18 +31,26 @@ class DepthFirst implements Search
     }
 
     /**
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
-        $visited = new VertexCollection;
-        $queue = [$this->vertex];
-        while ($vertex = array_shift($queue)) {
-            if (!$visited->contains($vertex)) {
-                $visited->add($vertex);
-                foreach ($vertex->getVerticesTo()->reverse() as $nextVertex) {
-                    $queue[] = $nextVertex;
-                }
+        /** @var \PHGraph\Vertex[] $visited */
+        $visited = [];
+        $queue = new SplQueue();
+        $queue->enqueue($this->vertex);
+
+        while (!$queue->isEmpty()) {
+            /** @var \PHGraph\Vertex $vertex */
+            $vertex = $queue->dequeue();
+
+            if (isset($visited[$vertex->getId()])) {
+                continue;
+            }
+
+            $visited[$vertex->getId()] = $vertex;
+            foreach (array_reverse($vertex->getVerticesTo()) as $next_vertex) {
+                $queue->enqueue($next_vertex);
             }
         }
 

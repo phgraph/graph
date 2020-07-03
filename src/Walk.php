@@ -1,9 +1,8 @@
 <?php
 
-namespace PHGraph;
+declare(strict_types=1);
 
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
+namespace PHGraph;
 
 /**
  * A path is a trail in which all vertices (except possibly the first and last)
@@ -14,9 +13,9 @@ class Walk
 {
     /** @var \PHGraph\Vertex */
     protected $start_vertex;
-    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
+    /** @var \PHGraph\Vertex[] */
     protected $vertices;
-    /** @var \PHGraph\Support\EdgeCollection<\PHGraph\Edge> */
+    /** @var \PHGraph\Edge[] */
     protected $edges;
     /** @var \PHGraph\Graph */
     protected $graph;
@@ -24,24 +23,24 @@ class Walk
     protected $alternating_sequence = [];
 
     /**
-     * @param \PHGraph\Vertex                                $start_vertex vertex that the walk starts from
-     * @param \PHGraph\Support\EdgeCollection<\PHGraph\Edge> $edges        collection of edges for the walk
+     * @param \PHGraph\Vertex $start_vertex vertex that the walk starts from
+     * @param \PHGraph\Edge[] $edges collection of edges for the walk
      *
      * @return void
      */
-    public function __construct(Vertex $start_vertex, EdgeCollection $edges)
+    public function __construct(Vertex $start_vertex, array $edges)
     {
         $this->start_vertex = $start_vertex;
         $this->edges = $edges;
-        $this->vertices = new VertexCollection([$this->start_vertex]);
+        $this->vertices = [$this->start_vertex->getId() => $this->start_vertex];
 
         // walk the edges for the alternating sequence
         $current_vertex = $start_vertex;
         $this->alternating_sequence[] = $current_vertex;
-        foreach ($this->edges->ordered() as $edge) {
+        foreach ($this->edges as $edge) {
             $current_vertex = $edge->getAdjacentVertex($current_vertex);
 
-            $this->vertices[] = $current_vertex;
+            $this->vertices[$current_vertex->getId()] = $current_vertex;
 
             $this->alternating_sequence[] = $edge;
             $this->alternating_sequence[] = $current_vertex;
@@ -77,9 +76,9 @@ class Walk
     /**
      * return all edges of walk.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
         return $this->edges;
     }
@@ -87,9 +86,9 @@ class Walk
     /**
      * return all vertices of walk.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
         return $this->vertices;
     }

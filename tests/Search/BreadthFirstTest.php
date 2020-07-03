@@ -37,6 +37,6 @@ class BreadthFirstTest extends TestCase
 
         $bf = new BreadthFirst($vertex[0]);
 
-        $this->assertEquals($vertex, $bf->getVertices()->all());
+        $this->assertEqualsCanonicalizing($vertex, $bf->getVertices());
     }
 }

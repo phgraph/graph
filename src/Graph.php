@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph;
 
 use PHGraph\Contracts\Attributable;
 use PHGraph\Contracts\Directable;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Support\VertexReplacementMap;
 use PHGraph\Traits\Attributes;
 use UnderflowException;
@@ -18,16 +18,8 @@ final class Graph implements Attributable, Directable
 {
     use Attributes;
 
-    /** @var \PHGraph\Support\VertexCollection<\PHGraph\Vertex> */
-    protected $vertices;
-
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->vertices = new VertexCollection;
-    }
+    /** @var \PHGraph\Vertex[] */
+    protected $vertices = [];
 
     /**
      * Degree: get degree for k-regular-graph (only if each vertex has the same
@@ -40,7 +32,11 @@ final class Graph implements Attributable, Directable
      */
     public function getDegree(): int
     {
-        $degree = $this->vertices->first()->degree();
+        if (count($this->vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
+        $degree = reset($this->vertices)->degree();
 
         foreach ($this->vertices as $vertex) {
             $i = $vertex->degree();
@@ -56,33 +52,45 @@ final class Graph implements Attributable, Directable
     /**
      * Degree: get minimum degree of vertices.
      *
+     * @throws UnderflowException if graph is empty
+     *
      * @return int
      */
     public function getDegreeMin(): int
     {
-        return $this->vertices->sortBy(function (Vertex $vertex) {
-            return $vertex->degree();
-        })->first()->degree();
+        if (count($this->vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
+        return min(array_map(static function ($item) {
+            return $item->degree();
+        }, $this->vertices));
     }
 
     /**
      * Degree: get maximum degree of vertices.
      *
+     * @throws UnderflowException if graph is empty
+     *
      * @return int
      */
     public function getDegreeMax(): int
     {
-        return $this->vertices->sortByDesc(function (Vertex $vertex) {
-            return $vertex->degree();
-        })->first()->degree();
+        if (count($this->vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
+        return max(array_map(static function ($item) {
+            return $item->degree();
+        }, $this->vertices));
     }
 
     /**
      * get the vertices in the graph.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
         return $this->vertices;
     }
@@ -96,7 +104,7 @@ final class Graph implements Attributable, Directable
      */
     public function addVertex(Vertex $vertex): void
     {
-        $this->vertices->add($vertex);
+        $this->vertices[$vertex->getId()] = $vertex;
 
         if ($this !== $vertex->getGraph()) {
             $vertex->setGraph($this);
@@ -114,7 +122,7 @@ final class Graph implements Attributable, Directable
     {
         $vertex = new Vertex($this, $attributes);
 
-        $this->vertices->add($vertex);
+        $this->vertices[$vertex->getId()] = $vertex;
 
         return $vertex;
     }
@@ -128,7 +136,7 @@ final class Graph implements Attributable, Directable
      */
     public function removeVertex(Vertex $vertex): void
     {
-        $this->vertices->remove($vertex);
+        unset($this->vertices[$vertex->getId()]);
 
         $vertex->destroy();
     }
@@ -136,15 +144,17 @@ final class Graph implements Attributable, Directable
     /**
      * get the edges in the graph.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
-        $edges = new EdgeCollection;
+        $edges = [];
 
         /** @var \PHGraph\Vertex $vertex */
         foreach ($this->vertices as $vertex) {
-            $edges = $edges->merge($vertex->getEdges());
+            foreach ($vertex->getEdges() as $edge) {
+                $edges[$edge->getId()] = $edge;
+            }
         }
 
         return $edges;
@@ -153,19 +163,26 @@ final class Graph implements Attributable, Directable
     /**
      * Create a copy of this graph with only the supplied edges.
      *
-     * @param \PHGraph\Support\EdgeCollection<\PHGraph\Edge> $edges edges to use
+     * @param \PHGraph\Edge[] $edges edges to use
      *
      * @return \PHGraph\Graph
      */
-    public function newFromEdges(EdgeCollection $edges): Graph
+    public function newFromEdges(array $edges): Graph
     {
-        $new_graph = new static;
+        $new_graph = new static();
         $new_graph->attributes = $this->attributes;
 
-        $vertex_replacement_map = new VertexReplacementMap;
+        $vertex_replacement_map = new VertexReplacementMap();
+
+        $vertices = [];
+        foreach ($edges as $edge) {
+            foreach ($edge->getVertices() as $vertex) {
+                $vertices[$vertex->getId()] = $vertex;
+            }
+        }
 
         /** @var \PHGraph\Vertex $vertex */
-        foreach ($edges->getVertices() as $vertex) {
+        foreach ($vertices as $vertex) {
             $new_vertex = clone $vertex;
             $new_vertex->setGraph($new_graph);
 
@@ -241,11 +258,11 @@ final class Graph implements Attributable, Directable
      *
      * @param int $group
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVerticesGroup(int $group): VertexCollection
+    public function getVerticesGroup(int $group): array
     {
-        return $this->vertices->filter(function ($vertex) use ($group) {
+        return array_filter($this->vertices, static function ($vertex) use ($group) {
             return $vertex->getAttribute('group') === $group;
         });
     }
@@ -320,7 +337,7 @@ final class Graph implements Attributable, Directable
             foreach ($this->vertices as $vertex_b) {
                 if (
                     $vertex_a !== $vertex_b
-                    && !$connected_vertices->contains($vertex_b)
+                    && !isset($connected_vertices[$vertex_b->getId()])
                 ) {
                     return false;
                 }

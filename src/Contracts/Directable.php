@@ -1,8 +1,8 @@
 <?php
 
-namespace PHGraph\Contracts;
+declare(strict_types=1);
 
-use PHGraph\Support\EdgeCollection;
+namespace PHGraph\Contracts;
 
 interface Directable
 {
@@ -30,7 +30,7 @@ interface Directable
     /**
      * get the edges in the graph.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection;
+    public function getEdges(): array;
 }

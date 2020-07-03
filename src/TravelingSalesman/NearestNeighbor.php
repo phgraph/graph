@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\TravelingSalesman;
 
 use PHGraph\Contracts\TravelingSalesman;
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 use RuntimeException;
+use SplObjectStorage;
 use SplPriorityQueue;
+use UnderflowException;
 use UnexpectedValueException;
 
 /**
@@ -29,12 +31,20 @@ class NearestNeighbor implements TravelingSalesman
      *
      * @param \PHGraph\Graph $graph Graph to operate on
      *
+     * @throws UnderflowException if graph is empty
+     *
      * @return void
      */
     public function __construct(Graph $graph)
     {
         $this->graph = $graph;
-        $this->start_vertex = $graph->getVertices()->random();
+        $vertices = $graph->getVertices();
+
+        if (count($vertices) === 0) {
+            throw new UnderflowException('Graph is empty');
+        }
+
+        $this->start_vertex = $vertices[array_rand($vertices)];
     }
 
     /**
@@ -66,23 +76,19 @@ class NearestNeighbor implements TravelingSalesman
      *
      * @throws UnexpectedValueException if the Graph is not connected
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
-        if ($this->start_vertex === null) {
-            throw new UnexpectedValueException('Graph is empty');
-        }
-
-        $edges = new EdgeCollection();
+        $edges = [];
 
         $vertex_current = $this->start_vertex;
-        $marked = new VertexCollection();
+        $marked = new SplObjectStorage();
 
-        $itterations = $this->graph->getVertices()->count() - 1;
+        $itterations = count($this->graph->getVertices()) - 1;
 
         for ($i = 0; $i < $itterations; $i++) {
-            $marked->add($vertex_current);
+            $marked->attach($vertex_current);
 
             $edge_queue = new SplPriorityQueue();
 
@@ -97,12 +103,12 @@ class NearestNeighbor implements TravelingSalesman
                 try {
                     /** @var \PHGraph\Edge $cheapest_edge */
                     $cheapest_edge = $edge_queue->extract();
-                } catch (RuntimeException $e) {
-                    throw new UnexpectedValueException('Graph has more than one component', 0, $e);
+                } catch (RuntimeException $exception) {
+                    throw new UnexpectedValueException('Graph has more than one component', 0, $exception);
                 }
             } while ($marked->contains($cheapest_edge->getFrom()) && $marked->contains($cheapest_edge->getTo()));
 
-            $edges[] = $cheapest_edge;
+            $edges[$cheapest_edge->getId()] = $cheapest_edge;
 
             if ($marked->contains($cheapest_edge->getFrom())) {
                 $vertex_current = $cheapest_edge->getTo();
@@ -112,11 +118,11 @@ class NearestNeighbor implements TravelingSalesman
         }
 
         // try to connect back to start vertex
-        if ($vertex_current->getVertices()->contains($this->start_vertex)) {
+        if (isset($vertex_current->getVertices()[$this->start_vertex->getId()])) {
             $edge_queue = new SplPriorityQueue();
             /** @var \PHGraph\Edge $edge */
             foreach ($vertex_current->getEdgesOut() as $edge) {
-                if (!$edge->isLoop() && !$edges->contains($edge)) {
+                if (!$edge->isLoop() && !isset($edges[$edge->getId()])) {
                     $edge_queue->insert($edge, -$edge->getAttribute('weight', 0));
                 }
             }
@@ -124,12 +130,12 @@ class NearestNeighbor implements TravelingSalesman
             do {
                 /** @var \PHGraph\Edge $cheapest_edge */
                 $cheapest_edge = $edge_queue->extract();
-            } while (!$cheapest_edge->getVertices()->contains($this->start_vertex));
+            } while (!isset($cheapest_edge->getVertices()[$this->start_vertex->getId()]));
 
-            $edges[] = $cheapest_edge;
+            $edges[$cheapest_edge->getId()] = $cheapest_edge;
         }
 
-        if ($edges->count() !== (count($this->graph->getVertices()))) {
+        if (count($edges) !== count($this->graph->getVertices())) {
             throw new UnexpectedValueException('Graph is not connected');
         }
 

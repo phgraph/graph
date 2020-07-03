@@ -102,7 +102,7 @@ class KruskalTest extends TestCase
 
         $kruskal = new Kruskal($graph);
 
-        $this->assertEquals(4, $kruskal->getEdges()->count());
+        $this->assertCount(4, $kruskal->getEdges());
     }
 
     /**
@@ -138,7 +138,12 @@ class KruskalTest extends TestCase
 
         $kruskal = new Kruskal($graph);
 
-        $this->assertEquals(39, $kruskal->getEdges()->sumAttribute('weight'));
+        $edges = $kruskal->getEdges();
+        $sum_weight = array_sum(array_map(function ($edge) {
+            return $edge->getAttribute('weight');
+        }, $edges));
+
+        $this->assertEquals(39, $sum_weight);
     }
 
     /**
@@ -159,6 +164,13 @@ class KruskalTest extends TestCase
 
         $kruskal = new Kruskal($graph);
 
-        $this->assertEquals(3, $kruskal->getEdges()->first()->getAttribute('weight'));
+        $edges = $kruskal->getEdges();
+
+        $edge = reset($edges);
+        if ($edge === false) {
+            $this->fail('No edges returned');
+        } else {
+            $this->assertEquals(3, $edge->getAttribute('weight'));
+        }
     }
 }

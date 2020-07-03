@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\Search;
 
 use PHGraph\Contracts\Search;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
+use SplObjectStorage;
 
 /**
  * Breadth First search algorithm.
@@ -29,25 +31,26 @@ class BreadthFirst implements Search
     }
 
     /**
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
         $queue = [$this->vertex];
-        $marked = new VertexCollection([$this->vertex]);
-        $visited = new VertexCollection;
+        $marked = new SplObjectStorage();
+        $marked->attach($this->vertex);
+        $visited = [];
 
         do {
             /** @var \PHGraph\Vertex $current_vertex */
             $current_vertex = array_shift($queue);
-            $visited->add($current_vertex);
+            $visited[$current_vertex->getId()] = $current_vertex;
             $children = $current_vertex->getVerticesTo();
 
             /** @var \PHGraph\Vertex $vertex */
             foreach ($children as $vertex) {
                 if (!$marked->contains($vertex)) {
                     $queue[] = $vertex;
-                    $marked->add($vertex);
+                    $marked->attach($vertex);
                 }
             }
         } while (count($queue));

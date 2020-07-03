@@ -3,7 +3,6 @@
 namespace Tests;
 
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +16,7 @@ class WalkTest extends TestCase
      */
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf(Walk::class, new Walk(new Vertex(new Graph), new EdgeCollection));
+        $this->assertInstanceOf(Walk::class, new Walk(new Vertex(new Graph), []));
     }
 
     /**
@@ -93,7 +92,7 @@ class WalkTest extends TestCase
         $walk = new Walk($start, $graph->getEdges());
         $new_graph = $walk->createGraph();
 
-        $this->assertEquals([$edge], $walk->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $walk->getEdges());
     }
 
     /**
@@ -110,7 +109,7 @@ class WalkTest extends TestCase
         $walk = new Walk($start, $graph->getEdges());
         $new_graph = $walk->createGraph();
 
-        $this->assertEquals([$start, $v2], $walk->getVertices()->all());
+        $this->assertEqualsCanonicalizing([$start, $v2], $walk->getVertices());
     }
 
     /**

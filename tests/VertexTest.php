@@ -5,7 +5,6 @@ namespace Tests;
 use Exception;
 use PHGraph\Edge;
 use PHGraph\Graph;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
 
@@ -92,7 +91,7 @@ class VertexTest extends TestCase
         $edge_c = $vertex_a->createEdge($vertex_c);
         $edge_d = $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b, $edge_c, $edge_d], $vertex_a->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c, $edge_d], $vertex_a->getEdges());
     }
 
     /**
@@ -112,7 +111,7 @@ class VertexTest extends TestCase
         $edge_b = $vertex_a->createEdge($vertex_c);
         $edge_c = $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b, $edge_c], $vertex_a->getEdgesIn()->all());
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c], $vertex_a->getEdgesIn());
     }
 
     /**
@@ -133,7 +132,7 @@ class VertexTest extends TestCase
         $edge_c = $vertex_a->createEdge($vertex_c);
         $edge_d = $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b, $edge_c, $edge_d], $vertex_a->getEdgesIn()->all());
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c, $edge_d], $vertex_a->getEdgesIn());
     }
 
     /**
@@ -153,7 +152,7 @@ class VertexTest extends TestCase
         $edge_b = $vertex_a->createEdge($vertex_c);
         $edge_c = $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b], $vertex_a->getEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b], $vertex_a->getEdgesOut());
     }
 
     /**
@@ -174,7 +173,7 @@ class VertexTest extends TestCase
         $edge_c = $vertex_a->createEdge($vertex_c);
         $edge_d = $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b, $edge_c], $vertex_a->getEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c], $vertex_a->getEdgesOut());
     }
 
     /**
@@ -196,7 +195,7 @@ class VertexTest extends TestCase
 
         $edge_a->disable();
 
-        $this->assertEquals([$edge_a], $vertex_a->getDisabledEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge_a], $vertex_a->getDisabledEdgesOut());
     }
 
     /**
@@ -216,7 +215,7 @@ class VertexTest extends TestCase
         $edge_b = $vertex_a->createEdge($vertex_c);
         $edge_c = $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([], $vertex_a->getDisabledEdgesOut()->all());
+        $this->assertEquals([], $vertex_a->getDisabledEdgesOut());
     }
 
     /**
@@ -236,7 +235,7 @@ class VertexTest extends TestCase
         $v1->createEdge($v3);
         $v4->createEdgeTo($v1);
 
-        $this->assertEqualsCanonicalizing([$v2, $v3, $v4], $v1->getVertices()->all());
+        $this->assertEqualsCanonicalizing([$v2, $v3, $v4], $v1->getVertices());
     }
 
     /**
@@ -257,9 +256,9 @@ class VertexTest extends TestCase
         $v1->createEdge($v4);
         $v1->createEdge($v1);
 
-        $vertices = new VertexCollection([$v2, $v1, $v3, $v4]);
+        $vertices = [$v2, $v1, $v3, $v4];
 
-        $this->assertEquals($vertices->all(), $v1->getVertices()->all());
+        $this->assertEqualsCanonicalizing($vertices, $v1->getVertices());
     }
 
     /**
@@ -279,7 +278,7 @@ class VertexTest extends TestCase
         $vertex_a->createEdge($vertex_c);
         $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$vertex_b, $vertex_c, $vertex_d], $vertex_a->getVerticesFrom()->all());
+        $this->assertEqualsCanonicalizing([$vertex_b, $vertex_c, $vertex_d], $vertex_a->getVerticesFrom());
     }
 
     /**
@@ -300,7 +299,7 @@ class VertexTest extends TestCase
         $vertex_a->createEdge($vertex_c);
         $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$vertex_a, $vertex_b, $vertex_c, $vertex_d], $vertex_a->getVerticesFrom()->all());
+        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b, $vertex_c, $vertex_d], $vertex_a->getVerticesFrom());
     }
 
     /**
@@ -320,7 +319,7 @@ class VertexTest extends TestCase
         $vertex_a->createEdge($vertex_c);
         $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$vertex_b, $vertex_c], $vertex_a->getVerticesTo()->all());
+        $this->assertEqualsCanonicalizing([$vertex_b, $vertex_c], $vertex_a->getVerticesTo());
     }
 
     /**
@@ -341,7 +340,7 @@ class VertexTest extends TestCase
         $vertex_a->createEdge($vertex_c);
         $vertex_d->createEdgeTo($vertex_a);
 
-        $this->assertEquals([$vertex_a, $vertex_b, $vertex_c], $vertex_a->getVerticesTo()->all());
+        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b, $vertex_c], $vertex_a->getVerticesTo());
     }
 
     /**
@@ -363,7 +362,7 @@ class VertexTest extends TestCase
 
         $to_delete->destroy();
 
-        $this->assertEquals([$vertex_b], $vertex_a->getVerticesTo()->all());
+        $this->assertEqualsCanonicalizing([$vertex_b], $vertex_a->getVerticesTo());
     }
 
     /**
@@ -413,7 +412,7 @@ class VertexTest extends TestCase
 
         $vertex_b->addEdgeIn($edge);
 
-        $this->assertEquals([$edge], $vertex_b->getEdgesIn()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_b->getEdgesIn());
     }
 
     /**
@@ -431,7 +430,7 @@ class VertexTest extends TestCase
 
         $vertex_a->addEdgeIn($edge);
 
-        $this->assertEquals([$edge], $vertex_a->getEdgesIn()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_a->getEdgesIn());
     }
 
     /**
@@ -449,7 +448,7 @@ class VertexTest extends TestCase
 
         $vertex_a->addEdgeIn($edge);
 
-        $this->assertEquals([], $vertex_a->getEdgesIn()->all());
+        $this->assertEquals([], $vertex_a->getEdgesIn());
     }
 
     /**
@@ -469,7 +468,7 @@ class VertexTest extends TestCase
 
         $vertex_b->addEdgeIn($edge_b);
 
-        $this->assertEquals([$edge_a], $vertex_b->getEdgesIn()->all());
+        $this->assertEqualsCanonicalizing([$edge_a], $vertex_b->getEdgesIn());
     }
 
     /**
@@ -487,7 +486,7 @@ class VertexTest extends TestCase
 
         $vertex_a->addEdgeOut($edge);
 
-        $this->assertEquals([$edge], $vertex_a->getEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_a->getEdgesOut());
     }
 
     /**
@@ -505,7 +504,7 @@ class VertexTest extends TestCase
 
         $vertex_a->addEdgeOut($edge);
 
-        $this->assertEquals([$edge], $vertex_a->getEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_a->getEdgesOut());
     }
 
     /**
@@ -523,7 +522,7 @@ class VertexTest extends TestCase
 
         $vertex_b->addEdgeOut($edge);
 
-        $this->assertEquals([], $vertex_b->getEdgesOut()->all());
+        $this->assertEquals([], $vertex_b->getEdgesOut());
     }
 
     /**
@@ -543,7 +542,7 @@ class VertexTest extends TestCase
 
         $vertex_b->addEdgeOut($edge_b);
 
-        $this->assertEquals([$edge_a], $vertex_b->getEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge_a], $vertex_b->getEdgesOut());
     }
 
     /**
@@ -563,7 +562,7 @@ class VertexTest extends TestCase
 
         $vertex_b->removeEdge($edge_b);
 
-        $this->assertEquals([$edge_a], $vertex_b->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge_a], $vertex_b->getEdges());
     }
 
     /**
@@ -583,7 +582,7 @@ class VertexTest extends TestCase
 
         $vertex_b->removeEdge($edge_a, true);
 
-        $this->assertEquals([], $vertex_b->getEdges()->all());
+        $this->assertEquals([], $vertex_b->getEdges());
     }
 
     /**
@@ -605,7 +604,7 @@ class VertexTest extends TestCase
 
         $vertex_a->disableEdge($edge_a);
 
-        $this->assertEquals([$edge_a], $vertex_a->getDisabledEdgesOut()->all());
+        $this->assertEqualsCanonicalizing([$edge_a], $vertex_a->getDisabledEdgesOut());
     }
 
     /**
@@ -628,7 +627,7 @@ class VertexTest extends TestCase
         $edge_a->disable();
         $vertex_a->enableEdge($edge_a);
 
-        $this->assertEquals([], $vertex_a->getDisabledEdgesOut()->all());
+        $this->assertEquals([], $vertex_a->getDisabledEdgesOut());
     }
 
     /**

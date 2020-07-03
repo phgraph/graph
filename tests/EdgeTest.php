@@ -57,7 +57,7 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::DIRECTED);
 
-        $this->assertEquals([$edge], $vertex_a->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_a->getEdges());
     }
 
     /**
@@ -71,7 +71,7 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
 
-        $this->assertEquals([$edge], $vertex_a->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_a->getEdges());
     }
 
     /**
@@ -169,7 +169,7 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::DIRECTED);
 
-        $this->assertSame([$vertex_b], $edge->getTargets()->all());
+        $this->assertEqualsCanonicalizing([$vertex_b], $edge->getTargets());
     }
 
     /**
@@ -183,7 +183,7 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b, Edge::UNDIRECTED);
 
-        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b], $edge->getTargets()->all());
+        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b], $edge->getTargets());
     }
 
     /**
@@ -197,7 +197,7 @@ class EdgeTest extends TestCase
         $vertex_b = new Vertex($this->graph);
         $edge = new Edge($vertex_a, $vertex_b);
 
-        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b], $edge->getVertices()->all());
+        $this->assertEqualsCanonicalizing([$vertex_a, $vertex_b], $edge->getVertices());
     }
 
     /**
@@ -221,7 +221,7 @@ class EdgeTest extends TestCase
 
         $edge->replaceVerticesFromMap($replacement_map);
 
-        $this->assertEqualsCanonicalizing([$vertex_c, $vertex_d], $edge->getVertices()->all());
+        $this->assertEqualsCanonicalizing([$vertex_c, $vertex_d], $edge->getVertices());
     }
 
     /**
@@ -245,7 +245,7 @@ class EdgeTest extends TestCase
 
         $edge->replaceVerticesFromMap($replacement_map);
 
-        $this->assertEqualsCanonicalizing([$vertex_c, $vertex_d], $edge->getVertices()->all());
+        $this->assertEqualsCanonicalizing([$vertex_c, $vertex_d], $edge->getVertices());
     }
 
     /**
@@ -269,7 +269,7 @@ class EdgeTest extends TestCase
 
         $edge->replaceVerticesFromMap($replacement_map);
 
-        $this->assertNotEquals([$edge], $vertex_a->getEdges()->all());
+        $this->assertNotEqualsCanonicalizing([$edge], $vertex_a->getEdges());
     }
 
     /**
@@ -434,7 +434,7 @@ class EdgeTest extends TestCase
         $edge->disable();
         $edge->enable();
 
-        $this->assertEquals([$edge], $vertex_b->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_b->getEdges());
     }
 
     /**
@@ -450,7 +450,7 @@ class EdgeTest extends TestCase
         $edge->disable();
         $edge->enable();
 
-        $this->assertEquals([$edge], $vertex_b->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $vertex_b->getEdges());
     }
 
     /**

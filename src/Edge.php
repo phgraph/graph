@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph;
 
 use Exception;
 use PHGraph\Contracts\Attributable;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Support\VertexReplacementMap;
 use PHGraph\Traits\Attributes;
 
@@ -15,10 +16,8 @@ class Edge implements Attributable
 {
     use Attributes;
 
-    /** @var int */
-    const DIRECTED = 0;
-    /** @var int */
-    const UNDIRECTED = 1;
+    public const DIRECTED = 0;
+    public const UNDIRECTED = 1;
 
     /** @var string */
     protected $id;
@@ -61,6 +60,30 @@ class Edge implements Attributable
         }
 
         $this->setAttributes($attributes);
+    }
+
+    /**
+     * Handle PHP native clone call. We reset id.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->id = spl_object_hash($this);
+    }
+
+    /**
+     * Handle unset properties.
+     *
+     * @param string  $property  dynamic property to get
+     *
+     * @throws \Exception always
+     *
+     * @return void
+     */
+    public function __get(string $property): void
+    {
+        throw new Exception('Undefined Property: ' . $property);
     }
 
     /**
@@ -108,27 +131,29 @@ class Edge implements Attributable
      */
     public function getAdjacentVertex(Vertex $vertex): Vertex
     {
-        return ($this->to === $vertex) ? $this->from : $this->to;
+        return $this->to === $vertex ? $this->from : $this->to;
     }
 
     /**
      * Get target vertices of this edge.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getTargets(): VertexCollection
+    public function getTargets(): array
     {
-        return new VertexCollection($this->isDirected() ? [$this->to] : [$this->to, $this->from]);
+        return $this->isDirected()
+            ? [$this->to->getId() => $this->to]
+            : [$this->to->getId() => $this->to, $this->from->getId() => $this->from];
     }
 
     /**
      * Get the vertices on this edge.
      *
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection
+    public function getVertices(): array
     {
-        return new VertexCollection([$this->to, $this->from]);
+        return [$this->to->getId() => $this->to, $this->from->getId() => $this->from];
     }
 
     /**
@@ -222,29 +247,5 @@ class Edge implements Attributable
 
         $this->to->disableEdge($this);
         $this->from->disableEdge($this);
-    }
-
-    /**
-     * Handle PHP native clone call. We reset id.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->id = spl_object_hash($this);
-    }
-
-    /**
-     * Handle unset properties.
-     *
-     * @param string  $property  dynamic property to get
-     *
-     * @throws \Exception always
-     *
-     * @return void
-     */
-    public function __get(string $property)
-    {
-        throw new Exception('Undefined Property: ' . $property);
     }
 }

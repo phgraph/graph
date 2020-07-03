@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\ShortestPath;
 
 use OutOfBoundsException;
 use PHGraph\Contracts\ShortestPath;
 use PHGraph\Edge;
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
+use SplObjectStorage;
 use SplPriorityQueue;
 use UnexpectedValueException;
 
@@ -24,7 +25,7 @@ class Dijkstra implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
     protected $vertex;
-    /** @var \PHGraph\Support\EdgeCollection */
+    /** @var \PHGraph\Edge[] */
     protected $edges;
 
     /**
@@ -71,7 +72,7 @@ class Dijkstra implements ShortestPath
     {
         try {
             $this->getEdgesTo($vertex);
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $exception) {
             return false;
         }
 
@@ -99,7 +100,9 @@ class Dijkstra implements ShortestPath
      */
     public function getDistance(Vertex $vertex): float
     {
-        return $this->getEdgesTo($vertex)->sumAttribute('weight');
+        return array_sum(array_map(static function ($vertex) {
+            return $vertex->getAttribute('weight', 0);
+        }, $this->getEdgesTo($vertex)));
     }
 
     /**
@@ -109,64 +112,63 @@ class Dijkstra implements ShortestPath
      *
      * @throws OutOfBoundsException
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdgesTo(Vertex $vertex): EdgeCollection
+    public function getEdgesTo(Vertex $vertex): array
     {
-        $current_vertex = $vertex;
-        $path = new EdgeCollection;
-
         if ($vertex === $this->vertex) {
-            return $path;
+            return [];
         }
 
         $edges = $this->getEdges();
+        /** @var \PHGraph\Edge[] $path */
+        $path = [];
+        $current_vertex = $vertex;
 
         do {
-            $pre = null;
+            $previous_vertex = null;
 
-            /** @var \PHGraph\Edge $edge */
             foreach ($edges as $edge) {
-                if ($path->contains($edge)) {
+                if (isset($path[$edge->getId()])) {
                     continue;
                 }
 
                 if (!$edge->isDirected() && $edge->getFrom() === $current_vertex) {
-                    $path->add($edge);
-                    $pre = $edge->getTo();
+                    $path[$edge->getId()] = $edge;
+                    $previous_vertex = $edge->getTo();
 
                     break;
                 }
 
                 if ($edge->getTo() === $current_vertex) {
-                    $path->add($edge);
-                    $pre = $edge->getFrom();
+                    $path[$edge->getId()] = $edge;
+                    $previous_vertex = $edge->getFrom();
 
                     break;
                 }
             }
 
-            if ($pre === null) {
+            if ($previous_vertex === null) {
                 throw new OutOfBoundsException('No edge leading to vertex');
             }
 
-            $current_vertex = $pre;
+            $current_vertex = $previous_vertex;
         } while ($current_vertex !== $this->vertex);
 
-        return $path->reverse();
+        return array_reverse($path);
     }
 
     /**
      * get map of vertex IDs to distance.
      *
-     * @return array
+     * @return float[]
      */
     public function getDistanceMap(): array
     {
         $ret = [];
         foreach ($this->vertex->getGraph()->getVertices() as $vertex) {
             try {
-                $ret[$vertex->getId()] = $this->getEdgesTo($vertex)->sumAttribute('weight');
+                $ret[$vertex->getId()] = $this->getDistance($vertex);
             } catch (OutOfBoundsException $ignore) {
                 // ignore vertices that can not be reached
             }
@@ -180,9 +182,9 @@ class Dijkstra implements ShortestPath
      *
      * @throws UnexpectedValueException
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
         if ($this->edges !== null) {
             return $this->edges;
@@ -195,16 +197,16 @@ class Dijkstra implements ShortestPath
             $this->vertex->getId() => INF,
         ];
 
-        $vertex_queue = new SplPriorityQueue;
+        $vertex_queue = new SplPriorityQueue();
         $vertex_queue->insert($this->vertex, 1);
 
         $lowest_cost_vertex_to = [
             $this->vertex->getId() => $this->vertex,
         ];
 
-        $used_vertices = new VertexCollection;
-
-        for ($i = 0; $i < count($vertices); $i++) {
+        $used_vertices = new SplObjectStorage();
+        $vertex_count = count($vertices);
+        for ($i = 0; $i < $vertex_count; $i++) {
             if ($vertex_queue->isEmpty()) {
                 break;
             }
@@ -218,7 +220,6 @@ class Dijkstra implements ShortestPath
                 continue;
             }
 
-            /** @var \PHGraph\Edge $edge */
             foreach ($current_vertex->getEdgesOut() as $edge) {
                 $target_vertex = $edge->isDirected()
                     ? $edge->getTo()
@@ -248,25 +249,39 @@ class Dijkstra implements ShortestPath
                 }
             }
 
-            $used_vertices->add($current_vertex);
+            $used_vertices->attach($current_vertex);
         }
 
         if ($cost_to[$this->vertex->getId()] === INF) {
             unset($lowest_cost_vertex_to[$this->vertex->getId()]);
         }
 
-        $edges = new EdgeCollection;
-        /** @var \PHGraph\Vertex $vertex */
+        /** @var \PHGraph\Edge[] $edges */
+        $edges = [];
         foreach ($vertices as $vid => $vertex) {
-            if ($lowest_cost_vertex_to[$vid] ?? false) {
-                /** @var \PHGraph\Edge $closest_edge */
-                $closest_edge = $lowest_cost_vertex_to[$vid]->getEdgesOut()->filter(function (Edge $edge) use ($vertex) {
-                    return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
-                })->sortBy(function (Edge $edge) {
-                    return $edge->getAttribute('weight', 0);
-                })->first();
+            if (isset($lowest_cost_vertex_to[$vid])) {
+                /** @var \PHGraph\Edge[] $closest_edges */
+                $closest_edges = array_filter(
+                    $lowest_cost_vertex_to[$vid]->getEdgesOut(),
+                    static function (Edge $edge) use ($vertex) {
+                        return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
+                    }
+                );
 
-                $edges[] = $closest_edge;
+                if (count($closest_edges) === 0) {
+                    // @todo determine if this can actually happen
+                    // @codeCoverageIgnoreStart
+                    continue;
+                    // @codeCoverageIgnoreEnd
+                }
+
+                uasort($closest_edges, static function ($left, $right) {
+                    return $left->getAttribute('weight', 0) - $right->getAttribute('weight', 0);
+                });
+
+                $closest_edge = end($closest_edges);
+
+                $edges[$closest_edge->getId()] = $closest_edge;
             }
         }
 

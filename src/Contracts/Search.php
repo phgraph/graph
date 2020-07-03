@@ -1,13 +1,13 @@
 <?php
 
-namespace PHGraph\Contracts;
+declare(strict_types=1);
 
-use PHGraph\Support\VertexCollection;
+namespace PHGraph\Contracts;
 
 interface Search
 {
     /**
-     * @return \PHGraph\Support\VertexCollection<\PHGraph\Vertex>
+     * @return \PHGraph\Vertex[]
      */
-    public function getVertices(): VertexCollection;
+    public function getVertices(): array;
 }

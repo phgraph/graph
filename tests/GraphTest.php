@@ -3,24 +3,13 @@
 namespace Tests;
 
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
-use PHGraph\Support\VertexCollection;
 use PHGraph\Vertex;
 use PHPUnit\Framework\TestCase;
+use UnderflowException;
 use UnexpectedValueException;
 
 class GraphTest extends TestCase
 {
-    /**
-     * @covers PHGraph\Graph::__construct
-     *
-     * @return void
-     */
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf(Graph::class, new Graph);
-    }
-
     /**
      * @covers PHGraph\Graph::getDegree
      *
@@ -34,6 +23,20 @@ class GraphTest extends TestCase
         $v1->createEdgeTo($v2);
 
         $this->assertEquals(1, $graph->getDegree());
+    }
+
+    /**
+     * @covers PHGraph\Graph::getDegree
+     *
+     * @return void
+     */
+    public function testGetDegreeEmpty(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        $graph = new Graph;
+
+        $graph->getDegree();
     }
 
     /**
@@ -70,6 +73,20 @@ class GraphTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Graph::getDegreeMin
+     *
+     * @return void
+     */
+    public function testGetDegreeMinEmpty(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        $graph = new Graph;
+
+        $graph->getDegreeMin();
+    }
+
+    /**
      * @covers PHGraph\Graph::getDegreeMax
      *
      * @return void
@@ -85,15 +102,29 @@ class GraphTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Graph::getDegreeMax
+     *
+     * @return void
+     */
+    public function testGetDegreeMaxEmpty(): void
+    {
+        $this->expectException(UnderflowException::class);
+
+        $graph = new Graph;
+
+        $graph->getDegreeMax();
+    }
+
+    /**
      * @covers PHGraph\Graph::getVertices
      *
      * @return void
      */
-    public function testGetVerticesIsVertexCollection(): void
+    public function testGetVerticesIsArray(): void
     {
         $graph = new Graph;
 
-        $this->assertInstanceOf(VertexCollection::class, $graph->getVertices());
+        $this->assertIsArray($graph->getVertices());
     }
 
     /**
@@ -108,7 +139,7 @@ class GraphTest extends TestCase
 
         $graph->addVertex($vertex);
 
-        $this->assertTrue($graph->getVertices()->contains($vertex));
+        $this->assertContains($vertex, $graph->getVertices());
     }
 
     /**
@@ -133,7 +164,7 @@ class GraphTest extends TestCase
         $graph = new Graph;
         $vertex = $graph->newVertex();
 
-        $this->assertTrue($graph->getVertices()->contains($vertex));
+        $this->assertContains($vertex, $graph->getVertices());
     }
 
     /**
@@ -147,7 +178,7 @@ class GraphTest extends TestCase
         $vertex = $graph->newVertex();
         $graph->removeVertex($vertex);
 
-        $this->assertFalse($graph->getVertices()->contains($vertex));
+        $this->assertNotContains($vertex, $graph->getVertices());
     }
 
     /**
@@ -155,11 +186,11 @@ class GraphTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesIsEdgeCollection(): void
+    public function testGetEdgesIsArray(): void
     {
         $graph = new Graph;
 
-        $this->assertInstanceOf(EdgeCollection::class, $graph->getEdges());
+        $this->assertIsArray($graph->getEdges());
     }
 
     /**
@@ -174,7 +205,7 @@ class GraphTest extends TestCase
         $vertex_b = new Vertex($graph);
         $edge = $vertex_a->createEdge($vertex_b);
 
-        $this->assertEquals([$edge], $graph->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge], $graph->getEdges());
     }
 
     /**
@@ -186,7 +217,7 @@ class GraphTest extends TestCase
     {
         $graph = new Graph;
 
-        $this->assertInstanceOf(Graph::class, $graph->newFromEdges(new EdgeCollection));
+        $this->assertInstanceOf(Graph::class, $graph->newFromEdges([]));
     }
 
     /**
@@ -198,7 +229,7 @@ class GraphTest extends TestCase
     {
         $graph = new Graph;
 
-        $this->assertNotSame($graph, $graph->newFromEdges(new EdgeCollection));
+        $this->assertNotSame($graph, $graph->newFromEdges([]));
     }
 
     /**
@@ -211,7 +242,7 @@ class GraphTest extends TestCase
         $graph = new Graph;
         $graph->setAttribute('testing', 'test');
 
-        $this->assertSame('test', $graph->newFromEdges(new EdgeCollection)->getAttribute('testing'));
+        $this->assertSame('test', $graph->newFromEdges([])->getAttribute('testing'));
     }
 
     /**
@@ -226,7 +257,9 @@ class GraphTest extends TestCase
         $vertex_b = new Vertex($graph);
         $edge = $vertex_a->createEdge($vertex_b);
 
-        $this->assertNotSame($edge, array_values($graph->newFromEdges(new EdgeCollection([$edge]))->getEdges()->all())[0]);
+        $new_graph_edges = $graph->newFromEdges([$edge])->getEdges();
+
+        $this->assertNotSame($edge, reset($new_graph_edges));
     }
 
     /**
@@ -369,7 +402,7 @@ class GraphTest extends TestCase
         $v1->createEdge($v4);
         $v2->createEdge($v3);
 
-        $this->assertEquals([$v1, $v3], $graph->getVerticesGroup(0)->all());
+        $this->assertEqualsCanonicalizing([$v1, $v3], $graph->getVerticesGroup(0));
     }
 
     /**

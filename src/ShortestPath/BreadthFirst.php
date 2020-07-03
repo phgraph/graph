@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHGraph\ShortestPath;
 
 use OutOfBoundsException;
 use PHGraph\Contracts\ShortestPath;
 use PHGraph\Graph;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 
@@ -56,7 +57,7 @@ class BreadthFirst implements ShortestPath
     {
         try {
             $this->getEdgesTo($vertex);
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $exception) {
             return false;
         }
 
@@ -90,14 +91,14 @@ class BreadthFirst implements ShortestPath
     /**
      * get array of edges on the walk for each vertex (vertex ID => array of walk edges).
      *
-     * @return array
+     * @return array<string, \PHGraph\Edge[]>
      */
     public function getEdgesMap(): array
     {
         $vertex_queue = [];
         $vertex_current = $this->vertex;
         $edges = [
-            $vertex_current->getId() => new EdgeCollection,
+            $vertex_current->getId() => [],
         ];
 
         do {
@@ -107,7 +108,7 @@ class BreadthFirst implements ShortestPath
 
                 if (!isset($edges[$vid])) {
                     $vertex_queue[] = $vertex_target;
-                    $edges[$vid] = $edges[$vertex_current->getId()]->merge([$edge]);
+                    $edges[$vid] = array_merge($edges[$vertex_current->getId()], [$edge]);
                 }
             }
 
@@ -124,12 +125,12 @@ class BreadthFirst implements ShortestPath
      *
      * @throws OutOfBoundsException
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdgesTo(Vertex $vertex): EdgeCollection
+    public function getEdgesTo(Vertex $vertex): array
     {
         if ($vertex->getGraph() !== $this->vertex->getGraph()) {
-            throw new OutOfBoundsException;
+            throw new OutOfBoundsException();
         }
 
         $map = $this->getEdgesMap();
@@ -138,17 +139,17 @@ class BreadthFirst implements ShortestPath
             return $map[$vertex->getId()];
         }
 
-        throw new OutOfBoundsException;
+        throw new OutOfBoundsException();
     }
 
     /**
      * get map of vertex IDs to distance.
      *
-     * @return array
+     * @return int[]
      */
     public function getDistanceMap(): array
     {
-        return array_map(function ($edges) {
+        return array_map(static function ($edges) {
             return count($edges);
         }, $this->getEdgesMap());
     }
@@ -156,15 +157,14 @@ class BreadthFirst implements ShortestPath
     /**
      * Get all the edges that were mapped out.
      *
-     * @return \PHGraph\Support\EdgeCollection<\PHGraph\Edge>
+     * @return \PHGraph\Edge[]
      */
-    public function getEdges(): EdgeCollection
+    public function getEdges(): array
     {
-        $all_edges = new EdgeCollection;
+        $all_edges = [];
 
-        /** @var \PHGraph\Support\EdgeCollection $edges */
         foreach ($this->getEdgesMap() as $edges) {
-            $all_edges = $all_edges->merge($edges);
+            $all_edges = array_merge($all_edges, $edges);
         }
 
         return $all_edges;

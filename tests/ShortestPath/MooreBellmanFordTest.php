@@ -3,10 +3,9 @@
 namespace Tests\ShortestPath;
 
 use OutOfBoundsException;
-use PHGraph\Exception\NegativeCycleException;
+use PHGraph\Exception\NegativeCycle;
 use PHGraph\Graph;
 use PHGraph\ShortestPath\MooreBellmanFord;
-use PHGraph\Support\EdgeCollection;
 use PHGraph\Vertex;
 use PHGraph\Walk;
 use PHPUnit\Framework\TestCase;
@@ -175,7 +174,7 @@ class MooreBellmanFordTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesIsEdgeCollection(): void
+    public function testGetEdgesIsArray(): void
     {
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -184,7 +183,7 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertInstanceOf(EdgeCollection::class, $bf->getEdgesTo($vertex_b));
+        $this->assertIsArray($bf->getEdgesTo($vertex_b));
     }
 
     /**
@@ -210,7 +209,10 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertEquals([$edge_a, $edge_b], $bf->getEdgesTo($vertex_e)->all());
+        $this->assertEquals([
+            $edge_a->getId() => $edge_a,
+            $edge_b->getId() => $edge_b,
+        ], $bf->getEdgesTo($vertex_e));
     }
 
     /**
@@ -226,7 +228,7 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertEmpty($bf->getEdgesTo($vertex_a)->all());
+        $this->assertEmpty($bf->getEdgesTo($vertex_a));
     }
 
     /**
@@ -286,7 +288,9 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertEquals([$edge], $bf->getEdges()->all());
+        $this->assertEquals([
+            $edge->getId() => $edge,
+        ], $bf->getEdges());
     }
 
     /**
@@ -303,12 +307,12 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $edges = $bf->getEdges()->all();
+        $edges = $bf->getEdges();
 
         $vertex_c = new Vertex($graph);
         $vertex_a->createEdgeTo($vertex_c);
 
-        $this->assertEquals($edges, $bf->getEdges()->all());
+        $this->assertEquals($edges, $bf->getEdges());
     }
 
     /**
@@ -329,7 +333,9 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertEquals([$edge_b], $bf->getEdges()->all());
+        $this->assertEquals([
+            $edge_b->getId() => $edge_b,
+        ], $bf->getEdges());
     }
 
     /**
@@ -355,7 +361,7 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertEqualsCanonicalizing([$edge_b, $edge_c], $bf->getEdges()->all());
+        $this->assertEqualsCanonicalizing([$edge_b, $edge_c], $bf->getEdges());
     }
 
     /**
@@ -377,7 +383,9 @@ class MooreBellmanFordTest extends TestCase
 
         $bf = new MooreBellmanFord($vertex_a);
 
-        $this->assertEquals([$edge_b], $bf->getEdges()->all());
+        $this->assertEquals([
+            $edge_b->getId() => $edge_b,
+        ], $bf->getEdges());
     }
 
     /**
@@ -385,9 +393,9 @@ class MooreBellmanFordTest extends TestCase
      *
      * @return void
      */
-    public function testGetEdgesThrowsNegativeCycleException(): void
+    public function testGetEdgesThrowsNegativeCycle(): void
     {
-        $this->expectException(NegativeCycleException::class);
+        $this->expectException(NegativeCycle::class);
 
         $graph = new Graph;
         $vertex_a = new Vertex($graph);
@@ -395,17 +403,13 @@ class MooreBellmanFordTest extends TestCase
         $vertex_c = new Vertex($graph);
         $vertex_d = new Vertex($graph);
         $vertex_e = new Vertex($graph);
-        $edge_a = $vertex_a->createEdgeTo($vertex_b);
-        $edge_b = $vertex_b->createEdgeTo($vertex_e);
-        $edge_c = $vertex_b->createEdgeTo($vertex_c);
-        $edge_d = $vertex_c->createEdgeTo($vertex_d);
-        $edge_e = $vertex_d->createEdgeTo($vertex_b);
 
-        $edge_a->setAttribute('weight', 2);
-        $edge_b->setAttribute('weight', 2);
-        $edge_c->setAttribute('weight', -2);
-        $edge_d->setAttribute('weight', 2);
-        $edge_e->setAttribute('weight', -2);
+        $vertex_a->createEdgeTo($vertex_b, ['weight' => 2]);
+        $vertex_b->createEdgeTo($vertex_e, ['weight' => 2]);
+        $vertex_b->createEdgeTo($vertex_c, ['weight' => -2]);
+        $vertex_b->createEdgeTo($vertex_c, ['weight' => -3]);
+        $vertex_c->createEdgeTo($vertex_d, ['weight' => 2]);
+        $vertex_d->createEdgeTo($vertex_b, ['weight' => -2]);
 
         $bf = new MooreBellmanFord($vertex_a);
 

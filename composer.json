@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=7.3.0",
+        "php": ">=7.4.0",
         "symfony/process": "^5.0"
     },
     "autoload": {
@@ -44,7 +44,7 @@
             "./vendor/bin/phpstan analyse --ansi"
         ],
         "insights": [
-            "./vendor/bin/phpinsights -n --ansi"
+            "./vendor/bin/phpinsights -n -v --ansi"
         ],
         "coverage": [
             "phpdbg -qrr ./vendor/bin/phpunit --colors=always --coverage-clover=./report/coverage.clover --coverage-html=./report"

@@ -17,12 +17,12 @@ use UnexpectedValueException;
  *
  * @see https://en.wikipedia.org/wiki/Prim%27s_algorithm
  */
-class Prim implements MinimumSpanningTree
+final class Prim implements MinimumSpanningTree
 {
     /** @var \PHGraph\Graph */
-    protected $graph;
+    private $graph;
     /** @var \PHGraph\Vertex */
-    protected $start_vertex;
+    private $start_vertex;
 
     /**
      * instantiate new algorithm.

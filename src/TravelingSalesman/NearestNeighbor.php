@@ -18,12 +18,12 @@ use UnexpectedValueException;
  *
  * @see https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
  */
-class NearestNeighbor implements TravelingSalesman
+final class NearestNeighbor implements TravelingSalesman
 {
     /** @var \PHGraph\Graph */
-    protected $graph;
+    private $graph;
     /** @var \PHGraph\Vertex */
-    protected $start_vertex;
+    private $start_vertex;
 
     /**
      * instantiate new algorithm. A starting vertex is chosen at random per the

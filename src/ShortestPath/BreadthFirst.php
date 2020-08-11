@@ -15,10 +15,10 @@ use PHGraph\Walk;
  *
  * @see https://en.wikipedia.org/wiki/Best-first_search
  */
-class BreadthFirst implements ShortestPath
+final class BreadthFirst implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
-    protected $vertex;
+    private $vertex;
 
     /**
      * instantiate new algorithm.

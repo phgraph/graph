@@ -15,10 +15,10 @@ use UnexpectedValueException;
  *
  * @see https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
  */
-class Kruskal implements MinimumSpanningTree
+final class Kruskal implements MinimumSpanningTree
 {
     /** @var \PHGraph\Graph */
-    protected $graph;
+    private $graph;
 
     /**
      * instantiate new algorithm.

@@ -9,18 +9,18 @@ namespace PHGraph;
  * are distinct. A trail is a walk in which all edges are distinct. A walk is an
  * alternating sequence of vertices and edges.
  */
-class Walk
+final class Walk
 {
     /** @var \PHGraph\Vertex */
-    protected $start_vertex;
+    private $start_vertex;
     /** @var \PHGraph\Vertex[] */
-    protected $vertices;
+    private $vertices;
     /** @var \PHGraph\Edge[] */
-    protected $edges;
+    private $edges;
     /** @var \PHGraph\Graph */
-    protected $graph;
+    private $graph;
     /** @var mixed[] */
-    protected $alternating_sequence = [];
+    private $alternating_sequence = [];
 
     /**
      * @param \PHGraph\Vertex $start_vertex vertex that the walk starts from

@@ -13,7 +13,7 @@ use PHGraph\Walk;
  * path: any path that has a point on the negative cycle can be made cheaper by
  * one more walk around the negative cycle.
  */
-class NegativeCycle extends Exception
+final class NegativeCycle extends Exception
 {
     /** @var \PHGraph\Walk */
     private $cycle;

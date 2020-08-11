@@ -15,10 +15,10 @@ use UnexpectedValueException;
  *
  * @see http://www.graphviz.org/
  */
-class GraphViz
+final class GraphViz
 {
     /** @var \PHGraph\Graph */
-    protected $graph;
+    private $graph;
     /** @var string */
     private $format;
     /** @var string */

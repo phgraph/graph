@@ -20,12 +20,12 @@ use UnderflowException;
  *
  * @see https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm
  */
-class MooreBellmanFord implements ShortestPath
+final class MooreBellmanFord implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
-    protected $vertex;
+    private $vertex;
     /** @var \PHGraph\Edge[] */
-    protected $edges;
+    private $edges;
 
     /**
      * instantiate new algorithm.

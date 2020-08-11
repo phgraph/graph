@@ -64,6 +64,7 @@ return [
         // potentially reenble
         SlevomatCodingStandard\Sniffs\TypeHints\DisallowArrayTypeHintSyntaxSniff::class,
         PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\EmptyStatementSniff::class,
+        SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff::class,
         // certain
         NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff::class,
         SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff::class,
@@ -110,9 +111,9 @@ return [
     */
 
     'requirements' => [
-        'min-quality' => 95,
-        'min-complexity' => 50,
-        'min-architecture' => 90,
+        'min-quality' => 97,
+        'min-complexity' => 55,
+        'min-architecture' => 95,
         'min-style' => 100,
         'disable-security-check' => false,
     ],

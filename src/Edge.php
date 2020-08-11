@@ -12,7 +12,7 @@ use PHGraph\Traits\Attributes;
 /**
  * Directed connectors of vertices.
  */
-class Edge implements Attributable
+final class Edge implements Attributable
 {
     use Attributes;
 

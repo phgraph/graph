@@ -14,10 +14,10 @@ use PHGraph\Vertex;
  *
  * @implements ArrayAccess<\PHGraph\Vertex,\PHGraph\Vertex>
  */
-class VertexReplacementMap implements ArrayAccess, Countable
+final class VertexReplacementMap implements ArrayAccess, Countable
 {
     /** @var array<string,\PHGraph\Vertex> */
-    protected $replacements = [];
+    private $replacements = [];
 
     /**
      * Countable: get count of items in collection.

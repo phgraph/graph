@@ -11,7 +11,7 @@ use PHGraph\Traits\Attributes;
 /**
  * The fundamental unit of which graphs are formed.
  */
-class Vertex implements Attributable
+final class Vertex implements Attributable
 {
     use Attributes;
 

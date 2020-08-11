@@ -13,10 +13,10 @@ use SplObjectStorage;
  *
  * @see https://en.wikipedia.org/wiki/Breadth-first_search
  */
-class BreadthFirst implements Search
+final class BreadthFirst implements Search
 {
     /** @var \PHGraph\Vertex */
-    protected $vertex;
+    private $vertex;
 
     /**
      * instantiate new algorithm.

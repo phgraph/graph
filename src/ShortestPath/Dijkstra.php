@@ -21,12 +21,12 @@ use UnexpectedValueException;
  *
  * @see https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
  */
-class Dijkstra implements ShortestPath
+final class Dijkstra implements ShortestPath
 {
     /** @var \PHGraph\Vertex */
-    protected $vertex;
+    private $vertex;
     /** @var \PHGraph\Edge[] */
-    protected $edges;
+    private $edges;
 
     /**
      * instantiate new algorithm.

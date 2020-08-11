@@ -13,10 +13,10 @@ use SplQueue;
  *
  * @see https://en.wikipedia.org/wiki/Depth-first_search
  */
-class DepthFirst implements Search
+final class DepthFirst implements Search
 {
     /** @var \PHGraph\Vertex */
-    protected $vertex;
+    private $vertex;
 
     /**
      * instantiate new algorithm.

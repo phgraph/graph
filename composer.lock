@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "762852b8da893e6542218c629a8c32d1",
+    "content-hash": "4a330d07423d8420d3facbe1ae82ad46",
     "packages": [
         {
             "name": "symfony/polyfill-php80",
@@ -2586,16 +2586,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.3.5",
+            "version": "9.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7115b00b23bcd4f62a73855c9615694d2f206e71"
+                "reference": "32ff2c88b44cb0260c595c4787efb0945ceada68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7115b00b23bcd4f62a73855c9615694d2f206e71",
-                "reference": "7115b00b23bcd4f62a73855c9615694d2f206e71",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/32ff2c88b44cb0260c595c4787efb0945ceada68",
+                "reference": "32ff2c88b44cb0260c595c4787efb0945ceada68",
                 "shasum": ""
             },
             "require": {
@@ -2680,7 +2680,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-10T06:50:08+00:00"
+            "time": "2020-08-11T09:58:22+00:00"
         },
         {
             "name": "psr/container",
@@ -5968,7 +5968,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3.0"
+        "php": ">=7.4.0"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

@@ -148,6 +148,16 @@ final class Vertex implements Attributable
     }
 
     /**
+     * Get the dissabled edges leading in to this vertex.
+     *
+     * @return \PHGraph\Edge[]
+     */
+    public function getDisabledEdgesIn(): array
+    {
+        return $this->edges_in_disabled;
+    }
+
+    /**
      * Get the edges leading out from this vertex.
      *
      * @return \PHGraph\Edge[]
@@ -158,7 +168,7 @@ final class Vertex implements Attributable
     }
 
     /**
-     * Get the edges leading out from this vertex.
+     * Get the disabled edges leading out from this vertex.
      *
      * @return \PHGraph\Edge[]
      */

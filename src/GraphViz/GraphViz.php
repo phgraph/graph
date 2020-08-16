@@ -166,8 +166,7 @@ final class GraphViz
             }
         }
 
-        // only append group number to vertex label if there are at least 2 different groups
-        $showGroups = ($this->graph->getNumberOfGroups() > 1);
+        $showGroups = ($this->graph->getNumberOfGroups() > 0);
 
         if ($showGroups) {
             $gid = 0;

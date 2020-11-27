@@ -17,8 +17,7 @@ use PHGraph\Walk;
  */
 final class BreadthFirst implements ShortestPath
 {
-    /** @var \PHGraph\Vertex */
-    private $vertex;
+    private Vertex $vertex;
 
     /**
      * instantiate new algorithm.

@@ -15,8 +15,7 @@ use PHGraph\Walk;
  */
 final class NegativeCycle extends Exception
 {
-    /** @var \PHGraph\Walk */
-    private $cycle;
+    private Walk $cycle;
 
     /**
      * @param string          $message  exception message

@@ -15,22 +15,20 @@ final class Vertex implements Attributable
 {
     use Attributes;
 
-    /** @var string */
-    protected $id;
-    /** @var \PHGraph\Graph */
-    protected $graph;
+    protected string $id;
+    protected Graph $graph;
     /** @var \PHGraph\Edge[] */
-    protected $edges_in;
+    protected array $edges_in;
     /** @var \PHGraph\Edge[] */
-    protected $edges_out;
+    protected array $edges_out;
     /** @var \PHGraph\Edge[] */
-    protected $edges_in_disabled;
+    protected array $edges_in_disabled;
     /** @var \PHGraph\Edge[] */
-    protected $edges_out_disabled;
+    protected array $edges_out_disabled;
     /** @var \PHGraph\Vertex[] */
-    protected $adjacent_in;
+    protected array $adjacent_in;
     /** @var \PHGraph\Vertex[] */
-    protected $adjacent_out;
+    protected array $adjacent_out;
 
     /**
      * @param \PHGraph\Graph $graph      source graph
@@ -107,7 +105,7 @@ final class Vertex implements Attributable
      */
     public function setGraph(Graph $graph): void
     {
-        if ($this->graph === $graph) {
+        if (isset($this->graph) && $this->graph === $graph) {
             return;
         }
 
@@ -135,6 +133,16 @@ final class Vertex implements Attributable
     public function getEdges(): array
     {
         return array_merge($this->edges_in, $this->edges_out);
+    }
+
+    /**
+     * Get all edges connected to this vertex.
+     *
+     * @return \PHGraph\Edge[]
+     */
+    public function getAllEdges(): array
+    {
+        return array_merge($this->edges_in, $this->edges_out, $this->edges_in_disabled, $this->edges_out_disabled);
     }
 
     /**

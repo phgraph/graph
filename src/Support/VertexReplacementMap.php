@@ -17,7 +17,7 @@ use PHGraph\Vertex;
 final class VertexReplacementMap implements ArrayAccess, Countable
 {
     /** @var array<string,\PHGraph\Vertex> */
-    private $replacements = [];
+    private array $replacements = [];
 
     /**
      * Countable: get count of items in collection.

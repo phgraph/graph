@@ -40,6 +40,24 @@ class AttributesTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Traits\Attributes::getAttributes
+     *
+     * @return void
+     */
+    public function testGetAttributes(): void
+    {
+        $attributable = new AttributesClass([
+            'foo.quux' => 'test1',
+            'bar.baz' => 'test2',
+        ]);
+
+        $this->assertEquals([
+            'foo.quux' => 'test1',
+            'bar.baz' => 'test2',
+        ], $attributable->getAttributes());
+    }
+
+    /**
      * @covers PHGraph\Traits\Attributes::getAttributesWithPrefix
      *
      * @return void

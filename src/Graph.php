@@ -19,7 +19,7 @@ final class Graph implements Attributable, Directable
     use Attributes;
 
     /** @var \PHGraph\Vertex[] */
-    protected $vertices = [];
+    protected array $vertices = [];
 
     /**
      * Degree: get degree for k-regular-graph (only if each vertex has the same

@@ -17,8 +17,7 @@ use UnexpectedValueException;
  */
 final class Kruskal implements MinimumSpanningTree
 {
-    /** @var \PHGraph\Graph */
-    private $graph;
+    private Graph $graph;
 
     /**
      * instantiate new algorithm.

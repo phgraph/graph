@@ -15,8 +15,7 @@ use SplObjectStorage;
  */
 final class BreadthFirst implements Search
 {
-    /** @var \PHGraph\Vertex */
-    private $vertex;
+    private Vertex $vertex;
 
     /**
      * instantiate new algorithm.

@@ -236,7 +236,7 @@ class GraphVizTest extends TestCase
         $a->setAttribute('name', 'a');
         $b->setAttribute('name', 'b');
 
-        $this->assertEquals("graph {\n  \"a\"\n  \"b\"\n}\n", $graphviz->createScript());
+        $this->assertEquals("graph {\n  \"a\"\n  \"b\"\n  subgraph cluster_0 {\n    label = 0\n  }\n}\n", $graphviz->createScript());
     }
 
     /**
@@ -302,7 +302,7 @@ class GraphVizTest extends TestCase
         $a->setAttribute('name', 'a');
         $b->setAttribute('name', 'b');
 
-        $this->assertEquals("digraph {\n  \"a\" -> \"b\"\n}\n", $graphviz->createScript());
+        $this->assertEquals("digraph {\n  subgraph cluster_0 {\n    label = 0\n  }\n  \"a\" -> \"b\"\n}\n", $graphviz->createScript());
     }
 
     /**
@@ -323,7 +323,7 @@ class GraphVizTest extends TestCase
         $b->setAttribute('name', 'b');
         $c->setAttribute('name', 'c');
 
-        $this->assertEquals("digraph {\n  \"a\" -> \"b\"\n  \"c\" -> \"b\" [dir=\"none\"]\n}\n", $graphviz->createScript());
+        $this->assertEquals("digraph {\n  subgraph cluster_0 {\n    label = 0\n  }\n  \"a\" -> \"b\"\n  \"c\" -> \"b\" [dir=\"none\"]\n}\n", $graphviz->createScript());
     }
 
     /**
@@ -364,7 +364,7 @@ class GraphVizTest extends TestCase
         $c->setAttribute('name', 'c');
         $d->setAttribute('name', 'd');
 
-        $this->assertEquals("graph {\n  \"d\"\n  \"a\" -- \"b\"\n  \"c\" -- \"b\"\n}\n", $graphviz->createScript());
+        $this->assertEquals("graph {\n  \"d\"\n  subgraph cluster_0 {\n    label = 0\n  }\n  \"a\" -- \"b\"\n  \"c\" -- \"b\"\n}\n", $graphviz->createScript());
     }
 
     /**
@@ -389,7 +389,7 @@ class GraphVizTest extends TestCase
         $d->setAttribute('name', 'test');
         $d->setAttribute('graphviz.a', 'b');
 
-        $this->assertEquals("graph {\n  \"a (+1)\"\n  \"b (0)\"\n  \"c (-1)\"\n  \"test\" [a=\"b\"]\n}\n", $graphviz->createScript());
+        $this->assertEquals("graph {\n  \"a (+1)\"\n  \"b (0)\"\n  \"c (-1)\"\n  \"test\" [a=\"b\"]\n  subgraph cluster_0 {\n    label = 0\n  }\n}\n", $graphviz->createScript());
     }
 
     /**
@@ -412,7 +412,7 @@ class GraphVizTest extends TestCase
         $edge_e->setAttributes(['graphviz.a' => 'b', 'graphviz.c' => 'd']);
         $graphviz = new GraphViz($graph);
 
-        $this->assertEquals("graph {\n  \"a1\" -- \"a2\"\n  \"b1\" -- \"b2\" [numeric=20]\n  \"c1\" -- \"c2\" [textual=\"forty\"]\n  \"d1\" -- \"d2\" [1=1 2=2]\n  \"e1\" -- \"e2\" [a=\"b\" c=\"d\"]\n}\n", $graphviz->createScript());
+        $this->assertEquals("graph {\n  subgraph cluster_0 {\n    label = 0\n  }\n  \"a1\" -- \"a2\"\n  \"b1\" -- \"b2\" [numeric=20]\n  \"c1\" -- \"c2\" [textual=\"forty\"]\n  \"d1\" -- \"d2\" [1=1 2=2]\n  \"e1\" -- \"e2\" [a=\"b\" c=\"d\"]\n}\n", $graphviz->createScript());
     }
 
     /**
@@ -444,7 +444,7 @@ class GraphVizTest extends TestCase
 
         $graphviz = new GraphViz($graph);
 
-        $this->assertEquals("graph {\n  \"1a\" -- \"1b\"\n  \"2a\" -- \"2b\" [label=20]\n  \"3a\" -- \"3b\" [label=\"0/30\"]\n  \"4a\" -- \"4b\" [label=\"40/∞\"]\n  \"5a\" -- \"5b\" [label=\"50/60\"]\n  \"6a\" -- \"6b\" [label=\"60/70/80\"]\n  \"7a\" -- \"7b\" [label=\"prefixed 70/∞\"]\n}\n", $graphviz->createScript());
+        $this->assertEquals("graph {\n  subgraph cluster_0 {\n    label = 0\n  }\n  \"1a\" -- \"1b\"\n  \"2a\" -- \"2b\" [label=20]\n  \"3a\" -- \"3b\" [label=\"0/30\"]\n  \"4a\" -- \"4b\" [label=\"40/∞\"]\n  \"5a\" -- \"5b\" [label=\"50/60\"]\n  \"6a\" -- \"6b\" [label=\"60/70/80\"]\n  \"7a\" -- \"7b\" [label=\"prefixed 70/∞\"]\n}\n", $graphviz->createScript());
     }
 
     /**

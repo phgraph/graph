@@ -75,6 +75,9 @@ return [
     ],
 
     'config' => [
+        NunoMaduro\PhpInsights\Domain\Insights\CyclomaticComplexityIsHigh::class => [
+            'maxComplexity' => 10,
+        ],
         ObjectCalisthenics\Sniffs\Files\ClassTraitAndInterfaceLengthSniff::class => [
             'maxLength' => 500,
         ],

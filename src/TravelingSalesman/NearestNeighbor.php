@@ -20,10 +20,8 @@ use UnexpectedValueException;
  */
 final class NearestNeighbor implements TravelingSalesman
 {
-    /** @var \PHGraph\Graph */
-    private $graph;
-    /** @var \PHGraph\Vertex */
-    private $start_vertex;
+    private Graph $graph;
+    private Vertex $start_vertex;
 
     /**
      * instantiate new algorithm. A starting vertex is chosen at random per the

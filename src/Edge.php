@@ -19,16 +19,11 @@ final class Edge implements Attributable
     public const DIRECTED = 0;
     public const UNDIRECTED = 1;
 
-    /** @var string */
-    protected $id;
-    /** @var \PHGraph\Vertex */
-    protected $from;
-    /** @var \PHGraph\Vertex */
-    protected $to;
-    /** @var int */
-    protected $direction;
-    /** @var bool */
-    protected $enabled = true;
+    protected string $id;
+    protected Vertex $from;
+    protected Vertex $to;
+    protected int $direction;
+    protected bool $enabled = true;
 
     /**
      * @param \PHGraph\Vertex $from       source vertex

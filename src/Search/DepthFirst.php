@@ -15,8 +15,7 @@ use SplQueue;
  */
 final class DepthFirst implements Search
 {
-    /** @var \PHGraph\Vertex */
-    private $vertex;
+    private Vertex $vertex;
 
     /**
      * instantiate new algorithm.

@@ -22,10 +22,9 @@ use UnderflowException;
  */
 final class MooreBellmanFord implements ShortestPath
 {
-    /** @var \PHGraph\Vertex */
-    private $vertex;
+    private Vertex $vertex;
     /** @var \PHGraph\Edge[] */
-    private $edges;
+    private array $edges;
 
     /**
      * instantiate new algorithm.
@@ -174,7 +173,7 @@ final class MooreBellmanFord implements ShortestPath
      */
     public function getEdges(): array
     {
-        if ($this->edges !== null) {
+        if (isset($this->edges)) {
             return $this->edges;
         }
 

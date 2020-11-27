@@ -95,6 +95,52 @@ class VertexTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Vertex::getEdges
+     *
+     * @return void
+     */
+    public function testGetEdgesIgnoresDisabled(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_a);
+        $edge_b = $vertex_b->createEdgeTo($vertex_a);
+        $edge_c = $vertex_a->createEdge($vertex_c);
+        $edge_d = $vertex_d->createEdgeTo($vertex_a);
+
+        $edge_d->disable();
+
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c], $vertex_a->getEdges());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::getAllEdges
+     *
+     * @return void
+     */
+    public function testGetAllEdges(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_a);
+        $edge_b = $vertex_b->createEdgeTo($vertex_a);
+        $edge_c = $vertex_a->createEdge($vertex_c);
+        $edge_d = $vertex_d->createEdgeTo($vertex_a);
+
+        $edge_d->disable();
+
+        $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c, $edge_d], $vertex_a->getAllEdges());
+    }
+
+    /**
      * @covers PHGraph\Vertex::getEdgesIn
      *
      * @return void
@@ -133,6 +179,48 @@ class VertexTest extends TestCase
         $edge_d = $vertex_d->createEdgeTo($vertex_a);
 
         $this->assertEqualsCanonicalizing([$edge_a, $edge_b, $edge_c, $edge_d], $vertex_a->getEdgesIn());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::getDisabledEdgesIn
+     *
+     * @return void
+     */
+    public function testGetDisabledEdgesIn(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_b);
+        $edge_b = $vertex_a->createEdge($vertex_c);
+        $edge_c = $vertex_d->createEdgeTo($vertex_a);
+
+        $edge_a->disable();
+
+        $this->assertEqualsCanonicalizing([$edge_a], $vertex_a->getDisabledEdgesIn());
+    }
+
+    /**
+     * @covers PHGraph\Vertex::getDisabledEdgesIn
+     *
+     * @return void
+     */
+    public function testGetDisabledEdgesInDefaultEmpty(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $vertex_c = new Vertex($graph);
+        $vertex_d = new Vertex($graph);
+
+        $edge_a = $vertex_a->createEdge($vertex_b);
+        $edge_b = $vertex_a->createEdge($vertex_c);
+        $edge_c = $vertex_d->createEdgeTo($vertex_a);
+
+        $this->assertEquals([], $vertex_a->getDisabledEdgesIn());
     }
 
     /**

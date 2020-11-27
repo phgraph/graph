@@ -11,16 +11,13 @@ namespace PHGraph;
  */
 final class Walk
 {
-    /** @var \PHGraph\Vertex */
-    private $start_vertex;
+    private Vertex $start_vertex;
     /** @var \PHGraph\Vertex[] */
-    private $vertices;
+    private array $vertices;
     /** @var \PHGraph\Edge[] */
-    private $edges;
-    /** @var \PHGraph\Graph */
-    private $graph;
-    /** @var mixed[] */
-    private $alternating_sequence = [];
+    private array $edges;
+    private Graph $graph;
+    private array $alternating_sequence = [];
 
     /**
      * @param \PHGraph\Vertex $start_vertex vertex that the walk starts from
@@ -64,7 +61,7 @@ final class Walk
      */
     public function createGraph(): Graph
     {
-        if ($this->graph !== null) {
+        if (isset($this->graph)) {
             return $this->graph;
         }
 

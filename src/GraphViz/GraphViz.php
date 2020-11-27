@@ -17,12 +17,9 @@ use UnexpectedValueException;
  */
 final class GraphViz
 {
-    /** @var \PHGraph\Graph */
-    private $graph;
-    /** @var string */
-    private $format;
-    /** @var string */
-    private $executable;
+    private Graph $graph;
+    private string $format;
+    private string $executable;
 
     /**
      * instantiate new graphviz wrapper.

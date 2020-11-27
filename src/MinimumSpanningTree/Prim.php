@@ -6,6 +6,7 @@ namespace PHGraph\MinimumSpanningTree;
 
 use PHGraph\Contracts\MinimumSpanningTree;
 use PHGraph\Graph;
+use PHGraph\Vertex;
 use RuntimeException;
 use SplObjectStorage;
 use SplPriorityQueue;
@@ -19,10 +20,8 @@ use UnexpectedValueException;
  */
 final class Prim implements MinimumSpanningTree
 {
-    /** @var \PHGraph\Graph */
-    private $graph;
-    /** @var \PHGraph\Vertex */
-    private $start_vertex;
+    private Graph $graph;
+    private Vertex $start_vertex;
 
     /**
      * instantiate new algorithm.

@@ -9,11 +9,11 @@ namespace PHGraph\Traits;
  */
 trait Attributes
 {
-    /** @var mixed[] */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
-     * get a single attribute with the given $name (or return $default if attribute was not found).
+     * get a single attribute with the given $name (or return $default if
+     * attribute was not found).
      *
      * @param string $name
      * @param mixed  $default to return if attribute was not found
@@ -26,7 +26,19 @@ trait Attributes
     }
 
     /**
-     * Get array of attributes with a given prefix. The prefix is removed from the keys.
+     * get all attribute with the given $name (or return $default if attribute
+     * was not found).
+     *
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Get array of attributes with a given prefix. The prefix is removed from
+     * the keys.
      *
      * @param string $prefix
      *

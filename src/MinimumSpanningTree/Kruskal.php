@@ -82,20 +82,21 @@ final class Kruskal implements MinimumSpanningTree
                 if ($marked->contains($from) && $marked->contains($to)) {
                     continue 2;
                 }
-                if ($marked->contains($from) || $marked->contains($to)) {
-                    foreach ($forests as $merge_key => $forest) {
-                        if (
-                            $marked !== $forest
-                            && ($forest->contains($from) || $forest->contains($to))
-                        ) {
-                            $forests[$key]->addAll($forests[$merge_key]);
-                            unset($forests[$merge_key]);
-                            break;
-                        }
-                    }
-                    $use_forest = $forests[$key];
-                    break;
+                if (!$marked->contains($from) && !$marked->contains($to)) {
+                    continue;
                 }
+                foreach ($forests as $merge_key => $forest) {
+                    if (
+                        $marked !== $forest
+                        && ($forest->contains($from) || $forest->contains($to))
+                    ) {
+                        $forests[$key]->addAll($forests[$merge_key]);
+                        unset($forests[$merge_key]);
+                        break;
+                    }
+                }
+                $use_forest = $forests[$key];
+                break;
             }
             if ($use_forest === null) {
                 $use_forest = new SplObjectStorage();

@@ -234,7 +234,6 @@ final class MooreBellmanFord implements ShortestPath
                 );
 
                 if (count($closest_edges) === 0) {
-                    // @todo determine if this can actually happen
                     // @codeCoverageIgnoreStart
                     continue;
                     // @codeCoverageIgnoreEnd
@@ -281,7 +280,6 @@ final class MooreBellmanFord implements ShortestPath
                 );
 
                 if (count($closest_edges) === 0) {
-                    // @todo determine if this can actually happen
                     // @codeCoverageIgnoreStart
                     continue;
                     // @codeCoverageIgnoreEnd

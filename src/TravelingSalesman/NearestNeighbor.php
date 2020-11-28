@@ -79,15 +79,12 @@ final class NearestNeighbor implements TravelingSalesman
     public function getEdges(): array
     {
         $edges = [];
-
         $vertex_current = $this->start_vertex;
         $marked = new SplObjectStorage();
-
         $itterations = count($this->graph->getVertices()) - 1;
 
         for ($i = 0; $i < $itterations; $i++) {
             $marked->attach($vertex_current);
-
             $edge_queue = new SplPriorityQueue();
 
             /** @var \PHGraph\Edge $edge */

@@ -17,6 +17,7 @@ final class Walk
     /** @var \PHGraph\Edge[] */
     private array $edges;
     private Graph $graph;
+    /** @var mixed[] */
     private array $alternating_sequence = [];
 
     /**

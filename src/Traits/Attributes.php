@@ -9,6 +9,7 @@ namespace PHGraph\Traits;
  */
 trait Attributes
 {
+    /** @var mixed[] */
     protected array $attributes = [];
 
     /**

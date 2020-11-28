@@ -258,30 +258,31 @@ final class Dijkstra implements ShortestPath
         /** @var \PHGraph\Edge[] $edges */
         $edges = [];
         foreach ($vertices as $vid => $vertex) {
-            if (isset($lowest_cost_vertex_to[$vid])) {
-                /** @var \PHGraph\Edge[] $closest_edges */
-                $closest_edges = array_filter(
-                    $lowest_cost_vertex_to[$vid]->getEdgesOut(),
-                    static function (Edge $edge) use ($vertex) {
-                        return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
-                    }
-                );
-
-                if (count($closest_edges) === 0) {
-                    // @todo determine if this can actually happen
-                    // @codeCoverageIgnoreStart
-                    continue;
-                    // @codeCoverageIgnoreEnd
-                }
-
-                uasort($closest_edges, static function ($left, $right) {
-                    return $left->getAttribute('weight', 0) - $right->getAttribute('weight', 0);
-                });
-
-                $closest_edge = end($closest_edges);
-
-                $edges[$closest_edge->getId()] = $closest_edge;
+            if (!isset($lowest_cost_vertex_to[$vid])) {
+                continue;
             }
+
+            /** @var \PHGraph\Edge[] $closest_edges */
+            $closest_edges = array_filter(
+                $lowest_cost_vertex_to[$vid]->getEdgesOut(),
+                static function (Edge $edge) use ($vertex) {
+                    return $edge->getTo() === $vertex || (!$edge->isDirected() && $edge->getFrom() === $vertex);
+                }
+            );
+
+            if (count($closest_edges) === 0) {
+                // @codeCoverageIgnoreStart
+                throw new UnexpectedValueException('No edges found');
+                // @codeCoverageIgnoreEnd
+            }
+
+            uasort($closest_edges, static function ($left, $right) {
+                return $left->getAttribute('weight', 0) - $right->getAttribute('weight', 0);
+            });
+
+            $closest_edge = end($closest_edges);
+
+            $edges[$closest_edge->getId()] = $closest_edge;
         }
 
         $this->edges = $edges;

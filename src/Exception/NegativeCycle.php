@@ -21,11 +21,11 @@ final class NegativeCycle extends Exception
      * @param string          $message  exception message
      * @param int             $code     user defined exception code
      * @param \Exception|null $previous previous exception if nested exception
-     * @param \PHGraph\Walk   $cycle    cycle involved
+     * @param \PHGraph\Walk|null   $cycle    cycle involved
      *
      * @return void
      */
-    public function __construct($message, $code = 0, $previous = null, Walk $cycle)
+    public function __construct($message, $code = 0, $previous = null, Walk $cycle = null)
     {
         parent::__construct($message, $code, $previous);
 
@@ -35,9 +35,9 @@ final class NegativeCycle extends Exception
     /**
      * Get the cycle that was found to be negative.
      *
-     * @return \PHGraph\Walk
+     * @return \PHGraph\Walk|null
      */
-    public function getCycle(): Walk
+    public function getCycle(): ?Walk
     {
         return $this->cycle;
     }

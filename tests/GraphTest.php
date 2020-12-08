@@ -263,6 +263,60 @@ class GraphTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Graph::newFromVertices
+     *
+     * @return void
+     */
+    public function testNewFromVerticessIsGraph(): void
+    {
+        $graph = new Graph;
+
+        $this->assertInstanceOf(Graph::class, $graph->newFromVertices([]));
+    }
+
+    /**
+     * @covers PHGraph\Graph::newFromVertices
+     *
+     * @return void
+     */
+    public function testNewFromVerticessIsNotSameGraph(): void
+    {
+        $graph = new Graph;
+
+        $this->assertNotSame($graph, $graph->newFromVertices([]));
+    }
+
+    /**
+     * @covers PHGraph\Graph::newFromVertices
+     *
+     * @return void
+     */
+    public function testNewFromVerticessKeepsAtrributes(): void
+    {
+        $graph = new Graph;
+        $graph->setAttribute('testing', 'test');
+
+        $this->assertSame('test', $graph->newFromVertices([])->getAttribute('testing'));
+    }
+
+    /**
+     * @covers PHGraph\Graph::newFromVertices
+     *
+     * @return void
+     */
+    public function testNewFromVerticessHasNewEdges(): void
+    {
+        $graph = new Graph;
+        $vertex_a = new Vertex($graph);
+        $vertex_b = new Vertex($graph);
+        $edge = $vertex_a->createEdge($vertex_b);
+
+        $new_graph_edges = $graph->newFromVertices([$vertex_a, $vertex_b])->getEdges();
+
+        $this->assertNotSame($edge, reset($new_graph_edges));
+    }
+
+    /**
      * @covers PHGraph\Graph::getNumberOfGroups
      *
      * @return void

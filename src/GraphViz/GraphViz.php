@@ -104,6 +104,7 @@ final class GraphViz
             $this->executable,
             '-T',
             $this->format,
+            '-Gnewrank=true',
             $temporary_file,
             '-o',
             $temporary_file . '.' . $this->format,

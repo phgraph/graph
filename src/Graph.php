@@ -200,6 +200,51 @@ final class Graph implements Attributable, Directable
     }
 
     /**
+     * Create a copy of this graph with only the supplied verticies.
+     *
+     * @param \PHGraph\Vertex[] $vertices vertices to use
+     *
+     * @return \PHGraph\Graph
+     */
+    public function newFromVertices(array $vertices): Graph
+    {
+        $new_graph = new static();
+        $new_graph->attributes = $this->attributes;
+        $keyed_vertices = [];
+        foreach ($vertices as $vertex) {
+            $keyed_vertices[$vertex->getId()] = true;
+        }
+
+        $vertex_replacement_map = new VertexReplacementMap();
+
+        /** @var \PHGraph\Edge[] $edges */
+        $edges = [];
+        foreach ($vertices as $vertex) {
+            $new_vertex = clone $vertex;
+            $new_vertex->setGraph($new_graph);
+
+            $vertex_replacement_map[$vertex] = $new_vertex;
+
+            foreach ($vertex->getAllEdges() as $edge) {
+                if (
+                    isset($keyed_vertices[$edge->getFrom()->getId()])
+                    && isset($keyed_vertices[$edge->getTo()->getId()])
+                ) {
+                    $edges[$edge->getId()] = $edge;
+                }
+            }
+        }
+
+        foreach ($edges as $edge) {
+            $new_edge = clone $edge;
+
+            $new_edge->replaceVerticesFromMap($vertex_replacement_map);
+        }
+
+        return $new_graph;
+    }
+
+    /**
      * Grouped: count total number of different groups assigned to vertices.
      *
      * @return int

@@ -141,7 +141,7 @@ class GraphVizTest extends TestCase
     {
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) {
-            file_put_contents($command[5], 'test');
+            file_put_contents($command[6], 'test');
 
             return true;
         })->andReturnSelf();
@@ -164,7 +164,7 @@ class GraphVizTest extends TestCase
 
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('__construct')->withArgs(function ($command) use (&$return_file) {
-            $return_file = $command[5];
+            $return_file = $command[6];
 
             return true;
         })->andReturnSelf();

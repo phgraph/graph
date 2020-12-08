@@ -273,6 +273,31 @@ class EdgeTest extends TestCase
     }
 
     /**
+     * @covers PHGraph\Edge::replaceVerticesFromMap
+     *
+     * @return void
+     */
+    public function testReplaceVerticesFromMapRetainsDisabled(): void
+    {
+        $vertex_a = new Vertex($this->graph);
+        $vertex_b = new Vertex($this->graph);
+        $edge = $vertex_a->createEdge($vertex_b);
+        $edge->disable();
+
+        $vertex_c = new Vertex($this->graph);
+        $vertex_d = new Vertex($this->graph);
+
+        $replacement_map = new VertexReplacementMap;
+
+        $replacement_map[$vertex_a] = $vertex_c;
+        $replacement_map[$vertex_b] = $vertex_d;
+
+        $edge->replaceVerticesFromMap($replacement_map);
+
+        $this->assertEmpty($vertex_c->getEdges());
+    }
+
+    /**
      * @covers PHGraph\Edge::isDirected
      *
      * @return void

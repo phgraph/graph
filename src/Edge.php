@@ -173,6 +173,10 @@ final class Edge implements Attributable
             $this->to->addEdgeOut($this);
             $this->from->addEdgeIn($this);
         }
+
+        if (!$this->enabled) {
+            $this->disable();
+        }
     }
 
     /**
